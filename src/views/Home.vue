@@ -9,7 +9,7 @@ export default{
     },
     data(){
         return{
-            teste: 0     
+            teste: 0
         }
     }
 }

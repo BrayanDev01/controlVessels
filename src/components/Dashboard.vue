@@ -73,12 +73,20 @@ export default{
         <div class="header">
             <img src="../assets/Gp_Cidade_DarkBG 1.png" alt="Grupo Cidade">
             <div class="options">
-                <div>Home</div>
-                <div>Formulário</div>
+                <router-link to="/home" class="buttonLink">
+                    <div>Home</div>
+                </router-link>
+                <router-link to="/form" class="buttonLink">
+                    <div>Formulário</div>
+                </router-link>
+                <router-link to="/" class="buttonLink">
+                    <div>Sair</div>
+                </router-link>
             </div>
         </div>
         <div class="dashboard">
             <div class="vesselSide">
+                <div class="titleSide">Embarcações</div>
                 <DataTable :value="vessels" tableStyle="min-width: 50rem">
                     <Column field="name" header="Nome"></Column>
                     <Column field="status" header="Status"></Column>
@@ -86,6 +94,7 @@ export default{
                 </DataTable>                
             </div>
             <div class="reportSide">
+                <div class="titleSide">Relatórios</div>
                 <DataTable :value="reports" tableStyle="min-width: 50rem">
                     <Column field="vessel.name" header="Embarcação"></Column>
                     <Column field="startOperation.iso" header="Inicio">
@@ -127,6 +136,25 @@ img{
     height: 80%;
     margin: 0 0 0 50px;
 }
+.buttonLink{
+    color: var(--white-gc);
+    text-decoration: none;
+}
+.buttonLink.router-link-active,
+.buttonLink.router-link-exact-active {
+   color: var(--secondary-color-gc);
+   cursor: pointer;
+ }
+
+.titleSide{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: larger;
+    margin:10px 0 10px 0 ;
+
+}
 .options{
     display: flex;
     align-items: center;
@@ -145,5 +173,29 @@ img{
     height: 40rem;
     border-radius: 20px;
     background-color: var(--white-gc);
+}
+
+@media (max-width: 1500px){
+    .main{
+        width: 100vw;
+        height: 100%;
+        background-color: var(--gray-bg-gc);
+        display: flex;
+        flex-direction: column;
+    }
+    .dashboard{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 30px 0 0 0 ;
+        gap: 20px;
+    }
+    .vesselSide, .reportSide{
+        width: 90%;
+        height: 40rem;
+        border-radius: 20px;
+        background-color: var(--white-gc);
+    }
 }
 </style>

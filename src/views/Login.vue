@@ -15,27 +15,27 @@ export default {
         send(){
             this.loading = true
             setTimeout(()=>{
-                if(this.user != this.dbUser && this.password != this.dbPassword){
-                this.$toast.add({ 
-                  severity: 'error', 
-                  summary: 'Login errado', 
-                  detail: 'Tente novamente',
-                  life: 3000 
-                });
-                this.user = ''
-                this.password = ''
-                this.loading = false
-            }else{
-                this.$toast.add({ 
-                  severity: 'success', 
-                  summary: 'Login correto', 
-                  detail: 'Parabens',
-                  life: 3000 
-                });
-                this.loading = false
-                this.$router.push({ path: '/home' })
-            }
-            }, 2000)
+                if(this.user != this.dbUser & this.password != this.dbPassword){
+                    this.$toast.add({ 
+                    severity: 'error', 
+                    summary: 'Login errado', 
+                    detail: 'Tente novamente',
+                    life: 3000 
+                    });
+                    this.user = ''
+                    this.password = ''
+                    this.loading = false
+                }else{
+                    this.$toast.add({ 
+                    severity: 'success', 
+                    summary: 'Login correto', 
+                    detail: 'Parabens',
+                    life: 3000 
+                    });
+                    this.loading = false
+                    this.$router.push({ path: '/home' })
+                }
+                }, 2000)
             
         }
     }
@@ -46,6 +46,7 @@ export default {
     <div class="main">
         <div class="card">
             <div class="form">
+                <img src="../assets/Gp_Cidade_Base 1.png" alt="grupo cidade" class="logoImg">
                 <span class=" item p-float-label">
                     <InputText id="username" v-model="user" style="width: 100%;"/>
                     <label for="username">Usúario</label>
@@ -78,6 +79,9 @@ export default {
     align-items: center;
     justify-content: center;
     background-color: white;
+}
+.logoImg{
+    margin: 0 0 10px 0;
 }
 .form{
     display: flex;

@@ -62,13 +62,13 @@ export default{
                 this.$toast.add({ severity: 'success', summary: 'Report Enviado', detail: 'Report enviado com sucesso', life: 3000 });
                 return results                
             }).catch(error => {  
-                this.errorCode();
-                this.resetForm()           
+                this.errorCode(error);
+                // this.resetForm()          
                 // console.error(error);
             });
         },
-        errorCode(){
-            this.$toast.add({ severity: 'error', summary: 'Report Não Enviado', detail: 'Parece que houve um erro com o envio', life: 3000 });
+        errorCode(error){
+            this.$toast.add({ severity: 'error', summary: 'Report Não Enviado', detail: error, life: 3000 });
         },
         resetForm(){
             this.selectVessel = '';
@@ -152,7 +152,7 @@ export default{
 }
 .form{
     border-radius: 10px;
-    width: 50%;
+    width: 80%;
     height: 60%;
     display: flex;
     flex-direction: column;
@@ -164,5 +164,19 @@ export default{
 .timeBox{
     display: flex;
     gap: 20px;
+}
+
+@media (min-width: 1500px) {
+    .form{
+        border-radius: 10px;
+        width: 50%;
+        height: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        background-color: var(--white-gc);
+    }   
 }
 </style>
