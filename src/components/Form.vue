@@ -63,7 +63,7 @@ export default{
                 return results                
             }).catch(error => {  
                 this.errorCode(error);
-                // this.resetForm()          
+                this.resetForm()        
                 // console.error(error);
             });
         },

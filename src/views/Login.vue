@@ -15,7 +15,16 @@ export default {
         send(){
             this.loading = true
             setTimeout(()=>{
-                if(this.user != this.dbUser & this.password != this.dbPassword){
+                if(this.user === this.dbUser && this.password === this.dbPassword){
+                    this.$toast.add({ 
+                    severity: 'success', 
+                    summary: 'Login correto', 
+                    detail: 'Parabens',
+                    life: 3000 
+                    });
+                    this.loading = false
+                    this.$router.push({ path: '/home' })
+                }else{
                     this.$toast.add({ 
                     severity: 'error', 
                     summary: 'Login errado', 
@@ -25,15 +34,6 @@ export default {
                     this.user = ''
                     this.password = ''
                     this.loading = false
-                }else{
-                    this.$toast.add({ 
-                    severity: 'success', 
-                    summary: 'Login correto', 
-                    detail: 'Parabens',
-                    life: 3000 
-                    });
-                    this.loading = false
-                    this.$router.push({ path: '/home' })
                 }
                 }, 2000)
             

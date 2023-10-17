@@ -12,6 +12,7 @@ import Textarea from 'primevue/textarea';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
+import Dialog from 'primevue/dialog';
 import Row from 'primevue/row';
 import './style.css'
 import App from './App.vue'
@@ -33,6 +34,7 @@ app.component('DataTable', DataTable);
 app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
+app.component('Dialog', Dialog)
 app.use(ToastService);
 app.use(router);
 app.mount('#app')

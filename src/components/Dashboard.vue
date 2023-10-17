@@ -5,7 +5,10 @@ export default{
     data(){
         return{
             vessels:[],
-            reports:[]
+            reports:[],
+            selectedVessel:[],
+            metaKey: true,
+            reportDialog: false
         }
     },
     methods:{
@@ -55,11 +58,16 @@ export default{
                 return new Date(value).toLocaleString()
             }
         },
-        goHome(){
-            
-        },
-        goForm(){
-
+        onRowSelect(e){
+            this.selectedVessel = e.data
+            this.$toast.add({
+                severity:'success', 
+                summary:'Relátorio selecionado',
+                detail: e.data.vessel.name,
+                life: 3000
+            })
+            console.log(this.selectedVessel)
+            this.reportDialog = true
         }
     },
     created(){
@@ -95,7 +103,7 @@ export default{
             </div>
             <div class="reportSide">
                 <div class="titleSide">Relatórios</div>
-                <DataTable :value="reports" tableStyle="min-width: 50rem">
+                <DataTable :value="reports" tableStyle="min-width: 50rem" selectionMode="single" dataKey="id" @rowSelect="onRowSelect">
                     <Column field="vessel.name" header="Embarcação"></Column>
                     <Column field="startOperation.iso" header="Inicio">
                         <template #body="slotProps">
@@ -107,7 +115,18 @@ export default{
                             {{ formatDate(slotProps.data.endOperation.iso) }}
                         </template>
                     </Column>
-                </DataTable> 
+                </DataTable>
+                <Dialog v-model:visible="reportDialog" modal header="Relatório" :style="{ width: '50vw' }">
+                    <div class="rigthSide">
+                        <div class="titleVessel">{{ selectedVessel?.vessel.name }}</div>
+                        <div>{{ selectedVessel?.vessel.Status }}</div>
+                        
+                    </div>
+                    <div class="leftSide">
+
+                    </div>
+                </Dialog>
+                <Toast></Toast>
             </div>
 
         </div>
