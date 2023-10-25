@@ -63,6 +63,10 @@ export default{
                 return new Date(value).toLocaleString()
             }
         },
+        goToView(e){
+            this.$router.push(`/vesselView/${e.data.objectId}`)
+            // console.log(e.data.objectId)
+        },
         onRowSelect(e){
             this.selectedVessel = e.data
             this.$toast.add({
@@ -87,7 +91,7 @@ export default{
         <div class="dashboard">
             <div class="vesselSide">
                 <div class="titleSide">Embarcações</div>
-                <DataTable :value="vessels" tableStyle="min-width: 50rem">
+                <DataTable :value="vessels" tableStyle="min-width: 50rem" @rowSelect="goToView" selectionMode="single" dataKey="id">
                     <Column field="name" header="Nome"></Column>
                     <Column field="status" header="Status"></Column>
                     <Column field="location" header="Localização"></Column>
