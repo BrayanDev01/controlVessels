@@ -1,7 +1,12 @@
 <script>
 import axios from 'axios'
+import MenuBar from '../components/MenuBar.vue'
 
 export default{
+    components:{
+        MenuBar
+    },
+
     data(){
         return{
             vessels:[],
@@ -78,20 +83,7 @@ export default{
 </script>
 <template>
     <div class="main">
-        <div class="header">
-            <img src="../assets/Gp_Cidade_DarkBG 1.png" alt="Grupo Cidade">
-            <div class="options">
-                <router-link to="/home" class="buttonLink">
-                    <div>Home</div>
-                </router-link>
-                <router-link to="/form" class="buttonLink">
-                    <div>Formulário</div>
-                </router-link>
-                <router-link to="/" class="buttonLink">
-                    <div>Sair</div>
-                </router-link>
-            </div>
-        </div>
+        <MenuBar></MenuBar>
         <div class="dashboard">
             <div class="vesselSide">
                 <div class="titleSide">Embarcações</div>
@@ -142,29 +134,6 @@ export default{
     display: flex;
     flex-direction: column;
 }
-.header{
-    width: 100vw;
-    height: 100px;
-    background-color: var(--primary-color-gc);
-    display: flex;
-    align-items: center;
-    color: var(--white-gc);
-    justify-content: space-between
-}
-img{
-    height: 80%;
-    margin: 0 0 0 50px;
-}
-.buttonLink{
-    color: var(--white-gc);
-    text-decoration: none;
-}
-.buttonLink.router-link-active,
-.buttonLink.router-link-exact-active {
-   color: var(--secondary-color-gc);
-   cursor: pointer;
- }
-
 .titleSide{
     width: 100%;
     display: flex;
@@ -173,12 +142,6 @@ img{
     font-size: larger;
     margin:10px 0 10px 0 ;
 
-}
-.options{
-    display: flex;
-    align-items: center;
-    margin: 0 50px 0 0;
-    gap: 20px;
 }
 
 .dashboard{

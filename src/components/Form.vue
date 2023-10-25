@@ -8,12 +8,14 @@ export default{
         return{
             actions:[],
             selectVessel: "",
-            typesOfOperation:['Carregando', 'Descarga'],
+            typesOfOperation:['Carregando', 'Descarga', 'Viagem'],
             typeOperation:"",
             startOperation:"",
             endOperation:"",
-            local:"",
-            port:"",
+            cities:["Miritituba", "Manaus", "Santarém", "Santana"],
+            selectedCity:"",
+            ports:["Master", "Cdp 201", "Cdp Fundeio", "Gauxo", "Uni-z", "Bertuol", "Arthur", "Ciamport"],
+            selectedPorto:"",
             observations:""
         }
     },
@@ -50,9 +52,9 @@ export default{
                     typeOperation: this.typeOperation,
                     startOperation: { __type: "Date", iso: this.startOperation },
                     endOperation: { __type: "Date", iso: this.endOperation },
-                    local: this.local,
+                    local: this.selectedCity,
                     vessel: {__type: 'Pointer', className: 'Vessels', objectId: this.selectVessel},
-                    port: this.port,
+                    port: this.selectedPorto,
                     observation: this.observations
                 }
             };
@@ -75,8 +77,8 @@ export default{
             this.typeOperation = '';
             this.startOperation = '';
             this.endOperation = '',
-            this.local = '';
-            this.port = '';
+            this.selectedCity = '';
+            this.selectedPorto = '';
             this.observations = '';
         }
         
@@ -84,7 +86,11 @@ export default{
     created(){
         this.getVessels()
     },
-    watch:{}
+    watch:{
+        selectedPorto(v){
+            console.log(v)
+        }
+    }
 }
 </script>   
 
@@ -109,14 +115,10 @@ export default{
                 </span>
             </div>
 
-            <span class="p-float-label">
-                <InputText id="username" v-model="local" />
-                <label for="username">Local da operação</label>
-            </span>
-            <span class="p-float-label">
-                <InputText id="username" v-model="port" />
-                <label for="username">Porto da operação</label>
-            </span>
+            
+            <Dropdown v-model="selectedCity" :options="ports" placeholder="Selecione o cidade"/>
+            
+            <Dropdown v-model="selectedPorto" :options="ports" placeholder="Selecione o porto"/>
 
             <span class="p-float-label">
                 <Textarea v-model="observations" rows="5" cols="40" />

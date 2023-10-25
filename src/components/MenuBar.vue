@@ -1,0 +1,54 @@
+<script>
+
+</script>
+
+<template>
+    <div class="header">
+        <img src="../assets/Gp_Cidade_DarkBG 1.png" alt="Grupo Cidade">
+        <div class="options">
+            <router-link to="/home" class="buttonLink">
+                <div>Home</div>
+            </router-link>
+            <router-link to="/vesselView/1" class="buttonLink">
+                <div>View</div>
+            </router-link>
+            <router-link to="/form" class="buttonLink">
+                <div>Formulário</div>
+            </router-link>
+            <router-link to="/" class="buttonLink">
+                <div>Sair</div>
+            </router-link>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+.header{
+    width: 100vw;
+    height: 100px;
+    background-color: var(--primary-color-gc);
+    display: flex;
+    align-items: center;
+    color: var(--white-gc);
+    justify-content: space-between
+}
+.buttonLink{
+    color: var(--white-gc);
+    text-decoration: none;
+}
+.buttonLink.router-link-active,
+.buttonLink.router-link-exact-active {
+   color: var(--secondary-color-gc);
+   cursor: pointer;
+}
+.options{
+    display: flex;
+    align-items: center;
+    margin: 0 50px 0 0;
+    gap: 20px;
+}
+img{
+    height: 80%;
+    margin: 0 0 0 50px;
+}
+</style>
