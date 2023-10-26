@@ -13,7 +13,7 @@ export default{
         }
     },
     methods:{
-        // Essa função puxará a embarcação pelo parametro passado pela rota
+        // Essa função puxará a embarcação pelo parametro passado pela rota;
         async getVessel(){
             const options = {
                 method: 'GET',
@@ -34,7 +34,7 @@ export default{
 
             this.vesselInfos = data
         },
-
+        // Função que puxará da do BD somente os reports relacionados a tal embarcação;
         async getReports(){
             const options = {
                 method: 'POST',
