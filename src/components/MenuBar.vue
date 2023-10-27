@@ -4,7 +4,7 @@
 
 <template>
     <div class="header">
-        <img src="../assets/Gp_Cidade_DarkBG 1.png" alt="Grupo Cidade">
+        <img src="../assets/Gp_Cidade_DarkBG1.png" alt="Grupo Cidade">
         <div class="options">
             <router-link to="/home" class="buttonLink">
                 <div>Home</div>

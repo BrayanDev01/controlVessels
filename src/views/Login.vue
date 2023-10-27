@@ -46,7 +46,7 @@ export default {
     <div class="main">
         <div class="card">
             <div class="form">
-                <img src="../assets/Gp_Cidade_Base 1.png" alt="grupo cidade" class="logoImg">
+                <img src="../assets/Gp_Cidade_Base1.png" alt="grupo cidade" class="logoImg">
                 <span class=" item p-float-label">
                     <InputText id="username" v-model="user" style="width: 100%;"/>
                     <label for="username">Usúario</label>
