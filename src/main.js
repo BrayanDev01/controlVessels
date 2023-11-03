@@ -3,6 +3,7 @@ import router from './router/index'
 import PrimeVue from 'primevue/config';
 import Button from "primevue/button"
 import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import Listbox from 'primevue/listbox'
@@ -25,6 +26,7 @@ const app = createApp(App);
 app.use(PrimeVue);
 app.component('Button', Button);
 app.component('InputText', InputText);
+app.component('Password', Password);
 app.component('Toast', Toast);
 app.component('Listbox', Listbox);
 app.component('Dropdown', Dropdown);

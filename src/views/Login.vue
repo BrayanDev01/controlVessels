@@ -51,11 +51,11 @@ export default {
                     <InputText id="username" v-model="user" style="width: 100%;"/>
                     <label for="username">Usúario</label>
                 </span>
-                <span class="item p-float-label">
-                    <InputText id="senha" v-model="password" type="password" style="width: 100%;"/>
-                    <label for="senha">Senha</label>
+                <span class="p-float-label teste">
+                    <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input:{ style: 'width: 100%'}}"></Password>
+                    <label for="password">Password</label>
                 </span>
-                <Button label="Entrar" @click="send()" :loading="loading"/>
+                <Button label="Entrar" @click="send()" :loading="loading"></Button>
             </div>
         </div>
         <Toast />    
@@ -63,6 +63,9 @@ export default {
 </template>
 
 <style scoped>
+.teste{
+    margin-bottom: 10px; 
+}
 .main{
     width: 100vw;
     height: 100vh;

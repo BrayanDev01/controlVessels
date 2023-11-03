@@ -116,12 +116,12 @@ export default{
             </div>
 
             
-            <Dropdown v-model="selectedCity" :options="ports" placeholder="Selecione o cidade"/>
+            <Dropdown v-model="selectedCity" :options="cities" placeholder="Selecione o cidade"/>
             
             <Dropdown v-model="selectedPorto" :options="ports" placeholder="Selecione o porto"/>
 
             <span class="p-float-label">
-                <Textarea v-model="observations" rows="5" cols="40" />
+                <Textarea v-model="observations" rows="5" cols="40"></Textarea>
                 <label>Observação</label>
             </span>
 
