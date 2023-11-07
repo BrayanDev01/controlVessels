@@ -9,9 +9,6 @@
             <router-link to="/home" class="buttonLink">
                 <div>Home</div>
             </router-link>
-            <router-link to="/vesselView/1" class="buttonLink">
-                <div>View</div>
-            </router-link>
             <router-link to="/form" class="buttonLink">
                 <div>Formulário</div>
             </router-link>
@@ -48,7 +45,20 @@
     gap: 20px;
 }
 img{
-    height: 80%;
+    height: 5rem;
     margin: 0 0 0 50px;
+}
+
+@media (max-width: 500px) {
+
+    img{
+        height: 2.5rem;
+        margin: 0 0 0 0px;
+    }
+    .options{
+        
+        margin: 0 15px 0 0;
+        
+    }
 }
 </style>

@@ -34,7 +34,7 @@ export default{
 
             this.vesselInfos = data
         },
-        // Função que puxará da do BD somente os reports relacionados a tal embarcação;
+        // Função que puxará do BD somente os reports relacionados a x embarcação;
         async getReports(){
             const options = {
                 method: 'POST',
@@ -129,5 +129,24 @@ export default{
 }
 .rigthSide{
     width: 50%;
+}
+@media (max-width: 500px) {
+    .main{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .leftSide{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+    }
+    .rigthSide{
+        width: 100%;
+    }
 }
 </style>

@@ -112,7 +112,7 @@ export default{
                         </template>
                     </Column>
                 </DataTable>
-                <Dialog v-model:visible="reportDialog" modal header="Relatório" :style="{ width: '50vw' }">
+                <Dialog v-model:visible="reportDialog" modal header="Relatório" :style="{ width: '50vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
                     <div class="rigthSide">
                         <div class="titleVessel">{{ selectedVessel?.vessel.name }}</div>
                         <div>{{ selectedVessel?.vessel.Status }}</div>

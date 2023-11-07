@@ -121,7 +121,7 @@ export default{
             <Dropdown v-model="selectedPorto" :options="ports" placeholder="Selecione o porto"/>
 
             <span class="p-float-label">
-                <Textarea v-model="observations" rows="5" cols="40"></Textarea>
+                <Textarea v-model="observations" rows="4" cols="35"></Textarea>
                 <label>Observação</label>
             </span>
 
@@ -155,7 +155,7 @@ export default{
 .form{
     border-radius: 10px;
     width: 80%;
-    height: 60%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -168,7 +168,7 @@ export default{
     gap: 20px;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 700px) {
     .form{
         border-radius: 10px;
         width: 50%;
