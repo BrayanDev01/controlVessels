@@ -1,5 +1,6 @@
-import { createApp } from 'vue'
-import router from './router/index'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import router from './router/index';
 import PrimeVue from 'primevue/config';
 import Button from "primevue/button"
 import InputText from 'primevue/inputtext';
@@ -18,11 +19,16 @@ import Row from 'primevue/row';
 import './style.css'
 import App from './App.vue'
 
-import "primevue/resources/themes/lara-light-indigo/theme.css";
+import "primevue/resources/themes/lara-light-indigo/theme.css";as
 import 'primevue/resources/primevue.min.css';
 import '../src/assets/theme.css'
 
 const app = createApp(App);
+
+const pinia = createPinia()
+
+
+
 app.use(PrimeVue);
 app.component('Button', Button);
 app.component('InputText', InputText);
@@ -38,6 +44,7 @@ app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
 app.component('Dialog', Dialog)
 app.use(ToastService);
+app.use(pinia)
 app.use(router);
 app.mount('#app')
 
