@@ -12,6 +12,7 @@ Projeto em fase inicial, tem como base o controle de embarcações para primeira
 - PrimeVue
 - Axios
 - Vue Router
+- Pinia
 
 ## Instalação
 

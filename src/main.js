@@ -19,7 +19,7 @@ import Row from 'primevue/row';
 import './style.css'
 import App from './App.vue'
 
-import "primevue/resources/themes/lara-light-indigo/theme.css";as
+import "primevue/resources/themes/lara-light-indigo/theme.css";
 import 'primevue/resources/primevue.min.css';
 import '../src/assets/theme.css'
 
