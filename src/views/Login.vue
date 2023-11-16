@@ -1,43 +1,61 @@
 <script>
+import axios, { AxiosError } from 'axios';
+import { mapState, mapActions } from 'pinia';
+import {userInfoStore} from '../store/UserInfos.js'
 
 export default {
     data(){
         return{
-            user:"",
-            password:"",
-            dbUser:"teste",
-            dbPassword:"teste",
+            user:"teste",
+            password:"12345678",
             loading: false
         }
     },
     methods:{
+        ...mapActions(userInfoStore, ['saveInfo']),
         
-        send(){
+        alert(x){
+            this.$toast.add({severity:'error', summary:'Algo deu errado', detail:`${x}`})
+            console.log(x)
+        },
+
+        async login(){
             this.loading = true
-            setTimeout(()=>{
-                if(this.user === this.dbUser && this.password === this.dbPassword){
-                    this.$toast.add({ 
-                    severity: 'success', 
-                    summary: 'Login correto', 
-                    detail: 'Parabens',
-                    life: 3000 
-                    });
-                    this.loading = false
-                    this.$router.push({ path: '/home' })
-                }else{
-                    this.$toast.add({ 
-                    severity: 'error', 
-                    summary: 'Login errado', 
-                    detail: 'Tente novamente',
-                    life: 3000 
-                    });
-                    this.user = ''
-                    this.password = ''
-                    this.loading = false
+
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}login`,
+                headers: {
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`,
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Revocable-Session': '1'
+                },
+                data:{
+                    username: this.user,
+                    password: this.password
                 }
-                }, 2000)
-            
+            };
+
+            const data = await axios.request(options).then((response) => {
+                this.saveInfo(response.data);
+                console.log(response);
+                this.$router.push({ path: '/home'});
+                
+                return response.data
+
+            }).catch((error) => {
+                
+                this.alert(error.response.data.error)
+                return error.response
+            });
+
+            console.log(data)
+            this.loading = false
         }
+
+    },
+    computed:{
+        ...mapState(userInfoStore, ['userInformations'])
     }
 }
 </script>
@@ -55,7 +73,7 @@ export default {
                     <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input:{ style: 'width: 100%'}}"></Password>
                     <label for="password">Password</label>
                 </span>
-                <Button label="Entrar" @click="send()" :loading="loading"></Button>
+                <Button label="Entrar" @click="login()" :loading="loading"></Button>
             </div>
         </div>
         <Toast />    

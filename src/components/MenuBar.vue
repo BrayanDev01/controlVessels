@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="header">
+    <div class="topMenu">
         <img src="../assets/Gp_Cidade_DarkBG1.png" alt="Grupo Cidade">
         <div class="options">
             <router-link to="/home" class="buttonLink">
@@ -20,7 +20,7 @@
 </template>
 
 <style scoped>
-.header{
+.topMenu{
     width: 100vw;
     height: 100px;
     background-color: var(--primary-color-gc);

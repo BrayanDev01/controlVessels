@@ -1,9 +1,15 @@
 <script>
 import axios from 'axios';
-import { useToast } from 'primevue/usetoast';
+import MenuBar from '../components/MenuBar.vue';
+import { mapState } from 'pinia';
+import {userInfoStore} from '../store/UserInfos.js'
+
 
 export default{
     name:'Form', 
+    components:{
+        MenuBar
+    },
     data(){
         return{
             actions:[],
@@ -83,6 +89,9 @@ export default{
         }
         
     },
+    computed:{
+        ...mapState(userInfoStore, ['userInformations'])
+    },
     created(){
         this.getVessels()
     },
@@ -96,6 +105,7 @@ export default{
 
 <template>
     <div class="main">
+        <MenuBar v-if="userInformations.accessLevel < 1"></MenuBar>
         <div class="header">
             <div class="titleHeader">Selecione a embarcação</div>
             <Dropdown v-model="selectVessel" :options="actions" optionValue="objectId" optionLabel="name" placeholder="Selecione uma embarcação"/>
@@ -127,7 +137,8 @@ export default{
 
             <Button label="Enviar Relatório" @click="sendReport()"></Button>
             <Toast /> 
-        </div>        
+        </div>
+               
     </div>
 </template>
 
