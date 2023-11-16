@@ -6,8 +6,8 @@ import {userInfoStore} from '../store/UserInfos.js'
 export default {
     data(){
         return{
-            user:"teste",
-            password:"12345678",
+            user:"",
+            password:"",
             loading: false
         }
     },
