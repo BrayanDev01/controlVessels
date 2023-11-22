@@ -19,13 +19,17 @@ export const userInfoStore = defineStore('userInfo', {
     actions:{
         saveInfo(x){
             this.userInformations = x
+        },
+
+        saindo(){
+            this.userInformations = []
         }
     },
 
 
     getters:{
         returnInfos(){
-            return this.user
+            return this.userInformations
         }
     }
 

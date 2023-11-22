@@ -1,11 +1,46 @@
 <script>
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import {userInfoStore} from '../store/UserInfos.js'
+import axios from 'axios';
 
 export default{
     computed:{
         ...mapState(userInfoStore, ['userInformations'])
+    },
+    methods:{
+        ...mapActions(userInfoStore, ['saindo']),
+
+        transition(){
+            this.$router.push({ path: '/'});
+        },
+
+        async logOut(){
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}logout`,
+                headers: {
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`,
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Session-Token': `${this.userInformations.sessionToken}`
+                }
+            };
+
+            const data = await axios.request(options).then((response) => {
+                
+                console.log(response);
+                this.saindo()
+                this.transition()
+                return response.data
+
+            }).catch((error) => {
+                
+                
+                return error.response
+            });
+            
+        }
     }
+
 }
 
 </script>
@@ -20,9 +55,9 @@ export default{
             <router-link to="/form" class="buttonLink" v-if="userInformations.accessLevel < 1">
                 <div>Formulário</div>
             </router-link>
-            <router-link to="/" class="buttonLink">
+            <div class="buttonLink" @click="logOut()">
                 <div>Sair</div>
-            </router-link>
+            </div>
         </div>
     </div>
 </template>
@@ -40,6 +75,10 @@ export default{
 .buttonLink{
     color: var(--white-gc);
     text-decoration: none;
+}
+.buttonLink:hover{
+    cursor: pointer;
+    text-decoration: underline;
 }
 .buttonLink.router-link-active,
 .buttonLink.router-link-exact-active {
