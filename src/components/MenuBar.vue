@@ -1,4 +1,12 @@
 <script>
+import { mapState } from 'pinia';
+import {userInfoStore} from '../store/UserInfos.js'
+
+export default{
+    computed:{
+        ...mapState(userInfoStore, ['userInformations'])
+    }
+}
 
 </script>
 
@@ -6,10 +14,10 @@
     <div class="topMenu">
         <img src="../assets/Gp_Cidade_DarkBG1.png" alt="Grupo Cidade">
         <div class="options">
-            <router-link to="/home" class="buttonLink">
+            <router-link to="/home" class="buttonLink" v-if="userInformations.accessLevel < 1">
                 <div>Home</div>
             </router-link>
-            <router-link to="/form" class="buttonLink">
+            <router-link to="/form" class="buttonLink" v-if="userInformations.accessLevel < 1">
                 <div>Formulário</div>
             </router-link>
             <router-link to="/" class="buttonLink">

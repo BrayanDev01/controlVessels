@@ -105,7 +105,7 @@ export default{
 
 <template>
     <div class="main">
-        <MenuBar v-if="userInformations.accessLevel < 1"></MenuBar>
+        <MenuBar></MenuBar>
         <div class="header">
             <div class="titleHeader">Selecione a embarcação</div>
             <Dropdown v-model="selectVessel" :options="actions" optionValue="objectId" optionLabel="name" placeholder="Selecione uma embarcação"/>
