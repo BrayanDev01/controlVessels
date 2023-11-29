@@ -124,7 +124,7 @@ export default {
             <template #container="{ closeCallback }">
                 <div class="bodyModal">
                     <h1>Esqueceu sua senha?</h1>
-                    <p style="margin:20px">Digite o email cadastrado abaixo e aguarde o link para alteração da senha</p>
+                    <p style="margin:10px">Digite o email cadastrado abaixo e aguarde o link para alteração da senha</p>
                     <p>Caso o seu email não chegue tente verificar se seu email foi escrito corretamente</p>
                     <span class=" item p-float-label modal">
                         <InputText id="email" v-model="email" :pt="{root:{ style: 'width: 100%'}}"/>
