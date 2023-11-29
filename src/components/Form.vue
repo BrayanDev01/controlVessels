@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
+import TripOperation from '../components/TripOperation.vue'
 import { mapState } from 'pinia';
 import {userInfoStore} from '../store/UserInfos.js'
 
@@ -8,11 +9,13 @@ import {userInfoStore} from '../store/UserInfos.js'
 export default{
     name:'Form', 
     components:{
-        MenuBar
+        MenuBar,
+        TripOperation
     },
     data(){
         return{
-            actions:[],
+            actions:['Viagem', 'Manobra', 'Socorro'],
+            vessels:[],
             selectVessel: "",
             typesOfOperation:['Carregando', 'Descarga', 'Viagem'],
             typeOperation:"",
@@ -44,7 +47,7 @@ export default{
                 console.error(error);
             });
 
-            this.actions = results
+            this.vessels = results
         },
         async sendReport(){
             const options = {
@@ -107,11 +110,11 @@ export default{
     <div class="main">
         <MenuBar></MenuBar>
         <div class="header">
-            <div class="titleHeader">Selecione a embarcação</div>
-            <Dropdown v-model="selectVessel" :options="actions" optionValue="objectId" optionLabel="name" placeholder="Selecione uma embarcação"/>
+            <div class="titleHeader">Selecione a operação</div>
+            <Dropdown v-model="selectVessel" :options="actions" placeholder="Selecione uma operação"/>
         </div>
 
-        <div class="form" v-if="selectVessel !== ''">
+        <!-- <div class="form" v-if="selectVessel !== ''">
             <Dropdown v-model="typeOperation" :options="typesOfOperation" placeholder="Selecione o tipo de operação" style="width: 45%;"></Dropdown>
 
             <div class="timeBox">
@@ -136,8 +139,10 @@ export default{
             </span>
 
             <Button label="Enviar Relatório" @click="sendReport()"></Button>
-            <Toast /> 
-        </div>
+            <Toast />
+            <TripOperation></TripOperation>
+        </div> -->
+        <TripOperation></TripOperation>
                
     </div>
 </template>
@@ -162,6 +167,7 @@ export default{
     color: var(--white-gc);
     font-weight: bold;
     font-size: larger;
+    margin: 10px;
 }
 .form{
     border-radius: 10px;

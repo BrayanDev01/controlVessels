@@ -34,7 +34,7 @@ export default{
 
             }).catch((error) => {
                 
-                
+                this.transition()
                 return error.response
             });
             

@@ -16,12 +16,13 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import Dialog from 'primevue/dialog';
 import Row from 'primevue/row';
-import './style.css'
+import '../src/style.scss'
 import App from './App.vue'
 
 import "primevue/resources/themes/lara-light-indigo/theme.css";
 import 'primevue/resources/primevue.min.css';
-import '../src/assets/theme.css'
+import 'primeicons/primeicons.css';
+import '../src/assets/theme.css';
 
 const app = createApp(App);
 
