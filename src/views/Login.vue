@@ -10,7 +10,8 @@ export default {
             password:"",
             email:"",
             visible: false,
-            loading: false
+            loading: false,
+            change: false
         }
     },
     methods:{
@@ -68,13 +69,21 @@ export default {
             }
 
             await axios.request(options).then((response) =>{
-                this.$toast.add({severity:'success', summary:'Email enviado', detail:'Verifique seu email'})
+                this.$toast.add({severity:'success', summary:'Email enviado', detail:'Verifique seu email', life: 3000})
                 this.visible = false
                 console.log(response)
             }).catch((error) =>{
-                this.$toast.add({severity:'error', summary:'Algo deu errado', detail:'Recarregue e tente novamente'})
+                this.$toast.add({severity:'error', summary:'Algo deu errado', detail:'Recarregue e tente novamente', life: 3000})
                 console.log(error)
             })
+        },
+        verification(){
+            if(this.email === ''){
+                this.change = true
+                this.$toast.add({severity:'error', summary:'Campo vazio', detail:'Preencha com o seu email', life: 3000})
+            }else{
+                this.rememberPass()
+            }
         },
         modalOpen(){
             this.visible = true
@@ -82,7 +91,6 @@ export default {
         modalClose(){
             this.visible = false
         }
-
     },
     computed:{
         ...mapState(userInfoStore, ['userInformations'])
@@ -109,7 +117,7 @@ export default {
         </div>
         <Toast />
         <Dialog
-            v-model:visible="visible"
+            :visible="visible"
             modal
             :pt="{
                 mask: {
@@ -127,11 +135,11 @@ export default {
                     <p style="margin:10px">Digite o email cadastrado abaixo e aguarde o link para alteração da senha</p>
                     <p>Caso o seu email não chegue tente verificar se seu email foi escrito corretamente</p>
                     <span class=" item p-float-label modal">
-                        <InputText id="email" v-model="email" :pt="{root:{ style: 'width: 100%'}}"/>
+                        <InputText id="email" v-model="email" :pt="{root:{ style: 'width: 100%'}}" :class="change ? 'p-invalid' : ''"/>
                         <label for="email">Email</label>
                     </span>
                     <div class="footer">
-                        <Button label="Enviar" @click="rememberPass()"></Button>
+                        <Button label="Enviar" @click="verification()"></Button>
                         <Button label="Cancelar" @click="modalClose"></Button>
                     </div>
                 </div>

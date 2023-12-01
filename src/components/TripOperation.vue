@@ -9,6 +9,9 @@ export default{
     data(){
         return{
             trips:[],
+            metaKey: false,
+            visible: false,
+            selectedReport: null,
             filters:{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 objectId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -43,6 +46,9 @@ export default{
                 console.log(error)
             })
 
+        },
+        seeReport(){
+            this.visible = true
         }
     }
 
@@ -58,8 +64,12 @@ export default{
             <DataTable 
                 :value="trips" 
                 tableStyle="min-width: 50rem" 
-                removableSort 
-                :rows="7" 
+                removableSort
+                :selection="selectedReport"
+                selectionMode="single"
+                :rows="7"
+                @rowSelect="seeReport()"
+                :metaKeySelection="metaKey"
                 v-model:filters="filters"
                 dataKey="id"
                 :loading="loading"
@@ -81,7 +91,29 @@ export default{
                 <Column field="descarregamento.startOperation" header="Descarregamento" sortable></Column>
             </DataTable>
         </div>
+        <Dialog
+            :visible="visible"
+            modal
+            :pt="{
+                mask: {
+                    style: 'backdrop-filter: blur(2px);'
 
+                },
+                root:{
+                    style:'max-width: 100%; background-color: white'
+                }
+            }"
+        >
+            <template #container="{ closeCallback }">
+                <div class="bodyModal">
+                    <header> Aqui vai ser o header</header>
+                    <div class="footer">
+                        <Button label="Enviar" @click="verification()"></Button>
+                        <Button label="Cancelar" @click="modalClose"></Button>
+                    </div>
+                </div>
+            </template>
+        </Dialog>
     </div>
     <Toast></Toast>
 </template>
@@ -106,5 +138,9 @@ Button{
     color: var(--primary-color-gc);
     font-weight:bold;
     border: none;
+}
+.bodyModal{
+    width: 80dvw;
+    height: 100%;
 }
 </style>
