@@ -9,8 +9,9 @@ export default{
     data(){
         return{
             trips:[],
+            cargoOptions:['Carga', 'Descarga'],
             metaKey: false,
-            visible: false,
+            visible: true,
             selectedReport: null,
             filters:{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -20,7 +21,8 @@ export default{
                 'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS },
                 'descarregamento.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS }
             },
-            loading:true
+            loading:true,
+            teste:'ISSO É SÒ UM TESTE'
             
         }
     },
@@ -48,8 +50,12 @@ export default{
 
         },
         seeReport(){
-            this.visible = true
+            console.log(this.visible);
+            this.visible = true ? true : false 
         }
+    },
+    created(){
+        // this.getTrips();
     }
 
 }
@@ -58,7 +64,7 @@ export default{
 <template>
     <div class="bgMain">
         <header>
-            <Button @click="getTrips()">Nova Viagem</Button>
+            <Button @click="seeReport()">Nova Viagem</Button>
         </header>
         <div>
             <DataTable 
@@ -106,10 +112,75 @@ export default{
         >
             <template #container="{ closeCallback }">
                 <div class="bodyModal">
-                    <header> Aqui vai ser o header</header>
+                    
+                    <div>Criação de viagem</div>
+                    <div class="panel">
+                        <div class="tripConfig">
+                            <div>Trajeto Configurações</div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="exitPort"/>
+                                        <label for="exitPort">Local de Saída</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="arrivalPort"/>
+                                        <label for="arrivalPort">Local de Chegada</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="itemConfig">
+                                <span class=" item p-float-label">
+                                    <InputText id="product"/>
+                                    <label for="product">Carga</label>
+                                </span>
+                            </div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" touchUI showTime hourFormat="24"/>
+                                        <label for="endOperation">Inicio Previsto</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" touchUI showTime hourFormat="24"/>
+                                        <label for="endOperation">Fim Previsto</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="itemConfig">
+                                <span class=" item p-float-label">
+                                    <InputText id="exitPort"/>
+                                    <label for="exitPort">Capitão</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="cargoConfig">
+                            <div>Carga / Descarga</div>
+                            <Dropdown v-model="selectVessel" :options="cargoOptions" placeholder="Selecione uma operação"/>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="exitPort"/>
+                                        <label for="exitPort">Local de Saída</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="arrivalPort"/>
+                                        <label for="arrivalPort">Local de Chegada</label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="footer">
                         <Button label="Enviar" @click="verification()"></Button>
-                        <Button label="Cancelar" @click="modalClose"></Button>
+                        <Button label="Cancelar" @click="closeCallback"></Button>
                     </div>
                 </div>
             </template>
@@ -142,5 +213,22 @@ Button{
 .bodyModal{
     width: 80dvw;
     height: 100%;
+}
+.panel{
+    display: flex;
+}
+.groupItem{
+    display: flex;
+}
+.itemConfig{
+    margin: 20px;
+}
+.tripConfig, .cargoConfig{
+    border: 1px solid red;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 </style>

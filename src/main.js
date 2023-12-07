@@ -16,6 +16,7 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import Dialog from 'primevue/dialog';
 import Row from 'primevue/row';
+import FileUpload from 'primevue/fileupload';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -32,6 +33,7 @@ const pinia = createPinia()
 
 app.use(PrimeVue);
 app.component('Button', Button);
+app.component('FileUpload', FileUpload)
 app.component('InputText', InputText);
 app.component('Password', Password);
 app.component('Toast', Toast);

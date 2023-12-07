@@ -5,7 +5,7 @@ export const userInfoStore = defineStore('userInfo', {
     // Informações que serão salvas e ficarão guardadas
     state:() =>({
         
-        userInformations: undefined
+        userInformations: []
         // "objectId": "ecOVy087cb",
         // "username": "teste",
         // "email": "teste@teste.com.br",
@@ -22,7 +22,7 @@ export const userInfoStore = defineStore('userInfo', {
         },
 
         saindo(){
-            this.userInformations = undefined
+            this.userInformations = []
         }
     },
 

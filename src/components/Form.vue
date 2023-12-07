@@ -14,7 +14,7 @@ export default{
     },
     data(){
         return{
-            actions:['Viagem', 'Manobra', 'Socorro'],
+            actions:['Viagem', 'Manobra', 'Socorro', 'Carregamento / Descarregamento'],
             vessels:[],
             selectVessel: "",
             typesOfOperation:['Carregando', 'Descarga', 'Viagem'],
@@ -25,7 +25,8 @@ export default{
             selectedCity:"",
             ports:["Master", "Cdp 201", "Cdp Fundeio", "Gauxo", "Uni-z", "Bertuol", "Arthur", "Ciamport"],
             selectedPorto:"",
-            observations:""
+            observations:"",
+            pdf: null
         }
     },
     methods:{
