@@ -113,10 +113,10 @@ export default{
             <template #container="{ closeCallback }">
                 <div class="bodyModal">
                     
-                    <div>Criação de viagem</div>
+                    <div class="titleHeader">Criação de viagem</div>
                     <div class="panel">
                         <div class="tripConfig">
-                            <div>Trajeto Configurações</div>
+                            <div>Configuração de Trajeto</div>
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class=" item p-float-label">
@@ -159,22 +159,40 @@ export default{
                             </div>
                         </div>
                         <div class="cargoConfig">
-                            <div>Carga / Descarga</div>
-                            <Dropdown v-model="selectVessel" :options="cargoOptions" placeholder="Selecione uma operação"/>
-                            <div class="groupItem">
-                                <div class="itemConfig">
-                                    <span class=" item p-float-label">
-                                        <InputText id="exitPort"/>
-                                        <label for="exitPort">Local de Saída</label>
-                                    </span>
-                                </div>
-                                <div class="itemConfig">
-                                    <span class=" item p-float-label">
-                                        <InputText id="arrivalPort"/>
-                                        <label for="arrivalPort">Local de Chegada</label>
-                                    </span>
-                                </div>
-                            </div>
+                            <div>Selecionar Carga / Descarga</div>
+                            <Dropdown v-model="selectVessel" :options="cargoOptions" placeholder="Selecione o processo"/>
+                            <Fieldset legend="Carga" class="fieldSet" :toggleable="true">
+                                <div class="groupItem">
+                                    <div class="itemConfig">
+                                        <span class=" item p-float-label">
+                                            <InputText id="exitPort"/>
+                                            <label for="exitPort">Local de Saída</label>
+                                        </span>
+                                    </div>
+                                    <div class="itemConfig">
+                                        <span class=" item p-float-label">
+                                            <InputText id="arrivalPort"/>
+                                            <label for="arrivalPort">Local de Chegada</label>
+                                        </span>
+                                    </div>
+                                </div>                                
+                            </Fieldset>
+                            <Fieldset legend="Descarga" class="fieldSet" :toggleable="true">
+                                <div class="groupItem">
+                                    <div class="itemConfig">
+                                        <span class=" item p-float-label">
+                                            <InputText id="exitPort"/>
+                                            <label for="exitPort">Local de Saída</label>
+                                        </span>
+                                    </div>
+                                    <div class="itemConfig">
+                                        <span class=" item p-float-label">
+                                            <InputText id="arrivalPort"/>
+                                            <label for="arrivalPort">Local de Chegada</label>
+                                        </span>
+                                    </div>
+                                </div>                                
+                            </Fieldset>
                         </div>
                     </div>
 
@@ -190,6 +208,16 @@ export default{
 </template>
 
 <style scoped>
+.titleHeader{
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 5px;
+}
+.fieldSet{
+    margin: 10px;
+}
 .bgMain{
     width: 90%;
     background-color: white;
@@ -224,7 +252,6 @@ Button{
     margin: 20px;
 }
 .tripConfig, .cargoConfig{
-    border: 1px solid red;
     width: 50%;
     display: flex;
     flex-direction: column;

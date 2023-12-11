@@ -1,7 +1,10 @@
 <script>
 import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
-import TripOperation from '../components/TripOperation.vue'
+import TripOperation from '../components/TripOperation.vue';
+import RescueOperation from '../components/RescueOperation.vue';
+import MovementOperantion from '../components/MovementOperation.vue';
+import ChargeOperation from '../components/ChargeOperation.vue';
 import { mapState } from 'pinia';
 import {userInfoStore} from '../store/UserInfos.js'
 
@@ -10,13 +13,16 @@ export default{
     name:'Form', 
     components:{
         MenuBar,
-        TripOperation
+        TripOperation,
+        RescueOperation,
+        MovementOperantion,
+        ChargeOperation
     },
     data(){
         return{
             actions:['Viagem', 'Manobra', 'Socorro', 'Carregamento / Descarregamento'],
             vessels:[],
-            selectVessel: "",
+            selectOperation: "",
             typesOfOperation:['Carregando', 'Descarga', 'Viagem'],
             typeOperation:"",
             startOperation:"",
@@ -112,38 +118,15 @@ export default{
         <MenuBar></MenuBar>
         <div class="header">
             <div class="titleHeader">Selecione a operação</div>
-            <Dropdown v-model="selectVessel" :options="actions" placeholder="Selecione uma operação"/>
+            <Dropdown v-model="selectOperation" :options="actions" placeholder="Selecione uma operação"/>
         </div>
 
-        <!-- <div class="form" v-if="selectVessel !== ''">
-            <Dropdown v-model="typeOperation" :options="typesOfOperation" placeholder="Selecione o tipo de operação" style="width: 45%;"></Dropdown>
+        <TripOperation v-if="selectOperation === 'Viagem'"></TripOperation>
+        <RescueOperation v-else-if="selectOperation === 'Socorro'"></RescueOperation>
+        <MovementOperantion v-else-if="selectOperation === 'Manobra'"></MovementOperantion>
+        <ChargeOperation v-else-if="selectOperation === 'Carregamento / Descarregamento'"></ChargeOperation>
+        <div style="color: white;" v-else>ERROR</div>
 
-            <div class="timeBox">
-                <span class="p-float-label">
-                    <Calendar v-model="startOperation" inputId="startOperation" touchUI showTime hourFormat="24"/>
-                    <label for="startOperation">Início da operação</label>
-                </span>
-                <span class="p-float-label">
-                    <Calendar v-model="endOperation" inputId="endOperation" touchUI showTime hourFormat="24"/>
-                    <label for="endOperation">Fim da operação</label>
-                </span>
-            </div>
-
-            
-            <Dropdown v-model="selectedCity" :options="cities" placeholder="Selecione o cidade"/>
-            
-            <Dropdown v-model="selectedPorto" :options="ports" placeholder="Selecione o porto"/>
-
-            <span class="p-float-label">
-                <Textarea v-model="observations" rows="4" cols="35"></Textarea>
-                <label>Observação</label>
-            </span>
-
-            <Button label="Enviar Relatório" @click="sendReport()"></Button>
-            <Toast />
-            <TripOperation></TripOperation>
-        </div> -->
-        <TripOperation></TripOperation>
                
     </div>
 </template>

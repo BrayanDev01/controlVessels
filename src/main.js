@@ -16,11 +16,12 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import Dialog from 'primevue/dialog';
 import Row from 'primevue/row';
+import Fieldset from 'primevue/fieldset';
 import FileUpload from 'primevue/fileupload';
 import '../src/style.scss'
 import App from './App.vue'
 
-import "primevue/resources/themes/lara-light-indigo/theme.css";
+import 'primevue/resources/themes/lara-light-indigo/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import '../src/assets/theme.css';
@@ -33,6 +34,7 @@ const pinia = createPinia()
 
 app.use(PrimeVue);
 app.component('Button', Button);
+app.component('Fieldset', Fieldset)
 app.component('FileUpload', FileUpload)
 app.component('InputText', InputText);
 app.component('Password', Password);
