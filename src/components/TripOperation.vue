@@ -2,17 +2,16 @@
 import axios from 'axios';
 import { FilterMatchMode } from 'primevue/api';
 
-// import axios from axios
-
 
 export default{
     data(){
         return{
             trips:[],
-            cargoOptions:['Carga', 'Descarga'],
+            cargoOptions:[],
             metaKey: false,
-            visible: true,
+            visible: false,
             selectedReport: null,
+            selectedCharge: null,
             filters:{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 objectId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -22,8 +21,13 @@ export default{
                 'descarregamento.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS }
             },
             loading:true,
-            teste:'ISSO É SÒ UM TESTE'
-            
+            teste:'ISSO É SÒ UM TESTE',
+            startPoint:'',
+            endPoint:'',
+            startOperation:'',
+            endOperation:'',
+            captain:'',
+            creator:'',            
         }
     },
     methods:{
@@ -49,13 +53,43 @@ export default{
             })
 
         },
+        async getIdCharge(){
+            const options = {
+                method: 'GET',
+                url: `${import.meta.env.VITE_URL_API}classes/Charge`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            };
+
+            await axios.request(options).then((response)=>{
+                this.cargoOptions = response.data.results
+                console.log(response.data.results)
+            }).catch(error =>{
+                console.log(error)
+            })
+        },  
+        closeModal(){
+            this.visible = false;
+            this.cleanInputs();
+        },
         seeReport(){
-            console.log(this.visible);
-            this.visible = true ? true : false 
+            this.visible = true;
+            this.getIdCharge();
+        },
+        cleanInputs(){
+            this.startPoint = '';
+            this.endPoint = '';
+            this.startOperation = '';
+            this.endOperation = '';
+            this.captain = '';
+            this.creator = '';
+            this.selectedCharge = null;
         }
     },
     created(){
-        // this.getTrips();
+        this.getTrips();
     }
 
 }
@@ -160,45 +194,48 @@ export default{
                         </div>
                         <div class="cargoConfig">
                             <div>Selecionar Carga / Descarga</div>
-                            <Dropdown v-model="selectVessel" :options="cargoOptions" placeholder="Selecione o processo"/>
-                            <Fieldset legend="Carga" class="fieldSet" :toggleable="true">
-                                <div class="groupItem">
-                                    <div class="itemConfig">
-                                        <span class=" item p-float-label">
-                                            <InputText id="exitPort"/>
-                                            <label for="exitPort">Local de Saída</label>
-                                        </span>
-                                    </div>
-                                    <div class="itemConfig">
-                                        <span class=" item p-float-label">
-                                            <InputText id="arrivalPort"/>
-                                            <label for="arrivalPort">Local de Chegada</label>
-                                        </span>
-                                    </div>
-                                </div>                                
-                            </Fieldset>
-                            <Fieldset legend="Descarga" class="fieldSet" :toggleable="true">
-                                <div class="groupItem">
-                                    <div class="itemConfig">
-                                        <span class=" item p-float-label">
-                                            <InputText id="exitPort"/>
-                                            <label for="exitPort">Local de Saída</label>
-                                        </span>
-                                    </div>
-                                    <div class="itemConfig">
-                                        <span class=" item p-float-label">
-                                            <InputText id="arrivalPort"/>
-                                            <label for="arrivalPort">Local de Chegada</label>
-                                        </span>
-                                    </div>
-                                </div>                                
-                            </Fieldset>
+                            <Dropdown v-model="selectedCharge" :options="cargoOptions" showClear filter optionLabel="objectId" placeholder="Selecione o processo"/>
+                            <div v-if="!selectedCharge"></div>
+                            <div v-else>
+                                <Fieldset legend="Carga" class="fieldSet" :toggleable="true">
+                                    <div class="groupItem">
+                                        <div class="itemConfig">
+                                            <span class=" item p-float-label">
+                                                <InputText id="exitPort" v-model="selectedCharge.cargo.docking.date" disabled></InputText>
+                                                <label for="exitPort">Atracação</label>
+                                            </span>
+                                        </div>
+                                        <div class="itemConfig">
+                                            <span class=" item p-float-label">
+                                                <InputText id="arrivalPort" v-model="selectedCharge.cargo.undocking.date" disabled/>
+                                                <label for="arrivalPort">Desatracação</label>
+                                            </span>
+                                        </div>
+                                    </div>                                
+                                </Fieldset>
+                                <Fieldset legend="Descarga" class="fieldSet" :toggleable="true">
+                                    <div class="groupItem">
+                                        <div class="itemConfig">
+                                            <span class=" item p-float-label">
+                                                <InputText id="exitPort" v-model="selectedCharge.uncargo.docking.date" disabled/>
+                                                <label for="exitPort">Atracação</label>
+                                            </span>
+                                        </div>
+                                        <div class="itemConfig">
+                                            <span class=" item p-float-label">
+                                                <InputText id="arrivalPort" v-model="selectedCharge.uncargo.undocking.date" disabled/>
+                                                <label for="arrivalPort">Desatracação</label>
+                                            </span>
+                                        </div>
+                                    </div>                                
+                                </Fieldset>
+                            </div>
                         </div>
                     </div>
 
                     <div class="footer">
                         <Button label="Enviar" @click="verification()"></Button>
-                        <Button label="Cancelar" @click="closeCallback"></Button>
+                        <Button label="Cancelar" @click="closeModal()"></Button>
                     </div>
                 </div>
             </template>
