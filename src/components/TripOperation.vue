@@ -21,6 +21,7 @@ export default{
                 'descarregamento.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS }
             },
             loading:true,
+            vessel:'',
             startPoint:'',
             endPoint:'',
             product:'',
@@ -40,7 +41,8 @@ export default{
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-                }
+                },
+                params:{include:"chargeInfos"}
             };
 
             await axios.request(options).then((response) =>{
@@ -77,8 +79,36 @@ export default{
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    trajeto: {
+                        "startPoint": this.startPoint,
+                        "endPoint": this.endPoint,
+                        "product": this.product,
+                        "startOperation": new Date(this.startOperation).toLocaleString(),
+                        "endOperation": new Date(this.endOperation).toLocaleString(),
+                        "captain": this.captain,
+                        "criador": "teste"
+
+                    },
+                    chargeInfos: { 
+                        __type: "Pointer", 
+                        className: "Charge", 
+                        objectId: this.selectedCharge.objectId
+                    },
+                    embarcacao: this.vessel
                 }
             };
+
+            await axios.request(options).then((response) =>{
+                this.getTrips
+                this.closeModal()
+                this.cleanInputs
+                this.sucessToast(response.data.objectId)
+                console.log(response)
+            }).catch(error =>{
+                console.log(error)
+            })
         }, 
         closeModal(){
             this.visible = false;
@@ -96,6 +126,9 @@ export default{
             this.captain = '';
             this.creator = '';
             this.selectedCharge = null;
+        },
+        sucessToast(x){
+            this.$toast.add({ severity: 'success', summary: 'Viagem criada com sucesso', detail: `Viagem criada código: ${x}`, life: 4000 });
         }
     },
     created(){
@@ -135,10 +168,10 @@ export default{
                 </template>
                 <template #loading> Carregando os dados, aguarde... </template>
                 <Column field="objectId" header="Codigo" sortable></Column>
-                <Column field="embarcacao.name" header="Embarcação" sortable></Column>
-                <Column field="carregamento.startOperation" header="Carregamento" sortable></Column>
-                <Column field="trajeto.startOperation" header="Trajeto" sortable></Column>
-                <Column field="descarregamento.startOperation" header="Descarregamento" sortable></Column>
+                <Column field="embarcacao" header="Embarcação" sortable></Column>
+                <Column field="chargeInfos.cargo.startOperation.date" header="Carregamento" sortable></Column>
+                <Column field="trajeto.endPoint" header="Trajeto" sortable></Column>
+                <Column field="chargeInfos.uncargo.startOperation.date" header="Descarregamento" sortable></Column>
             </DataTable>
         </div>
         <Dialog
@@ -175,11 +208,19 @@ export default{
                                     </span>
                                 </div>
                             </div>
-                            <div class="itemConfig">
-                                <span class=" item p-float-label">
-                                    <InputText id="product" v-model="product"/>
-                                    <label for="product">Carga</label>
-                                </span>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="product" v-model="product"/>
+                                        <label for="product">Carga</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="product" v-model="vessel"/>
+                                        <label for="product">Embarcação</label>
+                                    </span>
+                                </div>
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
@@ -206,7 +247,7 @@ export default{
                             <div>Selecionar Carga / Descarga</div>
                             <Dropdown v-model="selectedCharge" :options="cargoOptions" showClear filter optionLabel="objectId" placeholder="Selecione o processo"/>
                             <div v-if="!selectedCharge"></div>
-                            <div v-else>
+                            <div v-else style="width: 90%;">
                                 <Fieldset legend="Carga" class="fieldSet" :toggleable="true">
                                     <div class="groupItem">
                                         <div class="itemConfig">
@@ -244,7 +285,7 @@ export default{
                     </div>
 
                     <div class="footer">
-                        <Button label="Enviar" @click="verification()"></Button>
+                        <Button label="Enviar" @click="sendTrip()"></Button>
                         <Button label="Cancelar" @click="closeModal()"></Button>
                     </div>
                 </div>
@@ -303,6 +344,5 @@ Button{
     display: flex;
     flex-direction: column;
     align-items: center;
-
 }
 </style>
