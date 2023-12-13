@@ -21,9 +21,9 @@ export default{
                 'descarregamento.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS }
             },
             loading:true,
-            teste:'ISSO É SÒ UM TESTE',
             startPoint:'',
             endPoint:'',
+            product:'',
             startOperation:'',
             endOperation:'',
             captain:'',
@@ -69,7 +69,17 @@ export default{
             }).catch(error =>{
                 console.log(error)
             })
-        },  
+        },
+        async sendTrip(){
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}classes/Trips`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            };
+        }, 
         closeModal(){
             this.visible = false;
             this.cleanInputs();
@@ -154,40 +164,40 @@ export default{
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class=" item p-float-label">
-                                        <InputText id="exitPort"/>
+                                        <InputText id="exitPort" v-model="startPoint"/>
                                         <label for="exitPort">Local de Saída</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class=" item p-float-label">
-                                        <InputText id="arrivalPort"/>
+                                        <InputText id="arrivalPort" v-model="endPoint"/>
                                         <label for="arrivalPort">Local de Chegada</label>
                                     </span>
                                 </div>
                             </div>
                             <div class="itemConfig">
                                 <span class=" item p-float-label">
-                                    <InputText id="product"/>
+                                    <InputText id="product" v-model="product"/>
                                     <label for="product">Carga</label>
                                 </span>
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" touchUI showTime hourFormat="24"/>
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="startOperation"/>
                                         <label for="endOperation">Inicio Previsto</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" touchUI showTime hourFormat="24"/>
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="endOperation"/>
                                         <label for="endOperation">Fim Previsto</label>
                                     </span>
                                 </div>
                             </div>
                             <div class="itemConfig">
                                 <span class=" item p-float-label">
-                                    <InputText id="exitPort"/>
+                                    <InputText id="exitPort" v-model="captain"/>
                                     <label for="exitPort">Capitão</label>
                                 </span>
                             </div>
