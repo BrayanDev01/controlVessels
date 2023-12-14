@@ -23,6 +23,7 @@ export default{
             ],
             visible: false,
             loading: true,
+            objectId:"",
             cargoSelectedPort:"",
             cargoSelectedCity:"",
             cargoVessel:"",
@@ -68,6 +69,52 @@ export default{
                 return new Date(value).toLocaleString()
             }
         },
+        async createCharge(){
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}classes/Charge`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    cargo: {
+                        vessel: this.cargoVessel,
+                        docking: {date: this.cargoDocking},
+                        undocking: {date: this.cargoUndocking},
+                        startOperation: {date: this.cargoStartOperation},
+                        endOperation: {date: this.cargoEndOperation},
+                        port: this.cargoSelectedPort,
+                        city: this.cargoSelectedCity,
+                        startDraft: {date: this.cargostartDraft},
+                        endDraft: {date: this.cargoendDraft},
+                        Draft: {url: 'teste'}
+                    },
+                    uncargo: {
+                        vessel: this.uncargoVessel,
+                        docking: {date: this.uncargoDocking},
+                        undocking: {date: this.uncargoUndocking},
+                        startOperation: {date: this.uncargoStartOperation},
+                        endOperation: {date: this.uncargoEndOperation},
+                        port: this.uncargoSelectedPort,
+                        city: this.uncargoSelectedCity,
+                        startDraft: {date: this.uncargoStartDraft},
+                        endDraft: {date: this.uncargoendDraft},
+                        Draft: {url: 'teste'}
+                    }
+                }
+            }
+
+            await axios.request(options).then((response) =>{
+                this.closeModal()
+                console.log(response)
+
+            }).catch(error =>{
+
+                console.log(error)
+            
+            })
+        },
         openModal(){
             this.visible = true
         },
@@ -76,6 +123,24 @@ export default{
             this.visible = false
         },
         cleanForm(){
+            this.cargoSelectedCity = ''
+            this.cargoSelectedPort = ''
+            this.cargoVessel = ''
+            this.cargoDocking = ''
+            this.cargoUndocking = ''
+            this.cargoStartOperation = '',
+            this.cargoEndOperation = ''
+            this.cargoStartDraft = ''
+            this.cargoEndDraft = ''
+            this.uncargoSelectedPort = '',
+            this.uncargoSelectedCity = '',
+            this.uncargoVessel = ''
+            this.uncargoDocking = ''
+            this.uncargoUndocking = ''
+            this.uncargoStartOperation = '',
+            this.uncargoEndOperation = '',
+            this.uncargoStartDraft = ''
+            this.uncargoEndDraft = ''
 
         }
     },
@@ -206,7 +271,7 @@ export default{
                                 </div>
                                 <div class="itemConfig">
                                     <span class=" item p-float-label">
-                                        <InputText id="exitPort" v-model="cargoVessel"/>
+                                        <InputText id="exitPort" v-model="uncargoVessel"/>
                                         <label for="exitPort">Embarcação</label>
                                     </span>
                                 </div>
@@ -257,7 +322,7 @@ export default{
                     </div>
 
                     <div class="footer">
-                        <Button label="Enviar" @click="sendTrip()"></Button>
+                        <Button label="Enviar" @click="createCharge()"></Button>
                         <Button label="Cancelar" @click="closeModal()"></Button>
                     </div>
                 </div>

@@ -14,13 +14,15 @@ export default{
             selectedCharge: null,
             filters:{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-                objectId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-                'embarcacao.name': { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-                'carregamento.startOperation': { value: null, matchMode: FilterMatchMode.IN },
-                'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS },
-                'descarregamento.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS }
+                objectId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                embarcacao: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.IN },
+                'trajeto.endPoint': { value: null, matchMode: FilterMatchMode.EQUALS },
+                'chargeInfos.cargo.docking.date': { value: null, matchMode: FilterMatchMode.EQUALS },
+                'chargeInfos.cargo.startOperation.date': {value: null, matchMode: FilterMatchMode.CONTAINS}
             },
             loading:true,
+            objectId:'',
             vessel:'',
             startPoint:'',
             endPoint:'',
@@ -72,6 +74,28 @@ export default{
                 console.log(error)
             })
         },
+        editMode(event){
+            this.objectId = event.data.objectId;
+            console.log(event.data)
+            this.vessel = event.data.embarcacao;
+            this.startPoint = event.data.trajeto.startPoint;
+            this.endPoint = event.data.trajeto.endPoint;
+            this.product = event.data.trajeto.product;
+            this.startOperation = event.data.trajeto.startOperation;
+            this.endOperation = event.data.trajeto.endOperation;
+            this.captain = event.data.trajeto.captain;
+            this.creator = event.data.trajeto.criador
+            this.selectedCharge = event.data.chargeInfos
+            this.visible = true;
+            this.getIdCharge();            
+        },
+        createOrUpdate(){
+            if(!this.objectId){
+                this.sendTrip()
+            }else{
+                this.updateTrip()
+            }
+        },
         async sendTrip(){
             const options = {
                 method: 'POST',
@@ -109,7 +133,41 @@ export default{
             }).catch(error =>{
                 console.log(error)
             })
-        }, 
+        },
+        async updateTrip(){
+            const options = {
+                method: 'PUT',
+                url: `${import.meta.env.VITE_URL_API}classes/Trips/${this.objectId}`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    trajeto: {
+                        "startPoint": this.startPoint,
+                        "endPoint": this.endPoint,
+                        "product": this.product,
+                        "startOperation": new Date(this.startOperation).toLocaleString(),
+                        "endOperation": new Date(this.endOperation).toLocaleString(),
+                        "captain": this.captain,
+                        "criador": "teste"
+
+                    },
+                    embarcacao: this.vessel
+                }
+            }
+
+            await axios.request(options).then((response) =>{
+                this.getTrips
+                this.closeModal()
+                this.cleanInputs
+                this.updateToast(response.data)
+                console.log(response.data)
+            }).catch(error =>{
+                console.log(error)
+            })
+            
+        },
         closeModal(){
             this.visible = false;
             this.cleanInputs();
@@ -119,8 +177,11 @@ export default{
             this.getIdCharge();
         },
         cleanInputs(){
+            this.objectId = '';
             this.startPoint = '';
             this.endPoint = '';
+            this.product = '';
+            this.vessel = '';            
             this.startOperation = '';
             this.endOperation = '';
             this.captain = '';
@@ -129,7 +190,11 @@ export default{
         },
         sucessToast(x){
             this.$toast.add({ severity: 'success', summary: 'Viagem criada com sucesso', detail: `Viagem criada código: ${x}`, life: 4000 });
+        },
+        updateToast(x){
+            this.$toast.add({ severity: 'success', summary: 'Viagem atualizada com sucesso', detail: `Viagem atualizada código: ${x}`, life: 4000 });
         }
+
     },
     created(){
         this.getTrips();
@@ -151,7 +216,7 @@ export default{
                 :selection="selectedReport"
                 selectionMode="single"
                 :rows="7"
-                @rowSelect="seeReport()"
+                @rowSelect="editMode"
                 :metaKeySelection="metaKey"
                 v-model:filters="filters"
                 dataKey="id"
@@ -285,7 +350,7 @@ export default{
                     </div>
 
                     <div class="footer">
-                        <Button label="Enviar" @click="sendTrip()"></Button>
+                        <Button label="Enviar" @click="createOrUpdate()"></Button>
                         <Button label="Cancelar" @click="closeModal()"></Button>
                     </div>
                 </div>
