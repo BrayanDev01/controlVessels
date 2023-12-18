@@ -1,0 +1,383 @@
+<script>
+import axios from 'axios';
+
+export default{
+    data(){
+        return{
+            charges:[],
+            ports:[
+                { port: "Master" },
+                { port: "Cdp 201" },
+                { port: "Cdp Fundeio" },
+                { port: "Gauxo" },
+                { port: "Uni-z" },
+                { port: "Bertuol" },
+                { port: "Arthur" },
+                { port: "Ciamport"} ,
+            ],
+            cities:[
+                {city: "Miritituba"},
+                {city: "Manaus"},
+                {city: "Santarém"},
+                {city: "Santana"}
+            ],
+            visible: false,
+            loading: true,
+            objectId:"",
+            cargoSelectedPort:"",
+            cargoSelectedCity:"",
+            cargoVessel:"",
+            cargoDocking:"",
+            cargoUndocking:"",
+            cargoStartOperation:"",
+            cargoEndOperation:"",
+            cargoStartDraft:"",
+            cargoEndDraft:"",
+            uncargoSelectedPort:"",
+            uncargoSelectedCity:"",
+            uncargoVessel:"",
+            uncargoDocking:"",
+            uncargoUndocking:"",
+            uncargoStartOperation:"",
+            uncargoEndOperation:"",
+            uncargoStartDraft:"",
+            uncargoEndDraft:""
+        }
+    },
+    methods:{
+        async getCharges(){
+            const options = {
+                method: 'GET',
+                url: `${import.meta.env.VITE_URL_API}classes/Charge`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            };
+
+            await axios.request(options).then((response) =>{
+                this.charges = response.data.results
+                this.loading = false
+                console.log(response.data.results)
+            }).catch(error =>{
+                this.$toast.add({ severity: 'error', summary: 'Houve um erro', detail: `${error.message}`, life: 3000 });
+                console.log(error)
+            })
+        },
+        async createCharge(){
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}classes/Charge`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    cargo: {
+                        vessel: this.cargoVessel,
+                        docking: {date: new Date(this.cargoDocking).toLocaleString()},
+                        undocking: {date: new Date(this.cargoUndocking).toLocaleString()},
+                        startOperation: {date: new Date(this.cargoStartOperation).toLocaleString()},
+                        endOperation: {date: new Date(this.cargoEndOperation).toLocaleString()},
+                        port: this.cargoSelectedPort,
+                        city: this.cargoSelectedCity,
+                        startDraft: {date: new Date(this.cargostartDraft).toLocaleString()},
+                        endDraft: {date: new Date(this.cargoendDraft).toLocaleString()},
+                        Draft: {url: 'teste'}
+                    },
+                    uncargo: {
+                        vessel: this.uncargoVessel,
+                        docking: {date: new Date(this.uncargoDocking).toLocaleString()},
+                        undocking: {date: new Date(this.uncargoUndocking).toLocaleString()},
+                        startOperation: {date: new Date(this.uncargoStartOperation).toLocaleString()},
+                        endOperation: {date: new Date(this.uncargoEndOperation).toLocaleString()},
+                        port: this.uncargoSelectedPort,
+                        city: this.uncargoSelectedCity,
+                        startDraft: {date: new Date(this.uncargoStartDraft).toLocaleString()},
+                        endDraft: {date: new Date(this.uncargoendDraft).toLocaleString()},
+                        Draft: {url: 'teste'}
+                    }
+                }
+            }
+
+            await axios.request(options).then((response) =>{
+                this.successToast(response.data.objectId)
+                this.closeModal()
+                // console.log(response)
+
+            }).catch(error =>{
+
+                console.log(error)
+            
+            })
+        },
+        openModal(){
+            this.visible = true
+        },
+        closeModal(){
+            this.getCharges()
+            this.cleanForm()
+            this.visible = false
+        },
+        formatDate(value){
+            if(value){
+                return new Date(value).toLocaleString()
+            }
+        },
+        successToast(x){
+            this.$toast.add({ 
+                severity: 'success', 
+                summary: 'Formulario Criado', 
+                detail: `Formulário criado código: ${x}`, 
+                life: 3000 
+            });
+        },
+        cleanForm(){
+            this.cargoSelectedCity = ''
+            this.cargoSelectedPort = ''
+            this.cargoVessel = ''
+            this.cargoDocking = ''
+            this.cargoUndocking = ''
+            this.cargoStartOperation = '',
+            this.cargoEndOperation = ''
+            this.cargoStartDraft = ''
+            this.cargoEndDraft = ''
+            this.uncargoSelectedPort = '',
+            this.uncargoSelectedCity = '',
+            this.uncargoVessel = ''
+            this.uncargoDocking = ''
+            this.uncargoUndocking = ''
+            this.uncargoStartOperation = '',
+            this.uncargoEndOperation = '',
+            this.uncargoStartDraft = ''
+            this.uncargoEndDraft = ''
+
+        }
+    },
+    created(){
+        this.getCharges()
+    },
+    watch:{
+        cargoDocking(v){
+            console.log(v)
+        }
+    }
+}
+</script>
+
+<template>
+    <div class="bgMain">
+        <header>
+            <Button @click="openModal">Novo Documento</Button>
+        </header>
+        <div>
+            <DataTable
+                :value="charges"
+                :loading="loading"
+                paginator
+                :rows="5"
+                :rowsPerPageOptions="[5, 7]"
+            >
+                <Column field="objectId" header="Codigo"></Column>
+                <Column field="cargo.docking.date" header="Atracação Carregamento"></Column>
+                <Column field="cargo.undocking.date" header="Desatracação Carregamento"></Column>
+                <Column field="uncargo.docking.date" header="Atracação Descarregamento"></Column>
+                <Column field="uncargo.undocking.date" header="Desatracação Descarregamento">  </Column>
+            </DataTable>
+        </div>
+        <Dialog
+            :visible="visible"
+            modal
+            :pt="{
+                mask: {
+                    style: 'backdrop-filter: blur(2px);'
+
+                },
+                root:{
+                    style:'max-width: 100%; background-color: white'
+                }
+            }"
+        >
+            <template #container="{ closeCallback }">
+                <div class="bodyModal">
+                    
+                    <div class="titleHeader">Criação de Carga / Descarga</div>
+                    <div class="panel">
+                        <div class="cargoConfig">
+                            <div style="font-weight: bold;">Carregamento</div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <Dropdown v-model="cargoSelectedPort" :options="ports" showClear filter optionLabel="port" placeholder="Selecione o porto"/>
+                                </div>
+                                <div class="itemConfig">
+                                    <Dropdown v-model="cargoSelectedCity" :options="cities" showClear filter optionLabel="city" placeholder="Selecione a cidade"/>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="exitPort" v-model="cargoVessel"/>
+                                        <label for="exitPort">Embarcação</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoDocking"/>
+                                        <label for="endOperation">Atracação</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoUndocking"/>
+                                        <label for="endOperation">Desatracação</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoStartOperation"/>
+                                        <label for="endOperation">Inicio da Operação</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoEndOperation"/>
+                                        <label for="endOperation">Fim da Operação</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoStartDraft"/>
+                                        <label for="endOperation">Inicio do Draft</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoEndDraft"/>
+                                        <label for="endOperation">Fim do Draft</label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="uncargoConfig">
+                            <div style="font-weight: bold;">Descarregamento</div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <Dropdown v-model="uncargoSelectedPort" :options="ports" showClear filter optionLabel="port" placeholder="Selecione o porto"/>
+                                </div>
+                                <div class="itemConfig">
+                                    <Dropdown v-model="uncargoSelectedCity" :options="cities" showClear filter optionLabel="city" placeholder="Selecione a cidade"/>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="exitPort" v-model="uncargoVessel"/>
+                                        <label for="exitPort">Embarcação</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoDocking"/>
+                                        <label for="endOperation">Atracação</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoUndocking"/>
+                                        <label for="endOperation">Desatracação</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoStartOperation"/>
+                                        <label for="endOperation">Inicio da Operação</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoEndOperation"/>
+                                        <label for="endOperation">Fim da Operação</label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoStartDraft"/>
+                                        <label for="endOperation">Inicio do Draft</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class="p-float-label">
+                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoEndDraft"/>
+                                        <label for="endOperation">Fim do Draft</label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <Button label="Enviar" @click="createCharge()"></Button>
+                        <Button label="Cancelar" @click="closeModal()"></Button>
+                    </div>
+                </div>
+            </template>
+        </Dialog>
+
+    </div>
+    <Toast></Toast>
+</template>
+
+<style scoped>
+header{
+    display: flex;
+    justify-content: flex-end
+}
+.bgMain{
+    width: 90%;
+    background-color: white;
+    padding: 10px;
+    border-radius: 15px;
+}
+Button{
+    margin: 10px;
+    background-color: var(--secondary-color-gc);
+    color: var(--primary-color-gc);
+    font-weight:bold;
+    border: none;
+}
+
+.bodyModal{
+    width: 80dvw;
+    height: 100%;
+}
+.panel{
+    display: flex;
+}
+.groupItem{
+    display: flex;
+}
+.itemConfig{
+    margin: 20px;
+}
+.cargoConfig, .uncargoConfig{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.titleHeader{
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 5px;
+}
+</style>

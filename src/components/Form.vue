@@ -1,6 +1,10 @@
 <script>
 import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
+import TripOperation from '../components/TripOperation.vue';
+import RescueOperation from '../components/RescueOperation.vue';
+import MovementOperantion from '../components/MovementOperation.vue';
+import ChargeOperation from '../components/ChargeOperation.vue';
 import { mapState } from 'pinia';
 import {userInfoStore} from '../store/UserInfos.js'
 
@@ -8,12 +12,17 @@ import {userInfoStore} from '../store/UserInfos.js'
 export default{
     name:'Form', 
     components:{
-        MenuBar
+        MenuBar,
+        TripOperation,
+        RescueOperation,
+        MovementOperantion,
+        ChargeOperation
     },
     data(){
         return{
-            actions:[],
-            selectVessel: "",
+            actions:['Viagem', 'Manobra', 'Socorro', 'Carregamento / Descarregamento'],
+            vessels:[],
+            selectOperation: "",
             typesOfOperation:['Carregando', 'Descarga', 'Viagem'],
             typeOperation:"",
             startOperation:"",
@@ -22,7 +31,8 @@ export default{
             selectedCity:"",
             ports:["Master", "Cdp 201", "Cdp Fundeio", "Gauxo", "Uni-z", "Bertuol", "Arthur", "Ciamport"],
             selectedPorto:"",
-            observations:""
+            observations:"",
+            pdf: null
         }
     },
     methods:{
@@ -44,7 +54,7 @@ export default{
                 console.error(error);
             });
 
-            this.actions = results
+            this.vessels = results
         },
         async sendReport(){
             const options = {
@@ -93,7 +103,7 @@ export default{
         ...mapState(userInfoStore, ['userInformations'])
     },
     created(){
-        this.getVessels()
+        // this.getVessels()
     },
     watch:{
         selectedPorto(v){
@@ -107,37 +117,16 @@ export default{
     <div class="main">
         <MenuBar></MenuBar>
         <div class="header">
-            <div class="titleHeader">Selecione a embarcação</div>
-            <Dropdown v-model="selectVessel" :options="actions" optionValue="objectId" optionLabel="name" placeholder="Selecione uma embarcação"/>
+            <div class="titleHeader">Selecione a operação</div>
+            <Dropdown v-model="selectOperation" :options="actions" placeholder="Selecione uma operação"/>
         </div>
 
-        <div class="form" v-if="selectVessel !== ''">
-            <Dropdown v-model="typeOperation" :options="typesOfOperation" placeholder="Selecione o tipo de operação" style="width: 45%;"></Dropdown>
+        <TripOperation v-if="selectOperation === 'Viagem'"></TripOperation>
+        <RescueOperation v-else-if="selectOperation === 'Socorro'"></RescueOperation>
+        <MovementOperantion v-else-if="selectOperation === 'Manobra'"></MovementOperantion>
+        <ChargeOperation v-else-if="selectOperation === 'Carregamento / Descarregamento'"></ChargeOperation>
+        <div style="color: white;" v-else>ERROR</div>
 
-            <div class="timeBox">
-                <span class="p-float-label">
-                    <Calendar v-model="startOperation" inputId="startOperation" touchUI showTime hourFormat="24"/>
-                    <label for="startOperation">Início da operação</label>
-                </span>
-                <span class="p-float-label">
-                    <Calendar v-model="endOperation" inputId="endOperation" touchUI showTime hourFormat="24"/>
-                    <label for="endOperation">Fim da operação</label>
-                </span>
-            </div>
-
-            
-            <Dropdown v-model="selectedCity" :options="cities" placeholder="Selecione o cidade"/>
-            
-            <Dropdown v-model="selectedPorto" :options="ports" placeholder="Selecione o porto"/>
-
-            <span class="p-float-label">
-                <Textarea v-model="observations" rows="4" cols="35"></Textarea>
-                <label>Observação</label>
-            </span>
-
-            <Button label="Enviar Relatório" @click="sendReport()"></Button>
-            <Toast /> 
-        </div>
                
     </div>
 </template>
@@ -162,6 +151,7 @@ export default{
     color: var(--white-gc);
     font-weight: bold;
     font-size: larger;
+    margin: 10px;
 }
 .form{
     border-radius: 10px;
