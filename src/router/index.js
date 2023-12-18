@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from '../views/Home.vue'
 import Form from '../views/Form.vue'
 import Login from '../views/Login.vue'
-import NotFound from '../components/NotFound.vue'
+import NotFound from '../views/NotFound.vue'
 import VesselView from '../views/VesselView.vue'
 import { userInfoStore } from "../store/UserInfos";
 
