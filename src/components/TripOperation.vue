@@ -125,7 +125,6 @@ export default{
             };
 
             await axios.request(options).then((response) =>{
-                this.getTrips
                 this.closeModal()
                 this.cleanInputs
                 this.sucessToast(response.data.objectId)

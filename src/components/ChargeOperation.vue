@@ -204,7 +204,7 @@ export default{
                     <div class="titleHeader">Criação de Carga / Descarga</div>
                     <div class="panel">
                         <div class="cargoConfig">
-                            <div>Carregamento</div>
+                            <div style="font-weight: bold;">Carregamento</div>
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <Dropdown v-model="cargoSelectedPort" :options="ports" showClear filter optionLabel="port" placeholder="Selecione o porto"/>
@@ -263,7 +263,7 @@ export default{
                             </div>
                         </div>
                         <div class="uncargoConfig">
-                            <div>Descarregamento</div>
+                            <div style="font-weight: bold;">Descarregamento</div>
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <Dropdown v-model="uncargoSelectedPort" :options="ports" showClear filter optionLabel="port" placeholder="Selecione o porto"/>
