@@ -103,7 +103,7 @@ export default{
         ...mapState(userInfoStore, ['userInformations'])
     },
     created(){
-        this.getVessels()
+        // this.getVessels()
     },
     watch:{
         selectedPorto(v){

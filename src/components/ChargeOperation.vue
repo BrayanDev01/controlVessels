@@ -64,11 +64,6 @@ export default{
                 console.log(error)
             })
         },
-        formatDate(value){
-            if(value){
-                return new Date(value).toLocaleString()
-            }
-        },
         async createCharge(){
             const options = {
                 method: 'POST',
@@ -80,34 +75,35 @@ export default{
                 data:{
                     cargo: {
                         vessel: this.cargoVessel,
-                        docking: {date: this.cargoDocking},
-                        undocking: {date: this.cargoUndocking},
-                        startOperation: {date: this.cargoStartOperation},
-                        endOperation: {date: this.cargoEndOperation},
+                        docking: {date: new Date(this.cargoDocking).toLocaleString()},
+                        undocking: {date: new Date(this.cargoUndocking).toLocaleString()},
+                        startOperation: {date: new Date(this.cargoStartOperation).toLocaleString()},
+                        endOperation: {date: new Date(this.cargoEndOperation).toLocaleString()},
                         port: this.cargoSelectedPort,
                         city: this.cargoSelectedCity,
-                        startDraft: {date: this.cargostartDraft},
-                        endDraft: {date: this.cargoendDraft},
+                        startDraft: {date: new Date(this.cargostartDraft).toLocaleString()},
+                        endDraft: {date: new Date(this.cargoendDraft).toLocaleString()},
                         Draft: {url: 'teste'}
                     },
                     uncargo: {
                         vessel: this.uncargoVessel,
-                        docking: {date: this.uncargoDocking},
-                        undocking: {date: this.uncargoUndocking},
-                        startOperation: {date: this.uncargoStartOperation},
-                        endOperation: {date: this.uncargoEndOperation},
+                        docking: {date: new Date(this.uncargoDocking).toLocaleString()},
+                        undocking: {date: new Date(this.uncargoUndocking).toLocaleString()},
+                        startOperation: {date: new Date(this.uncargoStartOperation).toLocaleString()},
+                        endOperation: {date: new Date(this.uncargoEndOperation).toLocaleString()},
                         port: this.uncargoSelectedPort,
                         city: this.uncargoSelectedCity,
-                        startDraft: {date: this.uncargoStartDraft},
-                        endDraft: {date: this.uncargoendDraft},
+                        startDraft: {date: new Date(this.uncargoStartDraft).toLocaleString()},
+                        endDraft: {date: new Date(this.uncargoendDraft).toLocaleString()},
                         Draft: {url: 'teste'}
                     }
                 }
             }
 
             await axios.request(options).then((response) =>{
+                this.successToast(response.data.objectId)
                 this.closeModal()
-                console.log(response)
+                // console.log(response)
 
             }).catch(error =>{
 
@@ -119,8 +115,22 @@ export default{
             this.visible = true
         },
         closeModal(){
-            
+            this.getCharges()
+            this.cleanForm()
             this.visible = false
+        },
+        formatDate(value){
+            if(value){
+                return new Date(value).toLocaleString()
+            }
+        },
+        successToast(x){
+            this.$toast.add({ 
+                severity: 'success', 
+                summary: 'Formulario Criado', 
+                detail: `Formulário criado código: ${x}`, 
+                life: 3000 
+            });
         },
         cleanForm(){
             this.cargoSelectedCity = ''
@@ -146,6 +156,11 @@ export default{
     },
     created(){
         this.getCharges()
+    },
+    watch:{
+        cargoDocking(v){
+            console.log(v)
+        }
     }
 }
 </script>
@@ -159,28 +174,15 @@ export default{
             <DataTable
                 :value="charges"
                 :loading="loading"
+                paginator
+                :rows="5"
+                :rowsPerPageOptions="[5, 7]"
             >
                 <Column field="objectId" header="Codigo"></Column>
-                <Column field="cargo.docking.date" header="Atracação Carregamento">
-                    <template #body="slotProps">
-                        {{ formatDate(slotProps.data.cargo.docking.date) }}
-                    </template>                    
-                </Column>
-                <Column field="cargo.undocking.date" header="Desatracação Carregamento">
-                    <template #body="slotProps">
-                        {{ formatDate(slotProps.data.cargo.undocking.date) }}
-                    </template>                 
-                </Column>
-                <Column field="uncargo.docking.date" header="Atracação Descarregamento">
-                    <template #body="slotProps">
-                        {{ formatDate(slotProps.data.uncargo.docking.date) }}
-                    </template>                 
-                </Column>
-                <Column field="uncargo.undocking.date" header="Desatracação Descarregamento">
-                    <template #body="slotProps">
-                        {{ formatDate(slotProps.data.uncargo.undocking.date) }}
-                    </template>                 
-                </Column>
+                <Column field="cargo.docking.date" header="Atracação Carregamento"></Column>
+                <Column field="cargo.undocking.date" header="Desatracação Carregamento"></Column>
+                <Column field="uncargo.docking.date" header="Atracação Descarregamento"></Column>
+                <Column field="uncargo.undocking.date" header="Desatracação Descarregamento">  </Column>
             </DataTable>
         </div>
         <Dialog
@@ -330,9 +332,14 @@ export default{
         </Dialog>
 
     </div>
+    <Toast></Toast>
 </template>
 
 <style scoped>
+header{
+    display: flex;
+    justify-content: flex-end
+}
 .bgMain{
     width: 90%;
     background-color: white;

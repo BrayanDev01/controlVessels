@@ -169,6 +169,7 @@ export default{
             
         },
         closeModal(){
+            this.getTrips()
             this.visible = false;
             this.cleanInputs();
         },
@@ -192,14 +193,19 @@ export default{
             this.$toast.add({ severity: 'success', summary: 'Viagem criada com sucesso', detail: `Viagem criada código: ${x}`, life: 4000 });
         },
         updateToast(x){
-            this.$toast.add({ severity: 'success', summary: 'Viagem atualizada com sucesso', detail: `Viagem atualizada código: ${x}`, life: 4000 });
+            this.$toast.add({ 
+                severity: 'success', 
+                summary: 'Viagem atualizada com sucesso', 
+                detail: `Viagem atualizada código: ${x}`, 
+                life: 4000 
+            });
         }
 
     },
     created(){
         this.getTrips();
-    }
-
+    },
+    watch:{}
 }
 </script>
 
@@ -215,19 +221,21 @@ export default{
                 removableSort
                 :selection="selectedReport"
                 selectionMode="single"
-                :rows="7"
+                :rows="5"
+                :rowsPerPageOptions="[5, 7]"
+                paginator
                 @rowSelect="editMode"
                 :metaKeySelection="metaKey"
                 v-model:filters="filters"
                 dataKey="id"
                 :loading="loading"
-                :globalFilterFields="['objectId', 'embarcacao.name', 'carregamento.startOperation', 'trajeto.startOperation', 'descarregamento.startOperation']"
+                :globalFilterFields="['objectId', 'embarcacao', 'chargeInfos.cargo.startOperation.date', 'trajeto.endPoint', 'chargeInfos.uncargo.startOperation.date']"
             >
                 <template #header>
                     <div >
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
+                            <InputText v-model="filters['global'].value" placeholder="Digite o que procura" />
                         </span>
                     </div>
                 </template>
