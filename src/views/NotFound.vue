@@ -7,7 +7,7 @@ export default{
     },
     methods:{
         goToHome(){
-            this.$router.push('/home')
+            this.$router.push('/')
         }
     }
 }

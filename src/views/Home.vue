@@ -20,6 +20,6 @@ export default{
 }
 </script>
 <template>
-    <Form v-if="userInformations.accessLevel > 0"></Form>
+    <Form v-if="userInformations?.accessLevel > 0"></Form>
     <Dashboard v-else></Dashboard>
 </template>
