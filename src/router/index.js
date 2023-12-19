@@ -40,14 +40,14 @@ const router = createRouter({
     routes,
 })
 
-// router.beforeEach((to, from, next) => {
-//     const store = userInfoStore();
-//     if (to.name !== 'login' && store.returnInfos === [] ){
-//       next({ name:'login' })
-//     }
-//     else {
-//       next()
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    const store = userInfoStore();
+    if (to.name !== 'login' && store.returnInfos === null ){
+      next({ name:'login' })
+    }
+    else {
+      next()
+    }
+})
 
 export default router

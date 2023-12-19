@@ -49,10 +49,10 @@ export default{
     <div class="topMenu">
         <img src="../assets/Gp_Cidade_DarkBG1.png" alt="Grupo Cidade">
         <div class="options">
-            <router-link to="/home" class="buttonLink" v-if="userInformations.accessLevel < 1">
+            <router-link to="/home" class="buttonLink" v-if="userInformations?.accessLevel < 1">
                 <div>Home</div>
             </router-link>
-            <router-link to="/form" class="buttonLink" v-if="userInformations.accessLevel < 1">
+            <router-link to="/form" class="buttonLink" v-if="userInformations?.accessLevel < 1">
                 <div>Formulário</div>
             </router-link>
             <div class="buttonLink" @click="logOut()">
