@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios';
 
+
 export default{
     data(){
         return{
@@ -189,16 +190,18 @@ export default{
             this.uncargoEndOperation = '',
             this.uncargoStartDraft = ''
             this.uncargoEndDraft = ''
-
+            this.barcacaSelected = "",
+            this.vessel = "",
+            this.pusher = "",
+            this.cargoObservation = "",
+            this.uncargoObservation = ""
+        },
+        onSelectedDate(){
+            
         }
     },
     created(){
-        // this.getCharges()
-    },
-    watch:{
-        cargoDocking(v){
-            console.log(v)
-        }
+        this.getCharges()
     }
 }
 </script>
@@ -241,10 +244,16 @@ export default{
                     
                     <div class="titleHeader">Criação de Carga / Descarga</div>
                     <div class="itemConfig organizer">
-                        <Dropdown v-model="barcacaSelected" :options="frota" showClear filter optionLabel="barcaca" placeholder="Selecione a Barcaça"/>
+                        <Dropdown 
+                            v-model="barcacaSelected" 
+                            :options="frota" 
+                            showClear filter 
+                            optionLabel="barcaca" 
+                            placeholder="Selecione a Barcaça"
+                        />
             
                         <span class=" item p-float-label">
-                            <InputText id="exitPort" v-model="Vessel"/>
+                            <InputText id="exitPort" v-model="vessel"/>
                             <label for="exitPort">Navio</label>
                         </span>
 
@@ -259,22 +268,52 @@ export default{
                             <div style="font-weight: bold;">Carregamento</div>
                             <div class="groupItem">
                                 <div class="itemConfig">
-                                    <Dropdown v-model="cargoSelectedPort" :options="ports" showClear filter optionLabel="port" placeholder="Selecione o porto"/>
+                                    <Dropdown 
+                                        v-model="cargoSelectedPort" 
+                                        :options="ports" 
+                                        showClear 
+                                        filter 
+                                        optionLabel="port" 
+                                        placeholder="Selecione o porto"
+                                    />
                                 </div>
                                 <div class="itemConfig">
-                                    <Dropdown v-model="cargoSelectedCity" :options="cities" showClear filter optionLabel="city" placeholder="Selecione a cidade"/>
+                                    <Dropdown 
+                                        v-model="cargoSelectedCity" 
+                                        :options="cities" 
+                                        showClear 
+                                        filter 
+                                        optionLabel="city" 
+                                        placeholder="Selecione a cidade"
+                                    />
                                 </div>
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoDocking"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="cargoDocking" 
+                                            @dateSelect="onSelectedDate" 
+                                            ref="meuCalendario"
+                                        />
                                         <label for="endOperation">Atracação</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoUndocking"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="cargoUndocking"
+                                             @dateSelect="onSelectedDate"/>
                                         <label for="endOperation">Desatracação</label>
                                     </span>
                                 </div>
@@ -282,13 +321,29 @@ export default{
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoStartOperation"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="cargoStartOperation" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Inicio da Operação</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoEndOperation"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="cargoEndOperation" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Fim da Operação</label>
                                     </span>
                                 </div>
@@ -296,13 +351,29 @@ export default{
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoStartDraft"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="cargoStartDraft" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Inicio do Draft</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="cargoEndDraft"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="cargoEndDraft" 
+                                            dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Fim do Draft</label>
                                     </span>
                                 </div>
@@ -318,22 +389,52 @@ export default{
                             <div style="font-weight: bold;">Descarregamento</div>
                             <div class="groupItem">
                                 <div class="itemConfig">
-                                    <Dropdown v-model="uncargoSelectedPort" :options="ports" showClear filter optionLabel="port" placeholder="Selecione o porto"/>
+                                    <Dropdown 
+                                        v-model="uncargoSelectedPort" 
+                                        :options="ports" 
+                                        showClear 
+                                        filter 
+                                        optionLabel="port" 
+                                        placeholder="Selecione o porto"
+                                    />
                                 </div>
                                 <div class="itemConfig">
-                                    <Dropdown v-model="uncargoSelectedCity" :options="cities" showClear filter optionLabel="city" placeholder="Selecione a cidade"/>
+                                    <Dropdown 
+                                        v-model="uncargoSelectedCity" 
+                                        :options="cities" 
+                                        showClear 
+                                        filter 
+                                        optionLabel="city" 
+                                        placeholder="Selecione a cidade"
+                                    />
                                 </div>
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoDocking"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="uncargoDocking" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Atracação</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoUndocking"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="uncargoUndocking" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Desatracação</label>
                                     </span>
                                 </div>
@@ -341,13 +442,29 @@ export default{
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoStartOperation"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="uncargoStartOperation" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Inicio da Operação</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoEndOperation"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="uncargoEndOperation" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Fim da Operação</label>
                                     </span>
                                 </div>
@@ -355,13 +472,29 @@ export default{
                             <div class="groupItem">
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoStartDraft"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="uncargoStartDraft" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Inicio do Draft</label>
                                     </span>
                                 </div>
                                 <div class="itemConfig">
                                     <span class="p-float-label">
-                                        <Calendar inputId="endOperation" dateFormat="dd/mm/yy" touchUI showTime hourFormat="24" v-model="uncargoEndDraft"/>
+                                        <Calendar 
+                                            inputId="endOperation" 
+                                            dateFormat="dd/mm/yy" 
+                                            touchUI 
+                                            showTime 
+                                            hourFormat="24" 
+                                            v-model="uncargoEndDraft" 
+                                            @dateSelect="onSelectedDate"
+                                        />
                                         <label for="endOperation">Fim do Draft</label>
                                     </span>
                                 </div>
