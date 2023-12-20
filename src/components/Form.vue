@@ -2,8 +2,8 @@
 import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
 import TripOperation from '../components/TripOperation.vue';
-import RescueOperation from '../components/RescueOperation.vue';
-import MovementOperantion from '../components/MovementOperation.vue';
+// import RescueOperation from '../components/RescueOperation.vue';
+// import MovementOperantion from '../components/MovementOperation.vue';
 import ChargeOperation from '../components/ChargeOperation.vue';
 import { mapState } from 'pinia';
 import {userInfoStore} from '../store/UserInfos.js'
@@ -14,13 +14,13 @@ export default{
     components:{
         MenuBar,
         TripOperation,
-        RescueOperation,
-        MovementOperantion,
+        // RescueOperation,
+        // MovementOperantion,
         ChargeOperation
     },
     data(){
         return{
-            actions:['Viagem', 'Manobra', 'Socorro', 'Carregamento / Descarregamento'],
+            actions:['Viagem', 'Carregamento / Descarregamento'],
             vessels:[],
             selectOperation: "",
             typesOfOperation:['Carregando', 'Descarga', 'Viagem'],
@@ -122,10 +122,10 @@ export default{
         </div>
 
         <TripOperation v-if="selectOperation === 'Viagem'"></TripOperation>
-        <RescueOperation v-else-if="selectOperation === 'Socorro'"></RescueOperation>
-        <MovementOperantion v-else-if="selectOperation === 'Manobra'"></MovementOperantion>
+        <!-- <RescueOperation v-else-if="selectOperation === 'Socorro'"></RescueOperation>
+        <MovementOperantion v-else-if="selectOperation === 'Manobra'"></MovementOperantion> -->
         <ChargeOperation v-else-if="selectOperation === 'Carregamento / Descarregamento'"></ChargeOperation>
-        <div style="color: white;" v-else>ERROR</div>
+        <div style="color: white;" v-else></div>
 
                
     </div>
