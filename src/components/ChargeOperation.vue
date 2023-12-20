@@ -21,9 +21,45 @@ export default{
                 {city: "Santarém"},
                 {city: "Santana"}
             ],
+            frota:[
+                {barcaca: "NVG X (10)"},
+                {barcaca: "NVG LIV (54)"},
+                {barcaca: "NVG LIX (59)"},
+                {barcaca: "NVG LVII (57)"},
+                {barcaca: "NVG LIII (53)"},
+                {barcaca: "NVG LXI (61)"},
+                {barcaca: "BERTUOL XIII (13)"},
+                {barcaca: "BERTUOL III (03)"},
+                {barcaca: "NVG LXIV (64)"},
+                {barcaca: "NVG LXIII (63)"},
+                {barcaca: "NVG XXVII (27)"},
+                {barcaca: "NVG LVI(56)"},
+                {barcaca: "NVG LXX(70)"},
+                {barcaca: "NVG LXVI(66)"},
+                {barcaca: "NVG LXII(62)"},
+                {barcaca: "NVG XXVI(26)"},
+                {barcaca: "NVG LXIX(69)"},
+                {barcaca: "NVG LXVIII(68)"},
+                {barcaca: "NVG LXVII(67)"},
+                {barcaca: "NVG XII(12)"},
+                {barcaca: "NVG LII(52)"},
+                {barcaca: "NVG LVIII(58)"},
+                {barcaca: "NVG XVI(16)"},
+                {barcaca: "NVG LXV(65)"},
+                {barcaca: "NG XIII(13)"},
+                {barcaca: "NG XIV(14)"},
+                {barcaca: "NG XV(15)"},
+                {barcaca: "NGXVI(16)"},
+                {barcaca: "UNG III(03)"},
+                {barcaca: "NVG XI(11)"},
+                {barcaca: "NVG LX(60)"},
+            ],
             visible: false,
             loading: true,
             objectId:"",
+            barcacaSelected:"",
+            vessel:"",
+            pusher:"",
             cargoSelectedPort:"",
             cargoSelectedCity:"",
             cargoVessel:"",
@@ -33,6 +69,7 @@ export default{
             cargoEndOperation:"",
             cargoStartDraft:"",
             cargoEndDraft:"",
+            cargoObservation: "",
             uncargoSelectedPort:"",
             uncargoSelectedCity:"",
             uncargoVessel:"",
@@ -41,7 +78,8 @@ export default{
             uncargoStartOperation:"",
             uncargoEndOperation:"",
             uncargoStartDraft:"",
-            uncargoEndDraft:""
+            uncargoEndDraft:"",
+            uncargoObservation:""
         }
     },
     methods:{
@@ -155,7 +193,7 @@ export default{
         }
     },
     created(){
-        this.getCharges()
+        // this.getCharges()
     },
     watch:{
         cargoDocking(v){
@@ -202,6 +240,20 @@ export default{
                 <div class="bodyModal">
                     
                     <div class="titleHeader">Criação de Carga / Descarga</div>
+                    <div class="itemConfig organizer">
+                        <Dropdown v-model="barcacaSelected" :options="frota" showClear filter optionLabel="barcaca" placeholder="Selecione a Barcaça"/>
+            
+                        <span class=" item p-float-label">
+                            <InputText id="exitPort" v-model="Vessel"/>
+                            <label for="exitPort">Navio</label>
+                        </span>
+
+                        <span class=" item p-float-label">
+                            <InputText id="exitPort" v-model="pusher"/>
+                            <label for="exitPort">Empurrador</label>
+                        </span>
+                        
+                    </div>
                     <div class="panel">
                         <div class="cargoConfig">
                             <div style="font-weight: bold;">Carregamento</div>
@@ -211,12 +263,6 @@ export default{
                                 </div>
                                 <div class="itemConfig">
                                     <Dropdown v-model="cargoSelectedCity" :options="cities" showClear filter optionLabel="city" placeholder="Selecione a cidade"/>
-                                </div>
-                                <div class="itemConfig">
-                                    <span class=" item p-float-label">
-                                        <InputText id="exitPort" v-model="cargoVessel"/>
-                                        <label for="exitPort">Embarcação</label>
-                                    </span>
                                 </div>
                             </div>
                             <div class="groupItem">
@@ -261,6 +307,12 @@ export default{
                                     </span>
                                 </div>
                             </div>
+                            <div class="itemConfig">
+                                <span class="p-float-label">
+                                    <Textarea v-model="cargoObservation" rows="5" cols="30" />
+                                    <label>Observação</label>
+                                </span>
+                            </div>
                         </div>
                         <div class="uncargoConfig">
                             <div style="font-weight: bold;">Descarregamento</div>
@@ -270,12 +322,6 @@ export default{
                                 </div>
                                 <div class="itemConfig">
                                     <Dropdown v-model="uncargoSelectedCity" :options="cities" showClear filter optionLabel="city" placeholder="Selecione a cidade"/>
-                                </div>
-                                <div class="itemConfig">
-                                    <span class=" item p-float-label">
-                                        <InputText id="exitPort" v-model="uncargoVessel"/>
-                                        <label for="exitPort">Embarcação</label>
-                                    </span>
                                 </div>
                             </div>
                             <div class="groupItem">
@@ -319,6 +365,12 @@ export default{
                                         <label for="endOperation">Fim do Draft</label>
                                     </span>
                                 </div>
+                            </div>
+                            <div class="itemConfig">
+                                <span class="p-float-label">
+                                    <Textarea v-model="uncargoObservation" rows="5" cols="30" />
+                                    <label>Observação</label>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -379,5 +431,10 @@ Button{
     font-weight: bold;
     font-size: 2rem;
     margin: 5px;
+}
+.organizer{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 </style>
