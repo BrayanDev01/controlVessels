@@ -190,14 +190,17 @@ export default{
             this.uncargoEndOperation = '',
             this.uncargoStartDraft = ''
             this.uncargoEndDraft = ''
-            this.barcacaSelected = "",
-            this.vessel = "",
-            this.pusher = "",
-            this.cargoObservation = "",
-            this.uncargoObservation = ""
+            this.barcacaSelected = '',
+            this.vessel = '',
+            this.pusher = '',
+            this.cargoObservation = '',
+            this.uncargoObservation = ''
         },
         onSelectedDate(){
-            
+            this.$refs.meuCalendario.overlayVisible = false
+        },
+        onSelectedDate1(){
+            this.$refs.meuCalendario1.overlayVisible = false
         }
     },
     created(){
@@ -223,7 +226,7 @@ export default{
                 <Column field="cargo.docking.date" header="Atracação Carregamento"></Column>
                 <Column field="cargo.undocking.date" header="Desatracação Carregamento"></Column>
                 <Column field="uncargo.docking.date" header="Atracação Descarregamento"></Column>
-                <Column field="uncargo.undocking.date" header="Desatracação Descarregamento">  </Column>
+                <Column field="uncargo.undocking.date" header="Desatracação Descarregamento"> </Column>
             </DataTable>
         </div>
         <Dialog
@@ -313,7 +316,9 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="cargoUndocking"
-                                             @dateSelect="onSelectedDate"/>
+                                            @dateSelect="onSelectedDate1"
+                                            ref="meuCalendario1"
+                                        />
                                         <label for="endOperation">Desatracação</label>
                                     </span>
                                 </div>
