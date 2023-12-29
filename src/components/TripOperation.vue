@@ -8,10 +8,44 @@ export default{
         return{
             trips:[],
             cargoOptions:[],
+            frota:[
+                {barcaca: "NVG X (10)", carga:""},
+                {barcaca: "NVG LIV (54)", carga:""},
+                {barcaca: "NVG LIX (59)", carga:""},
+                {barcaca: "NVG LVII (57)", carga:""},
+                {barcaca: "NVG LIII (53)", carga:""},
+                {barcaca: "NVG LXI (61)", carga:""},
+                {barcaca: "BERTUOL XIII (13)", carga:""},
+                {barcaca: "BERTUOL III (03)", carga:""},
+                {barcaca: "NVG LXIV (64)", carga:""},
+                {barcaca: "NVG LXIII (63)", carga:""},
+                {barcaca: "NVG XXVII (27)", carga:""},
+                {barcaca: "NVG LVI(56)", carga:""},
+                {barcaca: "NVG LXX(70)", carga:""},
+                {barcaca: "NVG LXVI(66)", carga:""},
+                {barcaca: "NVG LXII(62)", carga:""},
+                {barcaca: "NVG XXVI(26)", carga:""},
+                {barcaca: "NVG LXIX(69)", carga:""},
+                {barcaca: "NVG LXVIII(68)", carga:""},
+                {barcaca: "NVG LXVII(67)", carga:""},
+                {barcaca: "NVG XII(12)", carga:""},
+                {barcaca: "NVG LII(52)", carga:""},
+                {barcaca: "NVG LVIII(58)", carga:""},
+                {barcaca: "NVG XVI(16)", carga:""},
+                {barcaca: "NVG LXV(65)", carga:""},
+                {barcaca: "NG XIII(13)", carga:""},
+                {barcaca: "NG XIV(14)", carga:""},
+                {barcaca: "NG XV(15)", carga:""},
+                {barcaca: "NGXVI(16)", carga:""},
+                {barcaca: "UNG III(03)", carga:""},
+                {barcaca: "NVG XI(11)", carga:""},
+                {barcaca: "NVG LX(60)", carga:""},
+            ],
             metaKey: false,
             visible: false,
             selectedReport: null,
             selectedCharge: null,
+            selectedFrota: null,
             filters:{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 objectId: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -120,7 +154,7 @@ export default{
                         className: "Charge", 
                         objectId: this.selectedCharge.objectId
                     },
-                    embarcacao: this.vessel
+                    embarcations: this.selectedFrota
                 }
             };
 
@@ -316,38 +350,22 @@ export default{
                             </div>
                         </div>
                         <div class="cargoConfig">
-                            <div>Selecionar Carga / Descarga</div>
-                            <Dropdown v-model="selectedCharge" :options="cargoOptions" showClear filter optionLabel="objectId" placeholder="Selecione o processo"/>
-                            <div v-if="!selectedCharge"></div>
-                            <div v-else style="width: 90%;">
-                                <Fieldset legend="Carga" class="fieldSet" :toggleable="true">
+                            <div style="margin: 10px;">Selecione as embarcações</div>
+                            <MultiSelect v-model="selectedFrota" :options="frota" showClear display="chip" filter :maxSelectedLabels="3" optionLabel="barcaca" placeholder="Selecione a barcaça" style="max-width: 100%;"/>
+                            <div v-if="!selectedFrota"></div>
+                            <div v-else style="width: 90%; height: 450px; overflow: auto;">
+                                <Fieldset legend="Barcaça" class="fieldSet" :toggleable="true" v-for="frota in selectedFrota">
                                     <div class="groupItem">
                                         <div class="itemConfig">
                                             <span class=" item p-float-label">
-                                                <InputText id="exitPort" v-model="selectedCharge.cargo.docking.date" disabled></InputText>
-                                                <label for="exitPort">Atracação</label>
+                                                <InputText id="exitPort" v-model="frota.barcaca" disabled></InputText>
+                                                <label for="exitPort">Barcaça</label>
                                             </span>
                                         </div>
                                         <div class="itemConfig">
                                             <span class=" item p-float-label">
-                                                <InputText id="arrivalPort" v-model="selectedCharge.cargo.undocking.date" disabled/>
-                                                <label for="arrivalPort">Desatracação</label>
-                                            </span>
-                                        </div>
-                                    </div>                                
-                                </Fieldset>
-                                <Fieldset legend="Descarga" class="fieldSet" :toggleable="true">
-                                    <div class="groupItem">
-                                        <div class="itemConfig">
-                                            <span class=" item p-float-label">
-                                                <InputText id="exitPort" v-model="selectedCharge.uncargo.docking.date" disabled/>
-                                                <label for="exitPort">Atracação</label>
-                                            </span>
-                                        </div>
-                                        <div class="itemConfig">
-                                            <span class=" item p-float-label">
-                                                <InputText id="arrivalPort" v-model="selectedCharge.uncargo.undocking.date" disabled/>
-                                                <label for="arrivalPort">Desatracação</label>
+                                                <InputText id="arrivalPort" v-model="frota.carga"/>
+                                                <label for="arrivalPort">Volume</label>
                                             </span>
                                         </div>
                                     </div>                                
