@@ -6,6 +6,7 @@ import { FilterMatchMode } from 'primevue/api';
 export default{
     data(){
         return{
+            userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             trips:[],
             cargoOptions:[],
             frota:[
@@ -50,10 +51,10 @@ export default{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 objectId: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 embarcacao: { value: null, matchMode: FilterMatchMode.CONTAINS },
-                'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.IN },
+                'trajeto.vessel': { value: null, matchMode: FilterMatchMode.IN },
+                'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS },
                 'trajeto.endPoint': { value: null, matchMode: FilterMatchMode.EQUALS },
-                'chargeInfos.cargo.docking.date': { value: null, matchMode: FilterMatchMode.EQUALS },
-                'chargeInfos.cargo.startOperation.date': {value: null, matchMode: FilterMatchMode.CONTAINS}
+                'trajeto.endOperation': {value: null, matchMode: FilterMatchMode.CONTAINS}
             },
             loading:true,
             objectId:'',
@@ -91,37 +92,19 @@ export default{
             })
 
         },
-        async getIdCharge(){
-            const options = {
-                method: 'GET',
-                url: `${import.meta.env.VITE_URL_API}classes/Charge`,
-                headers: {
-                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-                }
-            };
-
-            await axios.request(options).then((response)=>{
-                this.cargoOptions = response.data.results
-                console.log(response.data.results)
-            }).catch(error =>{
-                console.log(error)
-            })
-        },
         editMode(event){
             this.objectId = event.data.objectId;
-            console.log(event.data)
-            this.vessel = event.data.embarcacao;
+            // console.log(event.data)
+            this.vessel = event.data.trajeto.vessel;
             this.startPoint = event.data.trajeto.startPoint;
             this.endPoint = event.data.trajeto.endPoint;
             this.product = event.data.trajeto.product;
             this.startOperation = event.data.trajeto.startOperation;
             this.endOperation = event.data.trajeto.endOperation;
             this.captain = event.data.trajeto.captain;
-            this.creator = event.data.trajeto.criador
-            this.selectedCharge = event.data.chargeInfos
-            this.visible = true;
-            this.getIdCharge();            
+            this.creator = event.data.trajeto.criador;
+            this.selectedFrota = event.data.embarcations;
+            this.visible = true;          
         },
         createOrUpdate(){
             if(!this.objectId){
@@ -143,18 +126,14 @@ export default{
                         "startPoint": this.startPoint,
                         "endPoint": this.endPoint,
                         "product": this.product,
+                        "vessel": this.vessel,
                         "startOperation": new Date(this.startOperation).toLocaleString(),
                         "endOperation": new Date(this.endOperation).toLocaleString(),
                         "captain": this.captain,
-                        "criador": "teste"
+                        "criador": this.userInfo.username
 
                     },
-                    chargeInfos: { 
-                        __type: "Pointer", 
-                        className: "Charge", 
-                        objectId: this.selectedCharge.objectId
-                    },
-                    embarcations: this.selectedFrota
+                    embarcations: Object.assign({}, this.selectedFrota)
                 }
             };
 
@@ -180,13 +159,14 @@ export default{
                         "startPoint": this.startPoint,
                         "endPoint": this.endPoint,
                         "product": this.product,
+                        "vessel": this.vessel,
                         "startOperation": new Date(this.startOperation).toLocaleString(),
                         "endOperation": new Date(this.endOperation).toLocaleString(),
                         "captain": this.captain,
-                        "criador": "teste"
+                        "criador": this.userInfo.username
 
                     },
-                    embarcacao: this.vessel
+                    embarcations: Object.assign({}, this.selectedFrota)
                 }
             }
 
@@ -208,7 +188,6 @@ export default{
         },
         seeReport(){
             this.visible = true;
-            this.getIdCharge();
         },
         cleanInputs(){
             this.objectId = '';
@@ -220,7 +199,7 @@ export default{
             this.endOperation = '';
             this.captain = '';
             this.creator = '';
-            this.selectedCharge = null;
+            this.selectedFrota = null;
         },
         sucessToast(x){
             this.$toast.add({ severity: 'success', summary: 'Viagem criada com sucesso', detail: `Viagem criada código: ${x}`, life: 4000 });
@@ -262,7 +241,7 @@ export default{
                 v-model:filters="filters"
                 dataKey="id"
                 :loading="loading"
-                :globalFilterFields="['objectId', 'embarcacao', 'chargeInfos.cargo.startOperation.date', 'trajeto.endPoint', 'chargeInfos.uncargo.startOperation.date']"
+                :globalFilterFields="['objectId', 'trajeto.vessel', 'trajeto.startOperation', 'trajeto.endPoint', 'trajeto.endOperation']"
             >
                 <template #header>
                     <div >
@@ -274,10 +253,10 @@ export default{
                 </template>
                 <template #loading> Carregando os dados, aguarde... </template>
                 <Column field="objectId" header="Codigo" sortable></Column>
-                <Column field="embarcacao" header="Embarcação" sortable></Column>
-                <Column field="chargeInfos.cargo.startOperation.date" header="Carregamento" sortable></Column>
+                <Column field="trajeto.vessel" header="Embarcação" sortable></Column>
+                <Column field="trajeto.startOperation" header="Inicio da Viagem" sortable></Column>
                 <Column field="trajeto.endPoint" header="Trajeto" sortable></Column>
-                <Column field="chargeInfos.uncargo.startOperation.date" header="Descarregamento" sortable></Column>
+                <Column field="trajeto.endOperation" header="Fim da Viagem" sortable></Column>
             </DataTable>
         </div>
         <Dialog
@@ -351,9 +330,9 @@ export default{
                         </div>
                         <div class="cargoConfig">
                             <div style="margin: 10px;">Selecione as embarcações</div>
-                            <MultiSelect v-model="selectedFrota" :options="frota" showClear display="chip" filter :maxSelectedLabels="3" optionLabel="barcaca" placeholder="Selecione a barcaça" style="max-width: 100%;"/>
+                            <MultiSelect v-model="selectedFrota" :options="frota" showClear display="chip" filter :maxSelectedLabels="1" optionLabel="barcaca" placeholder="Selecione a barcaça" style="max-width: 100%;"/>
                             <div v-if="!selectedFrota"></div>
-                            <div v-else style="width: 90%; height: 450px; overflow: auto;">
+                            <div v-else style="width: 90%; height: 450px; overflow: auto; overflow-x:hidden;">
                                 <Fieldset legend="Barcaça" class="fieldSet" :toggleable="true" v-for="frota in selectedFrota">
                                     <div class="groupItem">
                                         <div class="itemConfig">
@@ -434,5 +413,25 @@ Button{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media(max-width: 500px){
+    .bodyModal{
+        width: 90dvw;
+        height: 100%;
+        overflow: auto;
+    }
+    .panel{
+        display: flex;
+        flex-direction: column;
+    }
+    .tripConfig, .cargoConfig{
+        width: 100%;
+        height: 100%;
+    }
+    .groupItem{
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>

@@ -13,16 +13,22 @@ export const userInfoStore = defineStore('userInfo', {
         // "updatedAt": "2023-11-13T19:20:56.029Z",
         // "accessLevel": 0,
         // "sessionToken": "r:f336e9e07f8d3943f2c8761960d887b8"
+
+
+
         
     }),
 
     actions:{
         saveInfo(x){
-            this.userInformations = x
+            this.userInformations = x;
+            localStorage.setItem("loggedUser", JSON.stringify(x));
         },
 
         saindo(){
-            this.userInformations = []
+            this.userInformations = [];
+            localStorage.removeItem("loggedUser");
+            console.log("removido")
         }
     },
 
@@ -31,6 +37,6 @@ export const userInfoStore = defineStore('userInfo', {
         returnInfos(state){
             return state.userInformations
         }
-    }
+    },
 
 })

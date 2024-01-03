@@ -231,6 +231,17 @@ export default{
     },
     created(){
         this.getCharges()
+    },
+    watch:{
+        cargoDocking:{  
+            handler(novaData) {
+                if (novaData) {
+                    const dataFormatada = new Date(novaData).toLocaleString();
+                    this.cargoDocking = dataFormatada;
+                }
+            },
+            deep: true,
+        }
     }
 }
 </script>
@@ -263,7 +274,7 @@ export default{
                     style: 'backdrop-filter: blur(2px);'
                 },
                 root:{
-                    style:'max-width: 100%; background-color: white'
+                    style:'max-width: 100%; height:100%; background-color: white'
                 }
             }"
         >
@@ -321,7 +332,8 @@ export default{
                                     <span class="p-float-label">
                                         <Calendar 
                                             inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
+                                            dateFormat="dd/mm/yy"
+                                            outputFormat ="" 
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
@@ -609,5 +621,28 @@ Button{
     display: flex;
     justify-content: center;
     gap: 20px;
+}
+
+@media(max-width: 500px){
+    .titleHeader{
+        font-size: 1.2rem;
+    }
+    .bodyModal{
+        width: 90dvw;
+        height: 100%;
+        overflow: auto;
+    }
+    .organizer{
+        flex-direction: column;
+        align-items: center;
+    }
+    .panel{
+        flex-direction: column;
+        align-items: center;
+    }
+    .groupItem{
+        flex-direction: column;
+    }
+
 }
 </style>

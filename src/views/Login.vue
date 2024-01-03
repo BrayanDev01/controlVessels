@@ -46,8 +46,8 @@ export default {
                 return response.data
 
             }).catch((error) => {
-                // console.log(error.response.data.error)
-                this.alert(error.response.data.error)
+                console.log(error.response.data.error)
+                this.alert(error.response)
                 return error.response
             });
 
