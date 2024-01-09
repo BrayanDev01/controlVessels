@@ -6,20 +6,55 @@ import { FilterMatchMode } from 'primevue/api';
 export default{
     data(){
         return{
+            userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             trips:[],
             cargoOptions:[],
+            frota:[
+                {barcaca: "NVG X (10)", carga:""},
+                {barcaca: "NVG LIV (54)", carga:""},
+                {barcaca: "NVG LIX (59)", carga:""},
+                {barcaca: "NVG LVII (57)", carga:""},
+                {barcaca: "NVG LIII (53)", carga:""},
+                {barcaca: "NVG LXI (61)", carga:""},
+                {barcaca: "BERTUOL XIII (13)", carga:""},
+                {barcaca: "BERTUOL III (03)", carga:""},
+                {barcaca: "NVG LXIV (64)", carga:""},
+                {barcaca: "NVG LXIII (63)", carga:""},
+                {barcaca: "NVG XXVII (27)", carga:""},
+                {barcaca: "NVG LVI(56)", carga:""},
+                {barcaca: "NVG LXX(70)", carga:""},
+                {barcaca: "NVG LXVI(66)", carga:""},
+                {barcaca: "NVG LXII(62)", carga:""},
+                {barcaca: "NVG XXVI(26)", carga:""},
+                {barcaca: "NVG LXIX(69)", carga:""},
+                {barcaca: "NVG LXVIII(68)", carga:""},
+                {barcaca: "NVG LXVII(67)", carga:""},
+                {barcaca: "NVG XII(12)", carga:""},
+                {barcaca: "NVG LII(52)", carga:""},
+                {barcaca: "NVG LVIII(58)", carga:""},
+                {barcaca: "NVG XVI(16)", carga:""},
+                {barcaca: "NVG LXV(65)", carga:""},
+                {barcaca: "NG XIII(13)", carga:""},
+                {barcaca: "NG XIV(14)", carga:""},
+                {barcaca: "NG XV(15)", carga:""},
+                {barcaca: "NGXVI(16)", carga:""},
+                {barcaca: "UNG III(03)", carga:""},
+                {barcaca: "NVG XI(11)", carga:""},
+                {barcaca: "NVG LX(60)", carga:""},
+            ],
             metaKey: false,
             visible: false,
             selectedReport: null,
             selectedCharge: null,
+            selectedFrota: null,
             filters:{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 objectId: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 embarcacao: { value: null, matchMode: FilterMatchMode.CONTAINS },
-                'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.IN },
+                'trajeto.vessel': { value: null, matchMode: FilterMatchMode.IN },
+                'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS },
                 'trajeto.endPoint': { value: null, matchMode: FilterMatchMode.EQUALS },
-                'chargeInfos.cargo.docking.date': { value: null, matchMode: FilterMatchMode.EQUALS },
-                'chargeInfos.cargo.startOperation.date': {value: null, matchMode: FilterMatchMode.CONTAINS}
+                'trajeto.endOperation': {value: null, matchMode: FilterMatchMode.CONTAINS}
             },
             loading:true,
             objectId:'',
@@ -30,6 +65,7 @@ export default{
             startOperation:'',
             endOperation:'',
             captain:'',
+            client: '',
             creator:'',            
         }
     },
@@ -57,37 +93,20 @@ export default{
             })
 
         },
-        async getIdCharge(){
-            const options = {
-                method: 'GET',
-                url: `${import.meta.env.VITE_URL_API}classes/Charge`,
-                headers: {
-                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-                }
-            };
-
-            await axios.request(options).then((response)=>{
-                this.cargoOptions = response.data.results
-                console.log(response.data.results)
-            }).catch(error =>{
-                console.log(error)
-            })
-        },
         editMode(event){
             this.objectId = event.data.objectId;
-            console.log(event.data)
-            this.vessel = event.data.embarcacao;
+            // console.log(event.data)
+            this.vessel = event.data.trajeto.vessel;
             this.startPoint = event.data.trajeto.startPoint;
             this.endPoint = event.data.trajeto.endPoint;
             this.product = event.data.trajeto.product;
             this.startOperation = event.data.trajeto.startOperation;
             this.endOperation = event.data.trajeto.endOperation;
             this.captain = event.data.trajeto.captain;
-            this.creator = event.data.trajeto.criador
-            this.selectedCharge = event.data.chargeInfos
-            this.visible = true;
-            this.getIdCharge();            
+            this.creator = event.data.trajeto.criador;
+            this.client = event.data.trajeto.client;
+            this.selectedFrota = event.data.embarcations;
+            this.visible = true;          
         },
         createOrUpdate(){
             if(!this.objectId){
@@ -109,18 +128,15 @@ export default{
                         "startPoint": this.startPoint,
                         "endPoint": this.endPoint,
                         "product": this.product,
+                        "vessel": this.vessel,
                         "startOperation": new Date(this.startOperation).toLocaleString(),
                         "endOperation": new Date(this.endOperation).toLocaleString(),
                         "captain": this.captain,
-                        "criador": "teste"
+                        "client": this.client,
+                        "criador": this.userInfo.username
 
                     },
-                    chargeInfos: { 
-                        __type: "Pointer", 
-                        className: "Charge", 
-                        objectId: this.selectedCharge.objectId
-                    },
-                    embarcacao: this.vessel
+                    embarcations: Object.assign({}, this.selectedFrota)
                 }
             };
 
@@ -146,13 +162,15 @@ export default{
                         "startPoint": this.startPoint,
                         "endPoint": this.endPoint,
                         "product": this.product,
+                        "vessel": this.vessel,
                         "startOperation": new Date(this.startOperation).toLocaleString(),
                         "endOperation": new Date(this.endOperation).toLocaleString(),
                         "captain": this.captain,
-                        "criador": "teste"
+                        "client": this.client,
+                        "criador": this.userInfo.username,
 
                     },
-                    embarcacao: this.vessel
+                    embarcations: Object.assign({}, this.selectedFrota)
                 }
             }
 
@@ -174,7 +192,6 @@ export default{
         },
         seeReport(){
             this.visible = true;
-            this.getIdCharge();
         },
         cleanInputs(){
             this.objectId = '';
@@ -186,7 +203,7 @@ export default{
             this.endOperation = '';
             this.captain = '';
             this.creator = '';
-            this.selectedCharge = null;
+            this.selectedFrota = null;
         },
         sucessToast(x){
             this.$toast.add({ severity: 'success', summary: 'Viagem criada com sucesso', detail: `Viagem criada código: ${x}`, life: 4000 });
@@ -198,6 +215,15 @@ export default{
                 detail: `Viagem atualizada código: ${x}`, 
                 life: 4000 
             });
+        },
+        calculetCargo(){
+            if(!this.selectedFrota){
+                return
+            } else{
+                return Object.values(this.selectedFrota)
+                .map(item => parseInt(item.carga, 10) || 0)
+                .reduce((soma, valor) => soma + valor, 0);
+            }
         }
 
     },
@@ -228,7 +254,7 @@ export default{
                 v-model:filters="filters"
                 dataKey="id"
                 :loading="loading"
-                :globalFilterFields="['objectId', 'embarcacao', 'chargeInfos.cargo.startOperation.date', 'trajeto.endPoint', 'chargeInfos.uncargo.startOperation.date']"
+                :globalFilterFields="['objectId', 'trajeto.vessel', 'trajeto.startOperation', 'trajeto.endPoint', 'trajeto.endOperation']"
             >
                 <template #header>
                     <div >
@@ -240,10 +266,10 @@ export default{
                 </template>
                 <template #loading> Carregando os dados, aguarde... </template>
                 <Column field="objectId" header="Codigo" sortable></Column>
-                <Column field="embarcacao" header="Embarcação" sortable></Column>
-                <Column field="chargeInfos.cargo.startOperation.date" header="Carregamento" sortable></Column>
+                <Column field="trajeto.vessel" header="Embarcação" sortable></Column>
+                <Column field="trajeto.startOperation" header="Inicio da Viagem" sortable></Column>
                 <Column field="trajeto.endPoint" header="Trajeto" sortable></Column>
-                <Column field="chargeInfos.uncargo.startOperation.date" header="Descarregamento" sortable></Column>
+                <Column field="trajeto.endOperation" header="Fim da Viagem" sortable></Column>
             </DataTable>
         </div>
         <Dialog
@@ -308,46 +334,41 @@ export default{
                                     </span>
                                 </div>
                             </div>
-                            <div class="itemConfig">
-                                <span class=" item p-float-label">
-                                    <InputText id="exitPort" v-model="captain"/>
-                                    <label for="exitPort">Capitão</label>
-                                </span>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="captainLabel" v-model="captain"/>
+                                        <label for="captainLabel">Capitão</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="clientLabel" v-model="client"/>
+                                        <label for="clientLabel">Cliente</label>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="cargoConfig">
-                            <div>Selecionar Carga / Descarga</div>
-                            <Dropdown v-model="selectedCharge" :options="cargoOptions" showClear filter optionLabel="objectId" placeholder="Selecione o processo"/>
-                            <div v-if="!selectedCharge"></div>
-                            <div v-else style="width: 90%;">
-                                <Fieldset legend="Carga" class="fieldSet" :toggleable="true">
+                            <div style="margin: 10px;">Selecione o comboio</div>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <MultiSelect v-model="selectedFrota" :options="frota" showClear display="chip" filter :maxSelectedLabels="1" optionLabel="barcaca" placeholder="Selecione a barcaça" style="max-width: 100%;"/>
+                                <div>{{ calculetCargo() }}</div>
+                            </div>
+                            <div v-if="!selectedFrota"></div>
+                            <div v-else style="width: 90%; height: 450px; overflow: auto; overflow-x:hidden;">
+                                <Fieldset legend="Barcaça" class="fieldSet" :toggleable="true" v-for="frota in selectedFrota">
                                     <div class="groupItem">
                                         <div class="itemConfig">
                                             <span class=" item p-float-label">
-                                                <InputText id="exitPort" v-model="selectedCharge.cargo.docking.date" disabled></InputText>
-                                                <label for="exitPort">Atracação</label>
+                                                <InputText id="exitPort" v-model="frota.barcaca" disabled></InputText>
+                                                <label for="exitPort">Barcaça</label>
                                             </span>
                                         </div>
                                         <div class="itemConfig">
                                             <span class=" item p-float-label">
-                                                <InputText id="arrivalPort" v-model="selectedCharge.cargo.undocking.date" disabled/>
-                                                <label for="arrivalPort">Desatracação</label>
-                                            </span>
-                                        </div>
-                                    </div>                                
-                                </Fieldset>
-                                <Fieldset legend="Descarga" class="fieldSet" :toggleable="true">
-                                    <div class="groupItem">
-                                        <div class="itemConfig">
-                                            <span class=" item p-float-label">
-                                                <InputText id="exitPort" v-model="selectedCharge.uncargo.docking.date" disabled/>
-                                                <label for="exitPort">Atracação</label>
-                                            </span>
-                                        </div>
-                                        <div class="itemConfig">
-                                            <span class=" item p-float-label">
-                                                <InputText id="arrivalPort" v-model="selectedCharge.uncargo.undocking.date" disabled/>
-                                                <label for="arrivalPort">Desatracação</label>
+                                                <InputText id="arrivalPort" v-model="frota.carga"/>
+                                                <label for="arrivalPort">Volume</label>
                                             </span>
                                         </div>
                                     </div>                                
@@ -416,5 +437,25 @@ Button{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media(max-width: 500px){
+    .bodyModal{
+        width: 90dvw;
+        height: 100%;
+        overflow: auto;
+    }
+    .panel{
+        display: flex;
+        flex-direction: column;
+    }
+    .tripConfig, .cargoConfig{
+        width: 100%;
+        height: 100%;
+    }
+    .groupItem{
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>
