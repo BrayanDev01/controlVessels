@@ -65,6 +65,7 @@ export default{
             startOperation:'',
             endOperation:'',
             captain:'',
+            client: '',
             creator:'',            
         }
     },
@@ -103,6 +104,7 @@ export default{
             this.endOperation = event.data.trajeto.endOperation;
             this.captain = event.data.trajeto.captain;
             this.creator = event.data.trajeto.criador;
+            this.client = event.data.trajeto.client;
             this.selectedFrota = event.data.embarcations;
             this.visible = true;          
         },
@@ -130,6 +132,7 @@ export default{
                         "startOperation": new Date(this.startOperation).toLocaleString(),
                         "endOperation": new Date(this.endOperation).toLocaleString(),
                         "captain": this.captain,
+                        "client": this.client,
                         "criador": this.userInfo.username
 
                     },
@@ -163,7 +166,8 @@ export default{
                         "startOperation": new Date(this.startOperation).toLocaleString(),
                         "endOperation": new Date(this.endOperation).toLocaleString(),
                         "captain": this.captain,
-                        "criador": this.userInfo.username
+                        "client": this.client,
+                        "criador": this.userInfo.username,
 
                     },
                     embarcations: Object.assign({}, this.selectedFrota)
@@ -211,6 +215,15 @@ export default{
                 detail: `Viagem atualizada código: ${x}`, 
                 life: 4000 
             });
+        },
+        calculetCargo(){
+            if(!this.selectedFrota){
+                return
+            } else{
+                return Object.values(this.selectedFrota)
+                .map(item => parseInt(item.carga, 10) || 0)
+                .reduce((soma, valor) => soma + valor, 0);
+            }
         }
 
     },
@@ -321,16 +334,27 @@ export default{
                                     </span>
                                 </div>
                             </div>
-                            <div class="itemConfig">
-                                <span class=" item p-float-label">
-                                    <InputText id="exitPort" v-model="captain"/>
-                                    <label for="exitPort">Capitão</label>
-                                </span>
+                            <div class="groupItem">
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="captainLabel" v-model="captain"/>
+                                        <label for="captainLabel">Capitão</label>
+                                    </span>
+                                </div>
+                                <div class="itemConfig">
+                                    <span class=" item p-float-label">
+                                        <InputText id="clientLabel" v-model="client"/>
+                                        <label for="clientLabel">Cliente</label>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="cargoConfig">
-                            <div style="margin: 10px;">Selecione as embarcações</div>
-                            <MultiSelect v-model="selectedFrota" :options="frota" showClear display="chip" filter :maxSelectedLabels="1" optionLabel="barcaca" placeholder="Selecione a barcaça" style="max-width: 100%;"/>
+                            <div style="margin: 10px;">Selecione o comboio</div>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <MultiSelect v-model="selectedFrota" :options="frota" showClear display="chip" filter :maxSelectedLabels="1" optionLabel="barcaca" placeholder="Selecione a barcaça" style="max-width: 100%;"/>
+                                <div>{{ calculetCargo() }}</div>
+                            </div>
                             <div v-if="!selectedFrota"></div>
                             <div v-else style="width: 90%; height: 450px; overflow: auto; overflow-x:hidden;">
                                 <Fieldset legend="Barcaça" class="fieldSet" :toggleable="true" v-for="frota in selectedFrota">
