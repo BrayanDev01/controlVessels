@@ -19,7 +19,6 @@ export default {
         
         alert(x){
             this.$toast.add({severity:'error', summary:'Algo deu errado', detail:`${x}`})
-            console.log(x)
         },
 
         async login(){
@@ -47,12 +46,12 @@ export default {
                 return response.data
 
             }).catch((error) => {
-                
-                this.alert(error.response.data.error)
+                console.log(error.response.data.error)
+                this.alert(error.response)
                 return error.response
             });
 
-            console.log(data)
+            // console.log(data)
             this.loading = false
         },
         async rememberPass(){

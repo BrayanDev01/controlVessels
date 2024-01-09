@@ -4,6 +4,11 @@ import {userInfoStore} from '../store/UserInfos.js'
 import axios from 'axios';
 
 export default{
+    data(){
+        return {
+            userInfo: JSON.parse(localStorage.getItem("loggedUser"))
+        }
+    },
     computed:{
         ...mapState(userInfoStore, ['userInformations'])
     },
@@ -15,13 +20,15 @@ export default{
         },
 
         async logOut(){
+            const tokenExit = JSON.parse(localStorage.getItem("loggedUser"))
+
             const options = {
                 method: 'POST',
                 url: `${import.meta.env.VITE_URL_API}logout`,
                 headers: {
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`,
                     'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-                    'X-Parse-Session-Token': `${this.userInformations.sessionToken}`
+                    'X-Parse-Session-Token': `${tokenExit.sessionToken}`
                 }
             };
 
@@ -49,10 +56,10 @@ export default{
     <div class="topMenu">
         <img src="../assets/Gp_Cidade_DarkBG1.png" alt="Grupo Cidade">
         <div class="options">
-            <router-link to="/home" class="buttonLink" v-if="userInformations?.accessLevel < 1">
+            <router-link to="/home" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Home</div>
             </router-link>
-            <router-link to="/form" class="buttonLink" v-if="userInformations?.accessLevel < 1">
+            <router-link to="/form" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Formulário</div>
             </router-link>
             <div class="buttonLink" @click="logOut()">

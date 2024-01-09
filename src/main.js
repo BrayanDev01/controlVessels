@@ -8,6 +8,7 @@ import Password from 'primevue/password';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import Listbox from 'primevue/listbox'
+import MultiSelect from 'primevue/multiselect';
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/calendar';
 import Textarea from 'primevue/textarea';
@@ -36,6 +37,7 @@ app.use(PrimeVue);
 app.component('Button', Button);
 app.component('Fieldset', Fieldset)
 app.component('FileUpload', FileUpload)
+app.component('MultiSelect', MultiSelect)
 app.component('InputText', InputText);
 app.component('Password', Password);
 app.component('Toast', Toast);

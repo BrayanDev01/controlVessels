@@ -42,7 +42,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const store = userInfoStore();
-    if (to.name !== 'login' && store.returnInfos === null ){
+    if (to.name !== 'login' && store.returnInfos === null && localStorage.getItem('loggedUser') === null){
       next({ name:'login' })
     }
     else {
