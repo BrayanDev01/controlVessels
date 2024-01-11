@@ -191,42 +191,6 @@ export default{
             this.pusher = '',
             this.cargoObservation = '',
             this.uncargoObservation = ''
-        },
-        onSelectedDate(){
-            this.$refs.meuCalendario.overlayVisible = false
-        },
-        onSelectedDate1(){
-            this.$refs.meuCalendario1.overlayVisible = false
-        },
-        onSelectedDate2(){
-            this.$refs.meuCalendario2.overlayVisible = false
-        },
-        onSelectedDate3(){
-            this.$refs.meuCalendario3.overlayVisible = false
-        },
-        onSelectedDate4(){
-            this.$refs.meuCalendario4.overlayVisible = false
-        },
-        onSelectedDate5(){
-            this.$refs.meuCalendario5.overlayVisible = false
-        },
-        onSelectedDate6(){
-            this.$refs.meuCalendario6.overlayVisible = false
-        },
-        onSelectedDate7(){
-            this.$refs.meuCalendario7.overlayVisible = false
-        },
-        onSelectedDate8(){
-            this.$refs.meuCalendario8.overlayVisible = false
-        },
-        onSelectedDate9(){
-            this.$refs.meuCalendario9.overlayVisible = false
-        },
-        onSelectedDate10(){
-            this.$refs.meuCalendario10.overlayVisible = false
-        },
-        onSelectedDate11(){
-            this.$refs.meuCalendario11.overlayVisible = false
         }
     },
     created(){
@@ -337,9 +301,7 @@ export default{
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
-                                            v-model="cargoDocking" 
-                                            @dateSelect="onSelectedDate" 
-                                            ref="meuCalendario"
+                                            v-model="cargoDocking"
                                         />
                                         <label for="endOperation">Atracação</label>
                                     </span>
@@ -353,8 +315,6 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="cargoUndocking"
-                                            @dateSelect="onSelectedDate1"
-                                            ref="meuCalendario1"
                                         />
                                         <label for="endOperation">Desatracação</label>
                                     </span>
@@ -369,9 +329,7 @@ export default{
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
-                                            v-model="cargoStartOperation" 
-                                            @dateSelect="onSelectedDate2"
-                                            ref="meuCalendario2"
+                                            v-model="cargoStartOperation"
                                         />
                                         <label for="endOperation">Inicio da Operação</label>
                                     </span>
@@ -385,8 +343,6 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="cargoEndOperation" 
-                                            @dateSelect="onSelectedDate3"
-                                            ref="meuCalendario3"
                                         />
                                         <label for="endOperation">Fim da Operação</label>
                                     </span>
@@ -401,9 +357,7 @@ export default{
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
-                                            v-model="cargoStartDraft" 
-                                            @dateSelect="onSelectedDate4"
-                                            ref="meuCalendario4"
+                                            v-model="cargoStartDraft"
                                         />
                                         <label for="endOperation">Inicio do Draft</label>
                                     </span>
@@ -417,8 +371,6 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="cargoEndDraft" 
-                                            @dateSelect="onSelectedDate5"
-                                            ref="meuCalendario5"
                                         />
                                         <label for="endOperation">Fim do Draft</label>
                                     </span>
@@ -465,8 +417,6 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="uncargoDocking" 
-                                            @dateSelect="onSelectedDate6"
-                                            ref="meuCalendario6"
                                         />
                                         <label for="endOperation">Atracação</label>
                                     </span>
@@ -479,9 +429,7 @@ export default{
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
-                                            v-model="uncargoUndocking" 
-                                            @dateSelect="onSelectedDate7"
-                                            ref="meuCalendario7"
+                                            v-model="uncargoUndocking"
                                         />
                                         <label for="endOperation">Desatracação</label>
                                     </span>
@@ -496,9 +444,7 @@ export default{
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
-                                            v-model="uncargoStartOperation" 
-                                            @dateSelect="onSelectedDate8"
-                                            ref="meuCalendario8"
+                                            v-model="uncargoStartOperation"
                                         />
                                         <label for="endOperation">Inicio da Operação</label>
                                     </span>
@@ -511,9 +457,7 @@ export default{
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
-                                            v-model="uncargoEndOperation" 
-                                            @dateSelect="onSelectedDate9"
-                                            ref="meuCalendario9"
+                                            v-model="uncargoEndOperation"
                                         />
                                         <label for="endOperation">Fim da Operação</label>
                                     </span>
@@ -529,8 +473,6 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="uncargoStartDraft" 
-                                            @dateSelect="onSelectedDate10"
-                                            ref="meuCalendario10"
                                         />
                                         <label for="endOperation">Inicio do Draft</label>
                                     </span>
@@ -544,8 +486,6 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="uncargoEndDraft" 
-                                            @dateSelect="onSelectedDate11"
-                                            ref="meuCalendario11"
                                         />
                                         <label for="endOperation">Fim do Draft</label>
                                     </span>
