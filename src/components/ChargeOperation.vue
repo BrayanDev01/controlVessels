@@ -387,7 +387,6 @@ export default{
                                             showTime 
                                             hourFormat="24" 
                                             v-model="cargoDocking"
-                                            :datepicker-options="datepickerOptions"
                                         ></Calendar>
                                         <label for="endOperation">Atracação</label>
                                     </span>
