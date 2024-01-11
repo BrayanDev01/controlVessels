@@ -163,12 +163,11 @@ export default{
                         "endPoint": this.endPoint,
                         "product": this.product,
                         "vessel": this.vessel,
-                        "startOperation": new Date(this.startOperation).toLocaleString(),
-                        "endOperation": new Date(this.endOperation).toLocaleString(),
+                        "startOperation": this.startOperation,
+                        "endOperation": this.endOperation,
                         "captain": this.captain,
                         "client": this.client,
                         "criador": this.userInfo.username,
-
                     },
                     embarcations: Object.assign({}, this.selectedFrota)
                 }

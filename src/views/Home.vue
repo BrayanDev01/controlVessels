@@ -11,7 +11,8 @@ export default{
     },
     data(){
         return{
-            teste: 0
+            teste: 0,
+            userInfo: JSON.parse(localStorage.getItem("loggedUser"))
         }
     },
     computed:{
@@ -20,6 +21,6 @@ export default{
 }
 </script>
 <template>
-    <Form v-if="userInformations?.accessLevel > 0"></Form>
+    <Form v-if="userInfo?.accessLevel > 0"></Form>
     <Dashboard v-else></Dashboard>
 </template>
