@@ -197,15 +197,6 @@ export default{
         this.getCharges()
     },
     watch:{
-        cargoDocking:{  
-            handler(novaData) {
-                if (novaData) {
-                    const dataFormatada = new Date(novaData).toLocaleString();
-                    this.cargoDocking = dataFormatada;
-                }
-            },
-            deep: true,
-        }
     }
 }
 </script>
