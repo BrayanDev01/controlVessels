@@ -55,15 +55,16 @@ export default{
                 {barcaca: "NVG XI(11)"},
                 {barcaca: "NVG LX(60)"},
             ],
+            metaKey: false,
             visible: false,
             loading: true,
+            selectedCharge: null,
             objectId:"",
             barcacaSelected:"",
             vessel:"",
             pusher:"",
             cargoSelectedPort:"",
             cargoSelectedCity:"",
-            cargoVessel:"",
             cargoDocking:"",
             cargoUndocking:"",
             cargoStartOperation:"",
@@ -73,14 +74,16 @@ export default{
             cargoObservation: "",
             uncargoSelectedPort:"",
             uncargoSelectedCity:"",
-            uncargoVessel:"",
             uncargoDocking:"",
             uncargoUndocking:"",
             uncargoStartOperation:"",
             uncargoEndOperation:"",
             uncargoStartDraft:"",
             uncargoEndDraft:"",
-            uncargoObservation:""
+            uncargoObservation:"",
+            datepickerOptions: {
+                datepickerMask: '99/99/9999' // Defina a máscara desejada
+            }
         }
     },
     methods:{
@@ -112,35 +115,86 @@ export default{
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
                 },
                 data:{
+                    barcaca: this.barcacaSelected,
+                    vessel: this.vessel,
+                    pusher: this.pusher,
                     cargo: {
-                        vessel: this.cargoVessel,
-                        docking: {date: new Date(this.cargoDocking).toLocaleString()},
-                        undocking: {date: new Date(this.cargoUndocking).toLocaleString()},
-                        startOperation: {date: new Date(this.cargoStartOperation).toLocaleString()},
-                        endOperation: {date: new Date(this.cargoEndOperation).toLocaleString()},
+                        docking: {date: this.cargoDocking},
+                        undocking: {date: this.cargoUndocking},
+                        startOperation: {date: this.cargoStartOperation},
+                        endOperation: {date: this.cargoEndOperation},
                         port: this.cargoSelectedPort,
                         city: this.cargoSelectedCity,
-                        startDraft: {date: new Date(this.cargostartDraft).toLocaleString()},
-                        endDraft: {date: new Date(this.cargoendDraft).toLocaleString()},
-                        Draft: {url: 'teste'}
+                        startDraft: {date: this.cargoStartDraft},
+                        endDraft: {date: this.cargoEndDraft},
+                        observation: this.cargoObservation,
+                        Draft: {url: ''}
                     },
                     uncargo: {
-                        vessel: this.uncargoVessel,
-                        docking: {date: new Date(this.uncargoDocking).toLocaleString()},
-                        undocking: {date: new Date(this.uncargoUndocking).toLocaleString()},
-                        startOperation: {date: new Date(this.uncargoStartOperation).toLocaleString()},
-                        endOperation: {date: new Date(this.uncargoEndOperation).toLocaleString()},
+                        docking: {date: this.uncargoDocking},
+                        undocking: {date: this.uncargoUndocking},
+                        startOperation: {date: this.uncargoStartOperation},
+                        endOperation: {date: this.uncargoEndOperation},
                         port: this.uncargoSelectedPort,
                         city: this.uncargoSelectedCity,
-                        startDraft: {date: new Date(this.uncargoStartDraft).toLocaleString()},
-                        endDraft: {date: new Date(this.uncargoendDraft).toLocaleString()},
-                        Draft: {url: 'teste'}
+                        startDraft: {date: this.uncargoStartDraft},
+                        endDraft: {date: this.uncargoEndDraft},
+                        observation: this.uncargoObservation,
+                        Draft: {url: ''}
                     }
                 }
             }
 
             await axios.request(options).then((response) =>{
                 this.successToast(response.data.objectId)
+                this.closeModal()
+            }).catch(error =>{
+                console.log(error)
+            })
+        },
+
+        async updateCharge(){
+            const options = {
+                method: 'PUT',
+                url: `${import.meta.env.VITE_URL_API}classes/Charge/${this.objectId}`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    barcaca: this.barcacaSelected,
+                    vessel: this.vessel,
+                    pusher: this.pusher,
+                    cargo: {
+                        docking: {date: this.cargoDocking},
+                        undocking: {date: this.cargoUndocking},
+                        startOperation: {date: this.cargoStartOperation},
+                        endOperation: {date: this.cargoEndOperation},
+                        port: this.cargoSelectedPort,
+                        city: this.cargoSelectedCity,
+                        startDraft: {date: this.cargoStartDraft},
+                        endDraft: {date: this.cargoEndDraft},
+                        observation: this.cargoObservation,
+                        Draft: {url: ''}
+                    },
+                    uncargo: {
+                        docking: {date: this.uncargoDocking},
+                        undocking: {date: this.uncargoUndocking},
+                        startOperation: {date: this.uncargoStartOperation},
+                        endOperation: {date:this.uncargoEndOperation},
+                        port: this.uncargoSelectedPort,
+                        city: this.uncargoSelectedCity,
+                        startDraft: {date: this.uncargoStartDraft},
+                        endDraft: {date: this.uncargoEndDraft},
+                        observation: this.uncargoObservation,
+                        Draft: {url: ''}
+                    }
+                }
+            }
+
+            await axios.request(options).then((response) =>{
+                this.successToast(response.data.objectId)
+                this.cleanForm()
                 this.closeModal()
             }).catch(error =>{
                 console.log(error)
@@ -168,20 +222,20 @@ export default{
             });
         },
         cleanForm(){
-            this.cargoSelectedCity = ''
-            this.cargoSelectedPort = ''
-            this.cargoVessel = ''
-            this.cargoDocking = ''
-            this.cargoUndocking = ''
+            this.cargoSelectedCity = '',
+            this.cargoSelectedPort = '',
+            this.cargoVessel = '',
+            this.cargoDocking = '',
+            this.cargoUndocking = '',
             this.cargoStartOperation = '',
-            this.cargoEndOperation = ''
-            this.cargoStartDraft = ''
-            this.cargoEndDraft = ''
+            this.cargoEndOperation = '',
+            this.cargoStartDraft = '',
+            this.cargoEndDraft = '',
             this.uncargoSelectedPort = '',
             this.uncargoSelectedCity = '',
-            this.uncargoVessel = ''
-            this.uncargoDocking = ''
-            this.uncargoUndocking = ''
+            this.uncargoVessel = '',
+            this.uncargoDocking = '',
+            this.uncargoUndocking = '',
             this.uncargoStartOperation = '',
             this.uncargoEndOperation = '',
             this.uncargoStartDraft = ''
@@ -190,8 +244,54 @@ export default{
             this.vessel = '',
             this.pusher = '',
             this.cargoObservation = '',
-            this.uncargoObservation = ''
-        }
+            this.uncargoObservation = '',
+            this.objectId = ''
+        },
+        ifEmpty(campo, dado){
+            
+            if(dado === ""){ 
+                return campo = ""
+            }else{
+                return campo = new Date(dado)
+            }
+
+        },
+
+        editMode(event){
+            
+            // console.log(event)
+            this.objectId = event.data.objectId;
+            this.barcacaSelected = event.data.barcaca;
+            this.vessel = event.data.vessel;
+            this.pusher = event.data.pusher;
+            this.cargoSelectedPort = event.data.cargo.port;
+            this.cargoSelectedCity = event.data.cargo.city;
+            this.cargoDocking = this.ifEmpty(this.cargoDocking, event.data.cargo.docking.date)
+            this.cargoUndocking = this.ifEmpty(this.cargoUndocking, event.data.cargo.undocking.date)
+            this.cargoStartOperation = this.ifEmpty(this.cargoStartOperation, event.data.cargo.startOperation.date)
+            this.cargoEndOperation = this.ifEmpty(this.cargoEndOperation, event.data.cargo.endOperation.date)
+            this.cargoStartDraft = this.ifEmpty(this.cargoStartDraft, event.data.cargo.startDraft.date)
+            this.cargoEndDraft = this.ifEmpty(this.cargoEndDraft, event.data.cargo.endDraft.date)
+            this.cargoObservation = event.data.cargo.observation;
+            this.uncargoSelectedPort = event.data.uncargo.port;
+            this.uncargoSelectedCity = event.data.uncargo.city;
+            this.uncargoDocking = this.ifEmpty(this.uncargoDocking, event.data.uncargo.docking.date)
+            this.uncargoUndocking = this.ifEmpty(this.uncargoUndocking, event.data.uncargo.undocking.date)
+            this.uncargoStartOperation = this.ifEmpty(this.uncargoStartOperation, event.data.uncargo.startOperation.date)
+            this.uncargoEndOperation = this.ifEmpty(this.uncargoEndOperation, event.data.uncargo.endOperation.date)
+            this.uncargoStartDraft = this.ifEmpty(this.uncargoStartDraft, event.data.uncargo.startDraft.date)
+            this.uncargoEndDraft = this.ifEmpty(this.uncargoEndDraft, event.data.uncargo.endDraft.date)
+            this.uncargoObservation = event.data.uncargo.observation;
+            
+            this.openModal();
+        },
+        createOrUpdate(){
+            if(!this.objectId){
+                this.createCharge()
+            }else{
+                this.updateCharge()
+            }
+        },
     },
     created(){
         this.getCharges()
@@ -210,15 +310,35 @@ export default{
             <DataTable
                 :value="charges"
                 :loading="loading"
+                removableSort
+                :selection="selectedCharge"
+                selectionMode="single"
+                @rowSelect="editMode"
                 paginator
                 :rows="5"
                 :rowsPerPageOptions="[5, 7]"
             >
-                <Column field="objectId" header="Codigo"></Column>
-                <Column field="cargo.docking.date" header="Atracação Carregamento"></Column>
-                <Column field="cargo.undocking.date" header="Desatracação Carregamento"></Column>
-                <Column field="uncargo.docking.date" header="Atracação Descarregamento"></Column>
-                <Column field="uncargo.undocking.date" header="Desatracação Descarregamento"> </Column>
+                <Column sortable field="objectId" header="Codigo"></Column>
+                <Column sortable field="cargo.docking.date" header="Atracação Carregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.cargo.docking.date) }}
+                    </template>
+                </Column>
+                <Column sortable field="cargo.undocking.date" header="Desatracação Carregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.cargo.undocking.date) }}
+                    </template>
+                </Column>
+                <Column sortable field="uncargo.docking.date" header="Atracação Descarregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.uncargo.docking.date) }}
+                    </template>
+                </Column>
+                <Column sortable field="uncargo.undocking.date" header="Desatracação Descarregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.uncargo.undocking.date) }}
+                    </template>
+                </Column>
             </DataTable>
         </div>
         <Dialog
@@ -286,14 +406,13 @@ export default{
                                 <div class="itemConfig">
                                     <span class="p-float-label">
                                         <Calendar 
-                                            inputId="endOperation" 
+                                            inputId="endOperation"
                                             dateFormat="dd/mm/yy"
-                                            outputFormat ="" 
                                             touchUI 
                                             showTime 
                                             hourFormat="24" 
                                             v-model="cargoDocking"
-                                        />
+                                        ></Calendar>
                                         <label for="endOperation">Atracação</label>
                                     </span>
                                 </div>
@@ -492,7 +611,7 @@ export default{
                     </div>
 
                     <div class="footer">
-                        <Button label="Enviar" @click="createCharge()"></Button>
+                        <Button label="Enviar" @click="createOrUpdate()"></Button>
                         <Button label="Cancelar" @click="closeModal()"></Button>
                     </div>
                 </div>
