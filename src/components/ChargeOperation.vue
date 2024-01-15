@@ -209,7 +209,6 @@ export default{
             this.visible = false
         },
         formatDate(value){
-            console.log("aqui",value)
             if(value){
                 return new Date(value).toLocaleString()
             }
@@ -248,30 +247,40 @@ export default{
             this.uncargoObservation = '',
             this.objectId = ''
         },
+        ifEmpty(campo, dado){
+            
+            if(dado === ""){ 
+                return campo = ""
+            }else{
+                return campo = new Date(dado)
+            }
+
+        },
+
         editMode(event){
             
-            // console.log(event).date
+            // console.log(event)
             this.objectId = event.data.objectId;
             this.barcacaSelected = event.data.barcaca;
             this.vessel = event.data.vessel;
             this.pusher = event.data.pusher;
             this.cargoSelectedPort = event.data.cargo.port;
             this.cargoSelectedCity = event.data.cargo.city;
-            this.cargoDocking = event.data.cargo.docking.date;
-            this.cargoUndocking = event.data.cargo.undocking.date;
-            this.cargoStartOperation = event.data.cargo.startOperation.date;
-            this.cargoEndOperation = event.data.cargo.endOperation.date;
-            this.cargoStartDraft = event.data.cargo.startDraft.date;
-            this.cargoEndDraft = event.data.cargo.endDraft.date;
+            this.cargoDocking = this.ifEmpty(this.cargoDocking, event.data.cargo.docking.date)
+            this.cargoUndocking = this.ifEmpty(this.cargoUndocking, event.data.cargo.undocking.date)
+            this.cargoStartOperation = this.ifEmpty(this.cargoStartOperation, event.data.cargo.startOperation.date)
+            this.cargoEndOperation = this.ifEmpty(this.cargoEndOperation, event.data.cargo.endOperation.date)
+            this.cargoStartDraft = this.ifEmpty(this.cargoStartDraft, event.data.cargo.startDraft.date)
+            this.cargoEndDraft = this.ifEmpty(this.cargoEndDraft, event.data.cargo.endDraft.date)
             this.cargoObservation = event.data.cargo.observation;
             this.uncargoSelectedPort = event.data.uncargo.port;
             this.uncargoSelectedCity = event.data.uncargo.city;
-            this.uncargoDocking = event.data.uncargo.docking.date;
-            this.uncargoUndocking = event.data.uncargo.undocking.date;
-            this.uncargoStartOperation = event.data.uncargo.startOperation.date;
-            this.uncargoEndOperation = event.data.uncargo.endOperation.date;
-            this.uncargoStartDraft = event.data.uncargo.startDraft.date;
-            this.uncargoEndDraft = event.data.uncargo.endDraft.date;
+            this.uncargoDocking = this.ifEmpty(this.uncargoDocking, event.data.uncargo.docking.date)
+            this.uncargoUndocking = this.ifEmpty(this.uncargoUndocking, event.data.uncargo.undocking.date)
+            this.uncargoStartOperation = this.ifEmpty(this.uncargoStartOperation, event.data.uncargo.startOperation.date)
+            this.uncargoEndOperation = this.ifEmpty(this.uncargoEndOperation, event.data.uncargo.endOperation.date)
+            this.uncargoStartDraft = this.ifEmpty(this.uncargoStartDraft, event.data.uncargo.startDraft.date)
+            this.uncargoEndDraft = this.ifEmpty(this.uncargoEndDraft, event.data.uncargo.endDraft.date)
             this.uncargoObservation = event.data.uncargo.observation;
             
             this.openModal();
@@ -310,10 +319,26 @@ export default{
                 :rowsPerPageOptions="[5, 7]"
             >
                 <Column sortable field="objectId" header="Codigo"></Column>
-                <Column sortable field="cargo.docking.date" header="Atracação Carregamento"></Column>
-                <Column sortable field="cargo.undocking.date" header="Desatracação Carregamento"></Column>
-                <Column sortable field="uncargo.docking.date" header="Atracação Descarregamento"></Column>
-                <Column sortable field="uncargo.undocking.date" header="Desatracação Descarregamento"> </Column>
+                <Column sortable field="cargo.docking.date" header="Atracação Carregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.cargo.docking.date) }}
+                    </template>
+                </Column>
+                <Column sortable field="cargo.undocking.date" header="Desatracação Carregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.cargo.undocking.date) }}
+                    </template>
+                </Column>
+                <Column sortable field="uncargo.docking.date" header="Atracação Descarregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.uncargo.docking.date) }}
+                    </template>
+                </Column>
+                <Column sortable field="uncargo.undocking.date" header="Desatracação Descarregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.uncargo.undocking.date) }}
+                    </template>
+                </Column>
             </DataTable>
         </div>
         <Dialog

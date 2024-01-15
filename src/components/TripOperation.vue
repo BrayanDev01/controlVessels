@@ -86,22 +86,30 @@ export default{
             await axios.request(options).then((response) =>{
                 this.trips = response.data.results
                 this.loading = false
-                console.log(response.data.results)
+                // console.log(response.data.results)
             }).catch(error =>{
                 this.$toast.add({ severity: 'error', summary: 'Houve um erro', detail: `${error.message}`, life: 3000 });
                 console.log(error)
             })
 
         },
+        ifEmpty(campo, dado){
+            
+            if(dado === ""){ 
+                return campo = ""
+            }else{
+                return campo = new Date(dado)
+            }
+
+        },
         editMode(event){
             this.objectId = event.data.objectId;
-            // console.log(event.data)
             this.vessel = event.data.trajeto.vessel;
             this.startPoint = event.data.trajeto.startPoint;
             this.endPoint = event.data.trajeto.endPoint;
             this.product = event.data.trajeto.product;
-            this.startOperation = event.data.trajeto.startOperation;
-            this.endOperation = event.data.trajeto.endOperation;
+            this.startOperation = this.ifEmpty(this.startOperation, event.data.trajeto.startOperation);
+            this.endOperation = this.ifEmpty(this.endOperation, event.data.trajeto.endOperation);
             this.captain = event.data.trajeto.captain;
             this.creator = event.data.trajeto.criador;
             this.client = event.data.trajeto.client;
@@ -144,7 +152,7 @@ export default{
                 this.closeModal()
                 this.cleanInputs
                 this.sucessToast(response.data.objectId)
-                console.log(response)
+                // console.log(response)
             }).catch(error =>{
                 console.log(error)
             })
