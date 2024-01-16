@@ -40,7 +40,7 @@ export default {
 
             const data = await axios.request(options).then((response) => {
                 this.saveInfo(response.data);
-                console.log(response);
+                // console.log(response);
                 this.$router.push({ path: '/home'});
                 
                 return response.data
@@ -70,7 +70,7 @@ export default {
             await axios.request(options).then((response) =>{
                 this.$toast.add({severity:'success', summary:'Email enviado', detail:'Verifique seu email', life: 3000})
                 this.visible = false
-                console.log(response)
+                // console.log(response)
             }).catch((error) =>{
                 this.$toast.add({severity:'error', summary:'Algo deu errado', detail:'Recarregue e tente novamente', life: 3000})
                 console.log(error)

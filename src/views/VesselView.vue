@@ -25,7 +25,7 @@ export default{
             };
 
             const data = await axios.request(options).then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 return response.data
 
             }).catch(function (error) {
@@ -47,7 +47,7 @@ export default{
             };
 
             const results = await axios.request(options).then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 return response.data.result
 
             }).catch(function (error) {
