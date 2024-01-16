@@ -643,7 +643,9 @@ Button{
 
 .bodyModal{
     width: 80dvw;
-    height: 100%;
+    height: 100dvh;
+    overflow: auto;
+    
 }
 .panel{
     display: flex;
