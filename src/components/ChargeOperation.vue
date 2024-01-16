@@ -100,7 +100,7 @@ export default{
             await axios.request(options).then((response) =>{
                 this.charges = response.data.results
                 this.loading = false
-                console.log(response.data.results)
+                // console.log(response.data.results)
             }).catch(error =>{
                 this.$toast.add({ severity: 'error', summary: 'Houve um erro', detail: `${error.message}`, life: 3000 });
                 console.log(error)

@@ -28,7 +28,7 @@ export default{
             };
 
             const results = await axios.request(options).then(function (response) {
-                console.log(response.data.results);
+                // console.log(response.data.results);
                 return response.data.results
 
             }).catch(function (error) {
@@ -49,7 +49,7 @@ export default{
             };
 
             const results = await axios.request(options).then(function (response) {
-                console.log(response.data.results);
+                // console.log(response.data.results);
                 return response.data.results
 
             }).catch(function (error) {
@@ -75,7 +75,7 @@ export default{
                 detail: e.data.vessel.name,
                 life: 3000
             })
-            console.log(this.selectedVessel)
+            // console.log(this.selectedVessel)
             this.reportDialog = true
         }
     },

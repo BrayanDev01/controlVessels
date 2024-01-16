@@ -28,7 +28,7 @@ export const userInfoStore = defineStore('userInfo', {
         saindo(){
             this.userInformations = [];
             localStorage.removeItem("loggedUser");
-            console.log("removido")
+            console.log("Você foi deslogado com sucesso")
         }
     },
 
