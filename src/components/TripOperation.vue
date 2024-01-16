@@ -54,7 +54,10 @@ export default{
                 'trajeto.vessel': { value: null, matchMode: FilterMatchMode.IN },
                 'trajeto.startOperation': { value: null, matchMode: FilterMatchMode.EQUALS },
                 'trajeto.endPoint': { value: null, matchMode: FilterMatchMode.EQUALS },
-                'trajeto.endOperation': {value: null, matchMode: FilterMatchMode.CONTAINS}
+                'trajeto.endOperation': {value: null, matchMode: FilterMatchMode.CONTAINS},
+                'trajeto.product': {value: null, matchMode: FilterMatchMode.CONTAINS},
+                'trajeto.criador': {value: null, matchMode: FilterMatchMode.CONTAINS},
+                'trajeto.client': {value: null, matchMode: FilterMatchMode.CONTAINS}
             },
             loading:true,
             objectId:'',
@@ -86,14 +89,14 @@ export default{
             await axios.request(options).then((response) =>{
                 this.trips = response.data.results
                 this.loading = false
-                // console.log(response.data.results)
+                console.log(response.data.results)
             }).catch(error =>{
                 this.$toast.add({ severity: 'error', summary: 'Houve um erro', detail: `${error.message}`, life: 3000 });
                 console.log(error)
             })
 
         },
-        ifEmpty(campo, dado){
+        ifDateEmpty(campo, dado){
             
             if(dado === ""){ 
                 return campo = ""
@@ -108,8 +111,8 @@ export default{
             this.startPoint = event.data.trajeto.startPoint;
             this.endPoint = event.data.trajeto.endPoint;
             this.product = event.data.trajeto.product;
-            this.startOperation = this.ifEmpty(this.startOperation, event.data.trajeto.startOperation);
-            this.endOperation = this.ifEmpty(this.endOperation, event.data.trajeto.endOperation);
+            this.startOperation = this.ifDateEmpty(this.startOperation, event.data.trajeto.startOperation);
+            this.endOperation = this.ifDateEmpty(this.endOperation, event.data.trajeto.endOperation);
             this.captain = event.data.trajeto.captain;
             this.creator = event.data.trajeto.criador;
             this.client = event.data.trajeto.client;
@@ -137,8 +140,8 @@ export default{
                         "endPoint": this.endPoint,
                         "product": this.product,
                         "vessel": this.vessel,
-                        "startOperation": new Date(this.startOperation).toLocaleString(),
-                        "endOperation": new Date(this.endOperation).toLocaleString(),
+                        "startOperation": this.startOperation,
+                        "endOperation": this.endOperation,
                         "captain": this.captain,
                         "client": this.client,
                         "criador": this.userInfo.username
@@ -177,7 +180,9 @@ export default{
                         "client": this.client,
                         "criador": this.userInfo.username,
                     },
-                    embarcations: Object.assign({}, this.selectedFrota)
+                    // embarcations: Object.assign({}, this.selectedFrota)
+                    embarcations: this.selectedFrota
+                    
                 }
             }
 
@@ -186,7 +191,7 @@ export default{
                 this.closeModal()
                 this.cleanInputs
                 this.updateToast(response.data)
-                console.log(response.data)
+                // console.log(response.data)
             }).catch(error =>{
                 console.log(error)
             })
@@ -210,6 +215,7 @@ export default{
             this.endOperation = '';
             this.captain = '';
             this.creator = '';
+            this.client = '';
             this.selectedFrota = null;
         },
         sucessToast(x){
@@ -230,6 +236,11 @@ export default{
                 return Object.values(this.selectedFrota)
                 .map(item => parseInt(item.carga, 10) || 0)
                 .reduce((soma, valor) => soma + valor, 0);
+            }
+        },
+        formatDate(value){
+            if(value){
+                return new Date(value).toLocaleString()
             }
         }
 
@@ -261,7 +272,7 @@ export default{
                 v-model:filters="filters"
                 dataKey="id"
                 :loading="loading"
-                :globalFilterFields="['objectId', 'trajeto.vessel', 'trajeto.startOperation', 'trajeto.endPoint', 'trajeto.endOperation']"
+                :globalFilterFields="['objectId', 'trajeto.vessel', 'trajeto.startOperation', 'trajeto.endPoint', 'trajeto.endOperation', 'trajeto.product', 'trajeto.criador', 'trajeto.client']"
             >
                 <template #header>
                     <div >
@@ -274,9 +285,17 @@ export default{
                 <template #loading> Carregando os dados, aguarde... </template>
                 <Column field="objectId" header="Codigo" sortable></Column>
                 <Column field="trajeto.vessel" header="Embarcação" sortable></Column>
-                <Column field="trajeto.startOperation" header="Inicio da Viagem" sortable></Column>
-                <Column field="trajeto.endPoint" header="Trajeto" sortable></Column>
-                <Column field="trajeto.endOperation" header="Fim da Viagem" sortable></Column>
+                <Column field="trajeto.startOperation" header="Inicio da Viagem" sortable>
+                    <template #body="{ data }">
+                        {{ formatDate(data.trajeto.startOperation) }}
+                    </template>
+                </Column>
+                <Column field="trajeto.endPoint" header="Destino" sortable></Column>
+                <Column field="trajeto.endOperation" header="Fim da Viagem" sortable>
+                    <template #body="{ data }">
+                        {{ formatDate(data.trajeto.endOperation) }}
+                    </template>
+                </Column>
             </DataTable>
         </div>
         <Dialog

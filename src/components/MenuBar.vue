@@ -6,7 +6,9 @@ import axios from 'axios';
 export default{
     data(){
         return {
-            userInfo: JSON.parse(localStorage.getItem("loggedUser"))
+            userInfo: JSON.parse(localStorage.getItem("loggedUser")),
+            position: 'center',
+            visible: false
         }
     },
     computed:{
@@ -20,6 +22,8 @@ export default{
         },
 
         async logOut(){
+            this.visible = true;
+
             const tokenExit = JSON.parse(localStorage.getItem("loggedUser"))
 
             const options = {
@@ -34,7 +38,7 @@ export default{
 
             const data = await axios.request(options).then((response) => {
                 
-                console.log(response);
+                // console.log(response);
                 this.saindo()
                 this.transition()
                 return response.data
@@ -67,6 +71,13 @@ export default{
             </div>
         </div>
     </div>
+    
+    <Dialog v-model:visible="visible" :position="position" :modal="true" :draggable="false">
+        <template #container>
+            <ProgressSpinner /> 
+        </template>
+    </Dialog>
+
 </template>
 
 <style scoped>

@@ -47,7 +47,7 @@ export default{
             };
 
             const results = await axios.request(options).then(function (response) {
-                console.log(response.data.results);
+                // console.log(response.data.results);
                 return response.data.results
 
             }).catch(function (error) {
@@ -76,7 +76,7 @@ export default{
             };
 
             const results = await axios.request(options).then(function (response) {
-                console.log(response.data.result);
+                // console.log(response.data.result);
                 this.$toast.add({ severity: 'success', summary: 'Report Enviado', detail: 'Report enviado com sucesso', life: 3000 });
                 return results                
             }).catch(error => {  
@@ -106,9 +106,6 @@ export default{
         // this.getVessels()
     },
     watch:{
-        selectedPorto(v){
-            console.log(v)
-        }
     }
 }
 </script>   
