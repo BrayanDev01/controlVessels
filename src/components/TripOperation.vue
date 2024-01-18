@@ -234,7 +234,11 @@ export default{
                 return
             } else{
                 return Object.values(this.selectedFrota)
-                .map(item => parseInt(item.carga, 10) || 0)
+                .map(item => {
+                    // Remover caracteres não numéricos e converter para número
+                    const numericValue = parseFloat(item.carga.replace(/[^0-9.]/g, '').replace(/\.(?=.*\.)/g, '').replace(/^(\d*\.\d*\.)|\./g, '$1')) || 0;
+                    return numericValue;
+                })
                 .reduce((soma, valor) => soma + valor, 0);
             }
         },
@@ -264,7 +268,7 @@ export default{
                 removableSort
                 :selection="selectedReport"
                 selectionMode="single"
-                :rows="5"
+                :rows="7"
                 :rowsPerPageOptions="[5, 7]"
                 paginator
                 @rowSelect="editMode"
@@ -404,7 +408,7 @@ export default{
                     </div>
 
                     <div class="footer">
-                        <Button label="Enviar" @click="createOrUpdate()"></Button>
+                        <Button @click="createOrUpdate()">{{ this.objectId ? "Atualizar": "Enviar" }}</Button>
                         <Button label="Cancelar" @click="closeModal()"></Button>
                     </div>
                 </div>
