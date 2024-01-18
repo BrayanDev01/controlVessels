@@ -107,7 +107,7 @@ export default {
                     <label for="username">Usúario</label>
                 </span>
                 <span class="p-float-label teste">
-                    <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input:{ style: 'width: 100%'}}"></Password>
+                    <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input:{ style: 'width: 100%'}}" :feedback="false" @keyup.enter="login()"></Password>
                     <label for="password">Password</label>
                 </span>
                 <Button label="Entrar" @click="login()" :loading="loading"></Button>
