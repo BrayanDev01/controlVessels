@@ -91,6 +91,7 @@ export default{
             const options = {
                 method: 'GET',
                 url: `${import.meta.env.VITE_URL_API}classes/Charge`,
+                params:{order: "-createdAt"},
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
@@ -315,10 +316,11 @@ export default{
                 selectionMode="single"
                 @rowSelect="editMode"
                 paginator
-                :rows="5"
+                :rows="7"
                 :rowsPerPageOptions="[5, 7]"
             >
                 <Column sortable field="objectId" header="Codigo"></Column>
+                <Column sortable field="barcaca.barcaca" header="Barcaça"></Column>
                 <Column sortable field="cargo.docking.date" header="Atracação Carregamento">
                     <template #body="{ data }">
                         {{ formatDate(data.cargo.docking.date) }}
@@ -611,7 +613,7 @@ export default{
                     </div>
 
                     <div class="footer">
-                        <Button label="Enviar" @click="createOrUpdate()"></Button>
+                        <Button @click="createOrUpdate()">{{ this.objectId ? "Atualizar": "Enviar" }}</Button>
                         <Button label="Cancelar" @click="closeModal()"></Button>
                     </div>
                 </div>
