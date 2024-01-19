@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import { FilterMatchMode } from 'primevue/api';
 
 
 export default{
@@ -55,7 +56,7 @@ export default{
                 {barcaca: "NVG XI(11)"},
                 {barcaca: "NVG LX(60)"},
             ],
-            metaKey: false,
+            metaKey: null,
             visible: false,
             loading: true,
             selectedCharge: null,
@@ -81,9 +82,18 @@ export default{
             uncargoStartDraft:"",
             uncargoEndDraft:"",
             uncargoObservation:"",
-            datepickerOptions: {
-                datepickerMask: '99/99/9999' // Defina a máscara desejada
-            }
+            filters:{
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                objectId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                numericId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                pusher: {value: null, matchMode: FilterMatchMode.CONTAINS},
+                vessel: {value: null, matchMode: FilterMatchMode.CONTAINS},
+                'barcaca.barcaca': { value: null, matchMode: FilterMatchMode.CONTAINS },
+                'cargo.docking.date': { value: null, matchMode: FilterMatchMode.IN },
+                'cargo.undocking.date': { value: null, matchMode: FilterMatchMode.EQUALS },
+                'uncargo.docking.date': { value: null, matchMode: FilterMatchMode.EQUALS },
+                'uncargo.undocking.date': {value: null, matchMode: FilterMatchMode.CONTAINS}
+            }            
         }
     },
     methods:{
@@ -318,7 +328,18 @@ export default{
                 paginator
                 :rows="7"
                 :rowsPerPageOptions="[5, 7]"
+                dataKey="id"
+                v-model:filters="filters"
+                :globalFilterFields="['objectId', 'numericId', 'pusher', 'vessel', 'barcaca.barcaca', 'cargo.docking.date', 'cargo.undocking.date', 'uncargo.docking.date', 'uncargo.undocking.date']"
             >
+                <template #header>
+                    <div >
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <InputText v-model="filters['global'].value" placeholder="Digite o que procura" />
+                        </span>
+                    </div>
+                </template>
                 <Column sortable field="objectId" header="Codigo"></Column>
                 <Column sortable field="barcaca.barcaca" header="Barcaça"></Column>
                 <Column sortable field="cargo.docking.date" header="Atracação Carregamento">
