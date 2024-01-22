@@ -340,7 +340,7 @@ export default{
                         </span>
                     </div>
                 </template>
-                <Column sortable field="objectId" header="Codigo"></Column>
+                <Column sortable field="numericId" header="Codigo"></Column>
                 <Column sortable field="barcaca.barcaca" header="Barcaça"></Column>
                 <Column sortable field="cargo.docking.date" header="Atracação Carregamento">
                     <template #body="{ data }">
