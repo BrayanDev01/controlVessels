@@ -386,7 +386,7 @@ export default{
                                 <div>{{ calculetCargo() }}</div>
                             </div>
                             <div v-if="!selectedFrota"></div>
-                            <div v-else style="width: 90%; height: 450px; overflow: auto; overflow-x:hidden;">
+                            <div v-else style="width: 90%; height: 350px; overflow: auto; overflow-x:hidden;">
                                 <Fieldset legend="Barcaça" class="fieldSet" :toggleable="true" v-for="frota in selectedFrota">
                                     <div class="groupItem">
                                         <div class="itemConfig">
