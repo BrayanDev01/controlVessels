@@ -6,6 +6,7 @@ import { FilterMatchMode } from 'primevue/api';
 export default{
     data(){
         return{
+            userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             charges:[],
             ports:[
                 { port: "Master" },
@@ -303,6 +304,9 @@ export default{
                 this.updateCharge()
             }
         },
+        exportCSV(){
+            this.$refs.charge.exportCSV()
+        }
     },
     created(){
         this.getCharges()
@@ -320,6 +324,7 @@ export default{
         <div>
             <DataTable
                 :value="charges"
+                ref="charge"
                 :loading="loading"
                 removableSort
                 :selection="selectedCharge"
@@ -333,12 +338,16 @@ export default{
                 :globalFilterFields="['objectId', 'numericId', 'pusher', 'vessel', 'barcaca.barcaca', 'cargo.docking.date', 'cargo.undocking.date', 'uncargo.docking.date', 'uncargo.undocking.date']"
             >
                 <template #header>
-                    <div >
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <InputText v-model="filters['global'].value" placeholder="Digite o que procura" />
                         </span>
+                        <div>
+                            <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" v-show="userInfo.accessLevel < 1"/>
+                        </div>
                     </div>
+                    
                 </template>
                 <Column sortable field="numericId" header="Codigo"></Column>
                 <Column sortable field="barcaca.barcaca" header="Barcaça"></Column>
