@@ -78,18 +78,17 @@ export default{
             const options = {
                 method: 'GET',
                 url: `${import.meta.env.VITE_URL_API}classes/Trips`,
-                params:{include:"embarcacao"},
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
                 },
-                params:{include:"chargeInfos"}
+                params:{order: "-createdAt"}
             };
 
             await axios.request(options).then((response) =>{
                 this.trips = response.data.results
                 this.loading = false
-                console.log(response.data.results)
+                // console.log(response.data.results)
             }).catch(error =>{
                 this.$toast.add({ severity: 'error', summary: 'Houve um erro', detail: `${error.message}`, life: 3000 });
                 console.log(error)
@@ -287,7 +286,7 @@ export default{
                     </div>
                 </template>
                 <template #loading> Carregando os dados, aguarde... </template>
-                <Column field="objectId" header="Codigo" sortable></Column>
+                <Column field="numericId" header="Codigo" sortable></Column>
                 <Column field="trajeto.vessel" header="Embarcação" sortable></Column>
                 <Column field="trajeto.startOperation" header="Inicio da Viagem" sortable>
                     <template #body="{ data }">
