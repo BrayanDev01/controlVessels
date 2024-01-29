@@ -122,7 +122,7 @@ export default{
         <!-- <RescueOperation v-else-if="selectOperation === 'Socorro'"></RescueOperation>
         <MovementOperantion v-else-if="selectOperation === 'Manobra'"></MovementOperantion> -->
         <ChargeOperation v-else-if="selectOperation === 'Carregamento / Descarregamento'"></ChargeOperation>
-        <div style="color: white;" v-else></div>
+        <div v-else></div>
 
                
     </div>
@@ -131,7 +131,8 @@ export default{
 <style scoped>
 .main{
     width: 100vw;
-    height: 100vh;
+    min-height: 100dvh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
