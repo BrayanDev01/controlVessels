@@ -153,7 +153,8 @@ export default {
 }
 .main{
     width: 100dvw;
-    height: 100dvh;
+    min-height: 100dvh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -210,5 +211,19 @@ p{
 .footer{
     display: flex;
     gap: 10px;
+}
+
+@media(max-width:500px){
+    .card{
+        width: 90%;
+        height: 650px;
+    }
+    .form{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        width: 90%;
+        gap: 10px;
+    }
 }
 </style>
