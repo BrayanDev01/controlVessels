@@ -72,7 +72,12 @@ export default{
         </div>
     </div>
     
-    <Dialog v-model:visible="visible" :position="position" :modal="true" :draggable="false">
+    <Dialog 
+        v-model:visible="visible" 
+        :position="position" 
+        :modal="true" 
+        :draggable="false"
+    >
         <template #container>
             <ProgressSpinner /> 
         </template>
@@ -88,7 +93,8 @@ export default{
     display: flex;
     align-items: center;
     color: var(--white-gc);
-    justify-content: space-between
+    justify-content: space-between;
+    box-shadow: 0px 10px 24px -10px rgba(0,0,0,0.49);
 }
 .buttonLink{
     color: var(--white-gc);
