@@ -65,6 +65,8 @@ export default{
             barcacaSelected:"",
             vessel:"",
             pusher:"",
+            product:"",
+            productVolume: undefined,
             cargoSelectedPort:"",
             cargoSelectedCity:"",
             cargoDocking:"",
@@ -130,6 +132,8 @@ export default{
                     barcaca: this.barcacaSelected,
                     vessel: this.vessel,
                     pusher: this.pusher,
+                    product: this.product,
+                    productVolume: this.productVolume,
                     cargo: {
                         docking: {date: this.cargoDocking},
                         undocking: {date: this.cargoUndocking},
@@ -177,6 +181,8 @@ export default{
                     barcaca: this.barcacaSelected,
                     vessel: this.vessel,
                     pusher: this.pusher,
+                    product: this.product,
+                    productVolume: this.productVolume,
                     cargo: {
                         docking: {date: this.cargoDocking},
                         undocking: {date: this.cargoUndocking},
@@ -255,6 +261,8 @@ export default{
             this.barcacaSelected = '',
             this.vessel = '',
             this.pusher = '',
+            this.product = ''
+            this.productVolume = undefined,
             this.cargoObservation = '',
             this.uncargoObservation = '',
             this.objectId = ''
@@ -407,7 +415,17 @@ export default{
                             <InputText id="exitPort" v-model="pusher"/>
                             <label for="exitPort">Empurrador</label>
                         </span>
-                        
+                    </div>
+                    <div class="itemConfig organizer">
+                        <span class=" item p-float-label">
+                            <InputText id="exitPort" v-model="product"/>
+                            <label for="exitPort">Produto</label>
+                        </span>
+
+                        <FloatLabel>
+                            <InputNumber id="number-input" v-model="productVolume" />
+                            <label for="number-input">Volume</label>
+                        </FloatLabel>
                     </div>
                     <div class="panel">
                         <div class="cargoConfig">

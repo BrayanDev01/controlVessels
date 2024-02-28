@@ -58,7 +58,7 @@ export default{
 
 <template>
     <div class="topMenu">
-        <img src="../assets/Gp_Cidade_DarkBG1.png" alt="Grupo Cidade">
+        <img src="../assets/Gp_Cidade_DarkBG.webp" alt="Grupo Cidade">
         <div class="options">
             <router-link to="/home" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Home</div>

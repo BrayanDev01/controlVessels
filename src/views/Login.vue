@@ -101,17 +101,22 @@ export default {
     <div class="main">
         <div class="card">
             <div class="form">
-                <img src="../assets/Gp_Cidade_Base1.png" alt="grupo cidade" class="logoImg">
+                <img src="../assets/Gp_Cidade_Base.webp" alt="grupo cidade" class="logoImg">
                 <span class=" item p-float-label">
                     <InputText id="username" v-model="user" :pt="{root:{ style: 'width: 100%'}}"/>
                     <label for="username">Usúario</label>
                 </span>
-                <span class="p-float-label teste">
+                <!-- <span class="p-float-label teste">
                     <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input:{ style: 'width: 100%'}}" :feedback="false" @keyup.enter="login()"></Password>
                     <label for="password">Password</label>
-                </span>
+                </span> -->
+                <FloatLabel class="teste">
+                    <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input: { root: { style: 'width: 100%' } }}" :feedback="false" @keyup.enter="login()" class="inpuTest"/>
+                    <label for="password">Senha</label>
+                </FloatLabel>
+
                 <Button label="Entrar" @click="login()" :loading="loading"></Button>
-                <a class="remember" @click="modalOpen()">Esqueci minha senha</a>
+                <a class="remember" @click="modalOpen()">Esqueci minha senha</a> 
             </div>
         </div>
         <Toast />
@@ -121,7 +126,6 @@ export default {
             :pt="{
                 mask: {
                     style: 'backdrop-filter: blur(2px);'
-
                 },
                 root:{
                     style:'max-width: 100%'
@@ -148,6 +152,9 @@ export default {
 </template>
 
 <style scoped>
+.inpuTest {
+    width: 100%;
+}
 .teste{
     margin-bottom: 10px; 
 }
@@ -170,7 +177,9 @@ export default {
     background-color: white;
 }
 .logoImg{
-    margin: 0 0 10px 0;
+    margin: 0 0 30px 0;
+    width: 100%;
+    height: 100%;
 }
 .form{
     display: flex;
