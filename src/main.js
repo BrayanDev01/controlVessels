@@ -19,6 +19,8 @@ import Dialog from 'primevue/dialog';
 import Row from 'primevue/row';
 import Fieldset from 'primevue/fieldset';
 import FileUpload from 'primevue/fileupload';
+import InputNumber from 'primevue/inputnumber';
+import FloatLabel from 'primevue/floatlabel';
 import ProgressSpinner from 'primevue/progressspinner';
 import '../src/style.scss'
 import App from './App.vue'
@@ -36,6 +38,8 @@ const pinia = createPinia()
 
 app.use(PrimeVue);
 app.component('Button', Button);
+app.component('FloatLabel', FloatLabel);
+app.component('InputNumber', InputNumber);
 app.component('ProgressSpinner', ProgressSpinner)
 app.component('Fieldset', Fieldset)
 app.component('FileUpload', FileUpload)
