@@ -10,7 +10,7 @@ export default{
     data(){
         return{
             vessels:[],
-            reports:[],
+            charges:[],
             selectedVessel:[],
             metaKey: true,
             reportDialog: false
@@ -41,22 +41,24 @@ export default{
         async getReports(){
             const options = {
                 method: 'GET',
-                url: `${import.meta.env.VITE_URL_API}classes/reports?include=vessel`,
+                url: `${import.meta.env.VITE_URL_API}classes/Charge`,
+                params:{order: "-createdAt"},
                 headers: {
                     'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
                 }
             };
 
-            const results = await axios.request(options).then(function (response) {
+            await axios.request(options).then((response) => {
                 // console.log(response.data.results);
+                this.charges = response.data.results
                 return response.data.results
 
             }).catch(function (error) {
                 console.error(error);
             });
 
-            this.reports = results
+            
         },
         formatDate(value){
             if(value){
@@ -98,28 +100,36 @@ export default{
                 </DataTable>                
             </div>
             <div class="reportSide">
-                <div class="titleSide">Relatórios</div>
-                <DataTable :value="reports" tableStyle="min-width: 50rem" selectionMode="single" dataKey="id" @rowSelect="onRowSelect">
-                    <Column field="vessel.name" header="Embarcação"></Column>
-                    <Column field="startOperation.iso" header="Inicio">
-                        <template #body="slotProps">
-                            {{ formatDate(slotProps.data.startOperation.iso) }}
-                        </template>
-                    </Column>
-                    <Column field="endOperation.iso" header="Fim">
-                        <template #body="slotProps">
-                            {{ formatDate(slotProps.data.endOperation.iso) }}
-                        </template>
-                    </Column>
+                <div class="titleSide">Carregamentos / Descarregamentos</div>
+                <DataTable 
+                    :value="charges" 
+                    tableStyle="min-width: 50rem" 
+                    selectionMode="single" 
+                    dataKey="id" 
+                    @rowSelect="onRowSelect"
+                    :rows="8"
+                    paginator
+                >
+                    <Column field="numericId" header="Código"></Column>
+                    <Column field="barcaca.barcaca" header="Barcaça"></Column>
+                    <Column field="vessel" header="Embarcação"></Column>
                 </DataTable>
-                <Dialog v-model:visible="reportDialog" modal header="Relatório" :style="{ width: '50vw' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-                    <div class="rigthSide">
-                        <div class="titleVessel">{{ selectedVessel?.vessel.name }}</div>
-                        <div>{{ selectedVessel?.vessel.Status }}</div>
-                        
-                    </div>
-                    <div class="leftSide">
-
+                <Dialog 
+                    v-model:visible="reportDialog" 
+                    modal 
+                    header="Relatório" 
+                    :style="{ width: '70vw'}" 
+                    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+                >
+                    <div style="display: flex;">
+                        <div class="rigthSide">
+                            <div class="titleVessel">Informações de Carregamento</div>
+                            <div>{{ selectedVessel?.vessel.Status }}</div>
+                            
+                        </div>
+                        <div class="leftSide">
+                            <div class="titleVessel">Informações de Descarregamento</div>
+                        </div>
                     </div>
                 </Dialog>
                 <Toast></Toast>
@@ -159,6 +169,10 @@ export default{
     height: 40rem;
     border-radius: 20px;
     background-color: var(--white-gc);
+}
+.rigthSide, leftSide{
+    width: 50%;
+
 }
 
 @media (max-width: 1500px){
