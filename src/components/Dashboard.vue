@@ -79,6 +79,7 @@ export default{
             })
             // console.log(this.selectedVessel)
             this.reportDialog = true
+            console.log(this.selectedVessel)
         }
     },
     created(){
@@ -116,15 +117,17 @@ export default{
                 </DataTable>
                 <Dialog 
                     v-model:visible="reportDialog" 
-                    modal 
-                    header="Relatório" 
+                    modal
                     :style="{ width: '70vw'}" 
                     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
                 >
+                    <template #header>
+                        <span style="font-weight: bold; font-size: larger;">Relátorio - #{{ selectedVessel?.numericId }}</span>
+                    </template>
                     <div style="display: flex;">
                         <div class="rigthSide">
                             <div class="titleVessel">Informações de Carregamento</div>
-                            <div>{{ selectedVessel?.vessel.Status }}</div>
+
                             
                         </div>
                         <div class="leftSide">
