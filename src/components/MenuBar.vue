@@ -58,7 +58,7 @@ export default{
 
 <template>
     <div class="topMenu">
-        <img src="../assets/Gp_Cidade_DarkBG1.png" alt="Grupo Cidade">
+        <img src="../assets/grupo_3_nf_white.png" alt="Grupo Cidade" style="height: 70%;">
         <div class="options">
             <router-link to="/home" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Home</div>
