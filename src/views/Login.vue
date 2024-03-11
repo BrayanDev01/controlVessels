@@ -101,15 +101,11 @@ export default {
     <div class="main">
         <div class="card">
             <div class="form">
-                <img src="../assets/Gp_Cidade_Base1.png" alt="grupo cidade" class="logoImg">
+                <img src="../assets/grupo_3_nf.png" alt="grupo cidade" class="logoImg">
                 <span class=" item p-float-label">
                     <InputText id="username" v-model="user" :pt="{root:{ style: 'width: 100%'}}"/>
                     <label for="username">Usúario</label>
                 </span>
-                <!-- <span class="p-float-label teste">
-                    <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input:{ style: 'width: 100%'}}" :feedback="false" @keyup.enter="login()"></Password>
-                    <label for="password">Password</label>
-                </span> -->
                 <FloatLabel class="teste">
                     <Password v-model="password" inputId="password" toggleMask style="width: 100%;" :pt="{input: { root: { style: 'width: 100%' } }}" :feedback="false" @keyup.enter="login()" class="inpuTest"/>
                     <label for="password">Senha</label>

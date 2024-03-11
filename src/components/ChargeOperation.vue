@@ -114,7 +114,7 @@ export default{
             await axios.request(options).then((response) =>{
                 this.charges = response.data.results
                 this.loading = false
-                // console.log(response.data.results)
+                console.log(response.data.results)
             }).catch(error =>{
                 this.$toast.add({ severity: 'error', summary: 'Houve um erro', detail: `${error.message}`, life: 3000 });
                 console.log(error)
@@ -283,6 +283,8 @@ export default{
             this.objectId = event.data.objectId;
             this.barcacaSelected = event.data.barcaca;
             this.vessel = event.data.vessel;
+            this.product = event.data.product;
+            this.productVolume = event.data.productVolume;
             this.pusher = event.data.pusher;
             this.cargoSelectedPort = event.data.cargo.port;
             this.cargoSelectedCity = event.data.cargo.city;
