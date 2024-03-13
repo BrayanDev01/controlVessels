@@ -267,9 +267,11 @@ export default{
                 removableSort
                 :selection="selectedReport"
                 selectionMode="single"
-                :rows="7"
-                :rowsPerPageOptions="[5, 7]"
-                paginator
+
+                scrollable
+                scrollHeight="500px"
+                :virtualScrollerOptions="{ itemSize: 46 }"                
+
                 @rowSelect="editMode"
                 :metaKeySelection="metaKey"
                 v-model:filters="filters"
