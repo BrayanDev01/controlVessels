@@ -58,7 +58,8 @@ export default{
 
 <template>
     <div class="topMenu">
-        <img src="../assets/grupo_3_nf_white.png" alt="Grupo Cidade" style="height: 70%;">
+        
+        <img src="../assets/grupo_3_nf_white.png" alt="Grupo Cidade" style="height: 60%;">
         <div class="options">
             <router-link to="/home" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Home</div>
@@ -123,8 +124,8 @@ img{
 @media (max-width: 500px) {
 
     img{
-        height: 2.5rem;
-        margin: 0 0 0 0px;
+        width:150px;
+        margin: 0px;
     }
     .options{
         

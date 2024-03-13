@@ -320,8 +320,6 @@ export default{
     },
     created(){
         this.getCharges()
-    },
-    watch:{
     }
 }
 </script>
@@ -340,9 +338,10 @@ export default{
                 :selection="selectedCharge"
                 selectionMode="single"
                 @rowSelect="editMode"
-                paginator
-                :rows="7"
-                :rowsPerPageOptions="[5, 7]"
+                scrollable
+                scrollHeight="500px"
+                :virtualScrollerOptions="{ itemSize: 46 }"
+                
                 dataKey="id"
                 v-model:filters="filters"
                 :globalFilterFields="['objectId', 'numericId', 'pusher', 'vessel', 'barcaca.barcaca', 'cargo.docking.date', 'cargo.undocking.date', 'uncargo.docking.date', 'uncargo.undocking.date']"
