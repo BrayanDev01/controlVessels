@@ -76,6 +76,11 @@ export default{
             cargoStartDraft:"",
             cargoEndDraft:"",
             cargoObservation: "",
+            cargoOperationTime: null,
+            cargoRainTime: null,
+            cargoMasterTime: null,
+            cargoNavegraosTime:null,
+            cargototalOperationTime: null,
             uncargoSelectedPort:"",
             uncargoSelectedCity:"",
             uncargoDocking:"",
@@ -85,6 +90,11 @@ export default{
             uncargoStartDraft:"",
             uncargoEndDraft:"",
             uncargoObservation:"",
+            uncargoOperationTime: null,
+            uncargoRainTime: null,
+            uncargoMasterTime: null,
+            uncargoNavegraosTime:null,
+            uncargototalOperationTime: null,
             filters:{
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 objectId: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -144,7 +154,11 @@ export default{
                         startDraft: {date: this.cargoStartDraft},
                         endDraft: {date: this.cargoEndDraft},
                         observation: this.cargoObservation,
-                        Draft: {url: ''}
+                        Draft: {url: ''},
+                        tempoOperacao: this.cargoOperationTime,
+                        tempoChuva: this.cargoRainTime,
+                        tempoMaster: this.cargoMasterTime,
+                        tempoNavegrãos: this.cargoNavegraosTime 
                     },
                     uncargo: {
                         docking: {date: this.uncargoDocking},
@@ -156,7 +170,11 @@ export default{
                         startDraft: {date: this.uncargoStartDraft},
                         endDraft: {date: this.uncargoEndDraft},
                         observation: this.uncargoObservation,
-                        Draft: {url: ''}
+                        Draft: {url: ''},
+                        tempoOperacaoUncargo: this.uncargoOperationTime,
+                        tempoChuvaUncargo: this.uncargoRainTime,
+                        tempoMasterUncargo: this.uncargoMasterTime,
+                        tempoNavegrãosUncargo: this.uncargoNavegraosTime 
                     }
                 }
             }
@@ -193,7 +211,12 @@ export default{
                         startDraft: {date: this.cargoStartDraft},
                         endDraft: {date: this.cargoEndDraft},
                         observation: this.cargoObservation,
-                        Draft: {url: ''}
+                        Draft: {url: ''},
+                        tempoOperacao: this.cargoOperationTime,
+                        tempoChuva: this.cargoRainTime,
+                        tempoMaster: this.cargoMasterTime,
+                        tempoNavegrãos: this.cargoNavegraosTime,
+                        tempoTotal: this.cargototalOperationTime                 
                     },
                     uncargo: {
                         docking: {date: this.uncargoDocking},
@@ -205,7 +228,12 @@ export default{
                         startDraft: {date: this.uncargoStartDraft},
                         endDraft: {date: this.uncargoEndDraft},
                         observation: this.uncargoObservation,
-                        Draft: {url: ''}
+                        Draft: {url: ''},
+                        tempoOperacaoUncargo: this.uncargoOperationTime,
+                        tempoChuvaUncargo: this.uncargoRainTime,
+                        tempoMasterUncargo: this.uncargoMasterTime,
+                        tempoNavegrãosUncargo: this.uncargoNavegraosTime,
+                        tempoTotal: this.uncargototalOperationTime
                     }
                 }
             }
@@ -266,6 +294,16 @@ export default{
             this.cargoObservation = '',
             this.uncargoObservation = '',
             this.objectId = ''
+            this.uncargoOperationTime= null;
+            this.uncargoRainTime= null;
+            this.uncargoMasterTime= null;
+            this.uncargoNavegraosTime= null;
+            this.cargoOperationTime= null;
+            this.cargoRainTime= null;
+            this.cargoMasterTime= null;
+            this.cargoNavegraosTime= null;
+            this.cargototalOperationTime = null;
+            this.uncargototalOperationTime = null;
         },
         ifEmpty(campo, dado){
             
@@ -295,6 +333,11 @@ export default{
             this.cargoStartDraft = this.ifEmpty(this.cargoStartDraft, event.data.cargo.startDraft.date)
             this.cargoEndDraft = this.ifEmpty(this.cargoEndDraft, event.data.cargo.endDraft.date)
             this.cargoObservation = event.data.cargo.observation;
+            this.cargoOperationTime= event.data.cargo.tempoOperacao;
+            this.cargoRainTime= event.data.cargo.tempoChuva;
+            this.cargoMasterTime= event.data.cargo.tempoMaster;
+            this.cargoNavegraosTime= event.data.cargo.tempoNavegrãos;
+            this.cargototalOperationTime = event.data.cargo.tempoTotal;
             this.uncargoSelectedPort = event.data.uncargo.port;
             this.uncargoSelectedCity = event.data.uncargo.city;
             this.uncargoDocking = this.ifEmpty(this.uncargoDocking, event.data.uncargo.docking.date)
@@ -304,6 +347,11 @@ export default{
             this.uncargoStartDraft = this.ifEmpty(this.uncargoStartDraft, event.data.uncargo.startDraft.date)
             this.uncargoEndDraft = this.ifEmpty(this.uncargoEndDraft, event.data.uncargo.endDraft.date)
             this.uncargoObservation = event.data.uncargo.observation;
+            this.uncargoOperationTime= event.data.uncargo.tempoOperacaoUncargo;
+            this.uncargoRainTime= event.data.uncargo.tempoChuvaUncargo;
+            this.uncargoMasterTime= event.data.uncargo.tempoMasterUncargo;
+            this.uncargoNavegraosTime= event.data.uncargo.tempoNavegrãosUncargo;
+            this.uncargototalOperationTime = event.data.uncargo.tempoTotal;
             
             this.openModal();
         },
@@ -316,8 +364,57 @@ export default{
         },
         exportCSV(){
             this.$refs.charge.exportCSV()
+        },
+        calcularTempoTotalCargo(){
+
+             // Dividir o tempo de operação em horas e minutos
+            const [horasOperacao, minutosOperacao] = this.cargoOperationTime.split(':').map(Number);
+            // Dividir o tempo de atraso em horas e minutos
+            const [horasChuva, minutosChuva] = this.cargoRainTime.split(':').map(Number);
+            // Dividir o tempo master em horas e minutos
+            const [horasMaster, minutosMaster] = this.cargoMasterTime.split(':').map(Number);
+            // Dividir o tempo de navegação de grãos em horas e minutos
+            const [horasNavegraos, minutosNavegraos] = this.cargoNavegraosTime.split(':').map(Number);
+
+            // Calcular o tempo total
+            const totalHoras = horasOperacao + horasChuva + horasMaster + horasNavegraos;
+            const totalMinutos = minutosOperacao + minutosChuva + minutosMaster + minutosNavegraos;
+
+            // Verificar se os minutos ultrapassaram 60 e ajustar as horas
+            const minutosRestantes = totalMinutos % 60;
+            const horasExtras = Math.floor(totalMinutos / 60);
+
+            const totalHorasFinal = totalHoras + horasExtras;
+            console.log(totalHorasFinal)
+
+            this.cargototalOperationTime = `${totalHorasFinal}:${minutosRestantes}`
+        },
+        calcularTempoTotalUncargo(){
+
+             // Dividir o tempo de operação em horas e minutos
+            const [horasOperacao, minutosOperacao] = this.uncargoOperationTime.split(':').map(Number);
+            // Dividir o tempo de atraso em horas e minutos
+            const [horasChuva, minutosChuva] = this.uncargoRainTime.split(':').map(Number);
+            // Dividir o tempo master em horas e minutos
+            const [horasMaster, minutosMaster] = this.uncargoMasterTime.split(':').map(Number);
+            // Dividir o tempo de navegação de grãos em horas e minutos
+            const [horasNavegraos, minutosNavegraos] = this.uncargoNavegraosTime.split(':').map(Number);
+
+            // Calcular o tempo total
+            const totalHoras = horasOperacao + horasChuva + horasMaster + horasNavegraos;
+            const totalMinutos = minutosOperacao + minutosChuva + minutosMaster + minutosNavegraos;
+
+            // Verificar se os minutos ultrapassaram 60 e ajustar as horas
+            const minutosRestantes = totalMinutos % 60;
+            const horasExtras = Math.floor(totalMinutos / 60);
+
+            const totalHorasFinal = totalHoras + horasExtras;
+            console.log(totalHorasFinal)
+
+            this.uncargototalOperationTime = `${totalHorasFinal}:${minutosRestantes}`
         }
     },
+
     created(){
         this.getCharges()
     }
@@ -483,65 +580,39 @@ export default{
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="cargoStartOperation"
-                                        />
-                                        <label for="endOperation">Inicio da Operação</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="operationTime" v-model="cargoOperationTime" @blur="validarTempo(this.cargoOperationTime)"/>
+                                        <label for="operationTime">Tempo da operação</label>
+                                     </FloatLabel>
                                 </div>
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="cargoEndOperation" 
-                                        />
-                                        <label for="endOperation">Fim da Operação</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="rainTime" v-model="cargoRainTime"/>
+                                        <label for="rainTime">Tempo de Chuva</label>
+                                    </FloatLabel>
                                 </div>
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="cargoStartDraft"
-                                        />
-                                        <label for="endOperation">Inicio do Draft</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="masterTime" v-model="cargoMasterTime" />
+                                        <label for="masterTime">Tempo Master</label>
+                                    </FloatLabel>
                                 </div>
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="cargoEndDraft" 
-                                        />
-                                        <label for="endOperation">Fim do Draft</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="navegraosTime" v-model="cargoNavegraosTime" />
+                                        <label for="navegraosTime">Tempo Navegrãos</label>
+                                    </FloatLabel>
                                 </div>
                             </div>
-                            <div class="itemConfig">
-                                <span class="p-float-label">
-                                    <Textarea v-model="cargoObservation" rows="5" cols="30" />
-                                    <label>Observação</label>
-                                </span>
+
+                            <div class="itemConfig gap-3 flex items-center">
+                                <FloatLabel>
+                                    <InputText id="totalOperationTime" v-model="cargototalOperationTime" disabled/>
+                                    <label for="totalOperationTime">Tempo total</label>
+                                </FloatLabel>
+                                <Button label="Calcular" raised @click="calcularTempoTotalCargo()"/>
                             </div>
                         </div>
                         <div class="uncargoConfig">
@@ -598,65 +669,39 @@ export default{
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="uncargoStartOperation"
-                                        />
-                                        <label for="endOperation">Inicio da Operação</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="operationTime" v-model="uncargoOperationTime" />
+                                        <label for="operationTime">Tempo da operação</label>
+                                    </FloatLabel>
                                 </div>
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="uncargoEndOperation"
-                                        />
-                                        <label for="endOperation">Fim da Operação</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="rainTime" v-model="uncargoRainTime" />
+                                        <label for="rainTime">Tempo de Chuva</label>
+                                    </FloatLabel>
                                 </div>
                             </div>
                             <div class="groupItem">
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="uncargoStartDraft" 
-                                        />
-                                        <label for="endOperation">Inicio do Draft</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="masterTime" v-model="uncargoMasterTime" />
+                                        <label for="masterTime">Tempo Master</label>
+                                    </FloatLabel>
                                 </div>
                                 <div class="itemConfig">
-                                    <span class="p-float-label">
-                                        <Calendar 
-                                            inputId="endOperation" 
-                                            dateFormat="dd/mm/yy" 
-                                            touchUI 
-                                            showTime 
-                                            hourFormat="24" 
-                                            v-model="uncargoEndDraft" 
-                                        />
-                                        <label for="endOperation">Fim do Draft</label>
-                                    </span>
+                                    <FloatLabel>
+                                        <InputText id="navegraosTime" v-model="uncargoNavegraosTime" />
+                                        <label for="navegraosTime">Tempo Navegrãos</label>
+                                    </FloatLabel>
                                 </div>
                             </div>
-                            <div class="itemConfig">
-                                <span class="p-float-label">
-                                    <Textarea v-model="uncargoObservation" rows="5" cols="30" />
-                                    <label>Observação</label>
-                                </span>
+
+                            <div class="itemConfig flex items-center gap-3" >
+                                <FloatLabel>
+                                    <InputText id="totalOperationTime" v-model="uncargototalOperationTime" disabled/>
+                                    <label for="totalOperationTime">Tempo total</label>
+                                </FloatLabel>
+                                <Button label="Calcular" raised @click="calcularTempoTotalUncargo()"/>
                             </div>
                         </div>
                     </div>
@@ -706,6 +751,7 @@ Button{
 }
 .itemConfig{
     margin: 20px;
+    align-items: center;
 }
 .cargoConfig, .uncargoConfig{
     width: 50%;
