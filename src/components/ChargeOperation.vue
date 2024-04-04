@@ -56,6 +56,11 @@ export default{
                 {barcaca: "UNG III(03)"},
                 {barcaca: "NVG XI(11)"},
                 {barcaca: "NVG LX(60)"},
+                {barcaca: "NG 14"},
+                {barcaca: "NG 15"},
+                {barcaca: "NG 16"},
+                {barcaca: "NG 17"},
+                {barcaca: "NG 18"}                
             ],
             metaKey: null,
             visible: false,
