@@ -4,6 +4,7 @@ import Form from '../views/Form.vue'
 import Login from '../views/Login.vue'
 import NotFound from '../views/NotFound.vue'
 import VesselView from '../views/VesselView.vue'
+import Locations from '../views/Locations.vue'
 import { userInfoStore } from "../store/UserInfos";
 
 
@@ -22,6 +23,11 @@ const routes = [
         path:'/form',
         name:'form',
         component: Form
+    },
+    {
+        path:'/locations',
+        name:'locations',
+        component: Locations
     },
     {
         path:'/vesselView/:id',

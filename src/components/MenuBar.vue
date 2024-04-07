@@ -67,6 +67,9 @@ export default{
             <router-link to="/form" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Formulário</div>
             </router-link>
+            <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+                <div>Localizações</div>
+            </router-link>
             <div class="buttonLink" @click="logOut()">
                 <div>Sair</div>
             </div>

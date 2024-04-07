@@ -94,7 +94,15 @@ export default{
         <div class="dashboard">
             <div class="vesselSide">
                 <div class="titleSide">Embarcações</div>
-                <DataTable :value="vessels" tableStyle="min-width: 50rem" @rowSelect="goToView" selectionMode="single" dataKey="id">
+                <DataTable 
+                    :value="vessels" 
+                    tableStyle="min-width: 50rem" 
+                    @rowSelect="goToView" 
+                    selectionMode="single" 
+                    dataKey="id"
+                    :rows="8"
+                    paginator
+                >
                     <Column field="name" header="Nome"></Column>
                     <Column field="status" header="Status"></Column>
                     <Column field="location" header="Localização"></Column>
