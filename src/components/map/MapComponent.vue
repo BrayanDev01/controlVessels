@@ -6,33 +6,31 @@
   
   <script setup>
   import { Map, MapStyle, Marker, config } from '@maptiler/sdk';
-  import { shallowRef, onMounted, onUnmounted, markRaw } from 'vue';
+  import { shallowRef, onMounted, onUnmounted, markRaw, ref, toRefs} from 'vue';
   import '@maptiler/sdk/dist/maptiler-sdk.css';
   
   const mapContainer = shallowRef(null);
   const map = shallowRef(null);
+
+  const props = defineProps({
+    latitude: Number,
+    longitude: Number
+  })
   
+  const { latitude } = toRefs(props)
+  const { longitude } = toRefs(props)
+
+  const cordinades = { lat: latitude, long: longitude}
+
   onMounted(() => {
-    console.log("CONSUMINDO")
-
     config.apiKey = `${import.meta.env.VITE_KEY_MAP}`;
-  
-    const initialState = { lat: -3.153301, lng: -59.938048, zoom: 11 };
-
   
     map.value = markRaw(new Map({
       container: mapContainer.value,
       style: MapStyle.STREETS,
-      center: [initialState.lng, initialState.lat],
-      zoom: initialState.zoom
+      center: [cordinades.long._object.longitude, cordinades.long._object.latitude],
+      zoom: 9
     }));
-
-    // new Marker({
-    //   color: "#FF0000"
-    // }).setLngLat([
-    //   initialState.lng,
-    //   initialState.lat
-    // ]).addTo(map.value);
 
     const customMarker = document.createElement('div');
     customMarker.style.backgroundImage = 'url(src/assets/logo_poseidon.png)';
@@ -45,7 +43,7 @@
       element: customMarker,
       anchor:'bottom'
     })
-    .setLngLat([initialState.lng, initialState.lat])
+    .setLngLat([cordinades.long._object.longitude, cordinades.long._object.latitude])
     .addTo(map.value);
   
   }),
@@ -57,8 +55,9 @@
 <style scoped>
   .map-wrap {
     position: relative;
-    width: 500px;
-    height: 500px; /* calculate height of the screen minus the heading */
+    width: 900px;
+    height: 400px;
+    box-shadow: 10px 10px 16px -9px rgba(0,0,0,0.41);
   }
   
   .map {
