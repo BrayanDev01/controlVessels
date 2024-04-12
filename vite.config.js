@@ -8,7 +8,7 @@ dns.setDefaultResultOrder('verbatim')
 export default defineConfig({
   plugins: [vue()],
   server: {
-    host: true
+    host: false
   }
 
 })

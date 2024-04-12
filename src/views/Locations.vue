@@ -74,20 +74,22 @@ export default{
                             <div class="ferrieSection">
                                 <div class="titleForm">Informações da Embarcação</div>
                                 <div class="ferriesInfos">
-                                    <div class="inputInfo">
-                                        <div class="infoTitle">
-                                            Nome:
+                                    <div class="inputGroupInfo">
+                                        <div class="inputInfo">
+                                            <div class="infoTitle">
+                                                Nome:
+                                            </div>
+                                            <div class="infoAnswer">
+                                                {{ slotProps.data.Ferrie.name }}
+                                            </div>
                                         </div>
-                                        <div class="infoAnswer">
-                                            {{ slotProps.data.Ferrie.name }}
-                                        </div>
-                                    </div>
-                                    <div class="inputInfo">
-                                        <div class="inputTitle">
-                                            Tipo de embarcação:
-                                        </div>
-                                        <div class="infoAnswer">
-                                            {{ slotProps.data.Ferrie.typeVessel }}
+                                        <div class="inputInfo">
+                                            <div class="inputTitle">
+                                                Tipo de embarcação:
+                                            </div>
+                                            <div class="infoAnswer">
+                                                {{ slotProps.data.Ferrie.typeVessel }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -101,28 +103,29 @@ export default{
                                             <div class="infoAnswer">{{ slotProps.data.captain }}</div>
                                         </div>
                                         <div>
-                                            <div class="infoTitle">Posição atual:</div>
-                                            <div class="infoAnswer">{{ slotProps.data.actualPosition }}</div>
-                                        </div>
-                                    </div>
-                                    <div class="inputGroupInfo">
-                                        <div>
                                             <div class="infoTitle">Comboio:</div>
                                             <div class="infoAnswer">{{ slotProps.data.convoy }}</div>
                                         </div>
                                         <div>
+                                            <div class="infoTitle">Previsão:</div>
+                                            <div class="infoAnswer">{{ slotProps.data.prevision }}</div>
+                                        </div>
+                                        <div>
+                                            <div class="infoTitle">Status:</div>
+                                            <div class="infoAnswer">{{ slotProps.data.status}}</div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="inputGroupInfo">
+                                        <div>
                                             <div class="infoTitle">Destino:</div>
                                             <div class="infoAnswer">{{ slotProps.data.destination }}</div>
                                         </div>
-                                    </div>
-                                    <div class="inputInfo">
-                                        <div class="infoTitle">Previsão:</div>
-                                        <div class="infoAnswer">{{ slotProps.data.prevision }}</div>
-                                    </div>
-                                    <div class="inputInfo">
-                                        <div class="infoTitle">Status:</div>
-                                        <div class="infoAnswer">{{ slotProps.data.status}}</div>
-                                    </div>
+                                        <div>
+                                            <div class="infoTitle">Posição atual:</div>
+                                            <div class="infoAnswer">{{ slotProps.data.actualPosition }}</div>
+                                        </div>
+                                    </div>                                    
                                 </div>
                             </div>                            
                         </div>
@@ -166,18 +169,22 @@ export default{
 .titleForm{
     font-size: large;
     font-weight: bolder;
+    margin: 10px;
 }
 .ferriesInfos, .tripInfos{
     width: 80%;
     height: 100%;
 }
+.tripInfos{
+    display: flex;
+}
 .inputInfo, .inputGroupInfo{
-    gap: 5px;
-    margin: 20px;
+    gap: 20px;  
 }
 .inputGroupInfo{
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
 }
 .infoTitle{
     color: gray;

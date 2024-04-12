@@ -22,6 +22,7 @@ import FileUpload from 'primevue/fileupload';
 import InputNumber from 'primevue/inputnumber';
 import FloatLabel from 'primevue/floatlabel';
 import ProgressSpinner from 'primevue/progressspinner';
+import Tag from 'primevue/tag';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -40,10 +41,10 @@ app.use(PrimeVue);
 app.component('Button', Button);
 app.component('FloatLabel', FloatLabel);
 app.component('InputNumber', InputNumber);
-app.component('ProgressSpinner', ProgressSpinner)
-app.component('Fieldset', Fieldset)
-app.component('FileUpload', FileUpload)
-app.component('MultiSelect', MultiSelect)
+app.component('ProgressSpinner', ProgressSpinner);
+app.component('Fieldset', Fieldset);
+app.component('FileUpload', FileUpload);
+app.component('MultiSelect', MultiSelect);
 app.component('InputText', InputText);
 app.component('Password', Password);
 app.component('Toast', Toast);
@@ -55,7 +56,8 @@ app.component('DataTable', DataTable);
 app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
-app.component('Dialog', Dialog)
+app.component('Dialog', Dialog);
+app.component('Tag', Tag);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);

@@ -70,6 +70,9 @@ export default{
             <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Localizações</div>
             </router-link>
+            <router-link to="/anomalies" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+                <div>Anomalias</div>
+            </router-link>
             <div class="buttonLink" @click="logOut()">
                 <div>Sair</div>
             </div>
