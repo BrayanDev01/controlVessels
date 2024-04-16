@@ -12,6 +12,7 @@ export default{
             anomalies:[],
             visible: false,
             resumeAnomalie: '',
+            dateAnomalie: null,
             departmentResp: '',
             typeAnomalie:'',
             baseAnomalie:'',
@@ -120,6 +121,43 @@ export default{
                 console.log(error)
             })
         },
+
+        async createAnomalie(){
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}classes/Anomalies`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    resumeAnomalie: this.resumeAnomalie,
+                    date: this.dateAnomalie,
+                    departmentResp: this.departmentResp.name,
+                    typeAnomalie: this.typeAnomalie.name,
+                    base: this.baseAnomalie.name,
+                    place: this.placeAnomalie.name,
+                    equipament: this.equipamentAnomalie.name,
+                    nameEquipament: this.nameEquipament,
+                    impact: this.impactAnomalie.name,
+                    status: this.statusAnomalie.name
+                }
+
+            }
+
+            await axios.request(options).then((response) =>{
+                
+                this.clearForm();
+                this.closeModal();
+                this.tostAdvice('success', 'Anomalia Registrada');                
+                console.log(response)
+            }).catch(error =>{
+                this.tostAdvice('error', 'Tivemos um erro')
+                this.clearForm();
+                console.log(error)
+            })
+            
+        },
         getStatusLabel(status) {
             switch (status) {
                 case 'Fechado':
@@ -134,7 +172,26 @@ export default{
                 default:
                     return null;
             }
+        },
+        clearForm(){
+            this.resumeAnomalie = "";
+            this.dateAnomalie = null;
+            this.departmentResp = "";
+            this.typeAnomalie = "";
+            this.baseAnomalie = "";
+            this.placeAnomalie = "";
+            this.equipamentAnomalie = "";
+            this.nameEquipament = "";
+            this.impactAnomalie = "";
+            this.statusAnomalie = "";
+        },
+        closeModal(){
+            this.visible = false
+        },
+        tostAdvice(cor, msg){
+            this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
         }
+
     },
     created(){
         this.getAnomalies()
@@ -173,10 +230,16 @@ export default{
                 <div class="titleDialog">Cadastrar Anomalia</div>
             </template>
             <div class="formAnomalies">
-                <FloatLabel>
-                    <Textarea v-model="resumeAnomalie" rows="5" cols="100" autoResize />
-                    <label>Resumo da Anomalia</label>
-                </FloatLabel>
+                <div style="display: flex; gap: 20px;">
+                    <FloatLabel>
+                        <Textarea v-model="resumeAnomalie" rows="5" cols="100" autoResize />
+                        <label>Resumo da Anomalia</label>
+                    </FloatLabel>
+                    <div class="groupQuestion">
+                        <span>Data da ocorrência</span>
+                        <Calendar v-model="dateAnomalie" dateFormat="dd/mm/yy" touchUI/>
+                    </div>
+                </div>
                 <div style="display: flex; width: 100%;">
                     <div class="optionsSide">
                         <div class="groupQuestion">
@@ -192,7 +255,7 @@ export default{
                             <span>Tipo de Anomalia:</span>
                             <Dropdown 
                                 v-model="typeAnomalie" 
-                                :options="types"
+                                :options="typesOptions"
                                 optionLabel="name" 
                                 placeholder="Selecione o tipo">
                             </Dropdown>
@@ -254,12 +317,13 @@ export default{
                     </div>
                 </div>
                 <div>
-                    <Button>Enviar Anomalia</Button>
-                    <Button>Cancelar</Button>
+                    <Button @click="createAnomalie()">Enviar Anomalia</Button>
+                    <Button @click="clearForm()">Cancelar</Button>
                 </div>
             </div>
         </Dialog>
     </div>
+    <Toast></Toast>
 </template>
 <style scoped>
 .main{

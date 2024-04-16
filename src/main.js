@@ -22,6 +22,7 @@ import FileUpload from 'primevue/fileupload';
 import InputNumber from 'primevue/inputnumber';
 import FloatLabel from 'primevue/floatlabel';
 import ProgressSpinner from 'primevue/progressspinner';
+import SpeedDial from 'primevue/speeddial';
 import Tag from 'primevue/tag';
 import '../src/style.scss'
 import App from './App.vue'
@@ -58,6 +59,7 @@ app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
 app.component('Dialog', Dialog);
 app.component('Tag', Tag);
+app.component('SpeedDial', SpeedDial);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);
