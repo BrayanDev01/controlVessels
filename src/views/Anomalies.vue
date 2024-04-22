@@ -2,6 +2,7 @@
 import Dropdown from 'primevue/dropdown';
 import MenuBar from '../components/MenuBar.vue';
 import axios from 'axios'
+import { FilterMatchMode } from 'primevue/api';
 
 export default{
     components:{
@@ -9,6 +10,7 @@ export default{
     },
     data(){
         return{
+            userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             anomalies:[],
             visible: false,
             resumeAnomalie: '',
@@ -98,7 +100,20 @@ export default{
                 {name:"Ainda não analisado"},
                 {name:"Em análise"},
                 {name:"Fechado"}
-            ]
+            ],
+            filters:{
+                global:{ value: null, matchMode: FilterMatchMode.CONTAINS},
+                objectId: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                base: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                departmentResp: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                equipament: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                impact: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                nameEquipament: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                place: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                resumeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                status: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS}
+            }
 
         }
     },
@@ -210,18 +225,31 @@ export default{
                     :value="anomalies"
                     ref="charges"
                     dataKey="id"
+                    removableSort
+                    v-model:filters="filters"
+                    :globalFilterFields="['global', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
                 >
-
-                    <Column field="typeAnomalie" header="Tipo"></Column>
-                    <Column field="base" header="Base"></Column>
-                    <Column field="place" header="Local"></Column>
-                    <Column field="status" header="Status">
+                    <template #header>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <FloatLabel>
+                                <InputText id="username" v-model="filters['global'].value"/>
+                                <label for="username">Global Search</label>
+                            </FloatLabel>
+                            <div>
+                                <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" v-show="userInfo.accessLevel < 1"/>
+                            </div>
+                        </div>
+                    </template>
+                    <Column field="typeAnomalie" header="Tipo" sortable></Column>
+                    <Column field="base" header="Base" sortable></Column>
+                    <Column field="place" header="Local" sortable></Column>
+                    <Column field="status" header="Status" sortable>
                         <template #body="slotProps">
                             <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)"></Tag>
                         </template>
                     </Column>
-                    <Column field="equipament" header="Equipamento"></Column>
-                    <Column field="departmentResp" header="Departamento Responsável"></Column>                    
+                    <Column field="equipament" header="Equipamento" sortable></Column>
+                    <Column field="departmentResp" header="Departamento Responsável" sortable></Column>                    
                 </DataTable>
             </div>
         </div>
@@ -318,7 +346,7 @@ export default{
                 </div>
                 <div>
                     <Button @click="createAnomalie()">Enviar Anomalia</Button>
-                    <Button @click="clearForm()">Cancelar</Button>
+                    <Button @click="clearForm() & closeModal()">Cancelar</Button>
                 </div>
             </div>
         </Dialog>
