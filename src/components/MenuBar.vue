@@ -12,7 +12,7 @@ export default{
             items: [
                 {
                     label: 'Dashboard',
-                    icon: 'pi-home',
+                    icon: 'pi pi-home',
                     command: () => {
                         this.$router.push('/home');
                         // this.$toast.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
@@ -20,7 +20,7 @@ export default{
                 },
                 {
                     label: 'Navegrãos',
-                    icon: 'pi-objects-column',
+                    icon: 'pi pi-objects-column',
                     command: () => {
                         this.$router.push('/form');
                         // this.$toast.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
@@ -28,7 +28,7 @@ export default{
                 },
                 {
                     label: 'Localizações',
-                    icon: 'pi-map',
+                    icon: 'pi pi-map',
                     command: () => {
                         this.$router.push('/locations');
                         // this.$toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
@@ -36,14 +36,14 @@ export default{
                 },
                 {
                     label: 'Anomalias',
-                    icon: 'pi-tag',
+                    icon: 'pi pi-tag',
                     command: () => {
                         this.$router.push('/anomalies');
                     }
                 },
                 {
                     label: 'Sair',
-                    icon: 'pi-sign-out',
+                    icon: 'pi pi-sign-out',
                     command: () => {
                         this.logOut();
                     }
