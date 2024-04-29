@@ -220,11 +220,12 @@ export default{
             <div class="header">
                 <Button @click="visible=true">Nova Anomalia</Button>
             </div>
-            <div>
+            <div v-show="userInfo?.accessLevel === 0">
                 <DataTable
                     :value="anomalies"
                     ref="charges"
                     dataKey="id"
+                    :style="{width:'90dvw'}"
                     removableSort
                     v-model:filters="filters"
                     :globalFilterFields="['global', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
@@ -253,14 +254,14 @@ export default{
                 </DataTable>
             </div>
         </div>
-        <Dialog v-model:visible="visible" modal :style="{width: '60dvw'}">
+        <Dialog v-model:visible="visible" modal :style="{width: '60dvw'}" @hide="clearForm()" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
             <template #header>
                 <div class="titleDialog">Cadastrar Anomalia</div>
             </template>
             <div class="formAnomalies">
-                <div style="display: flex; gap: 20px;">
+                <div class="topBox">
                     <FloatLabel>
-                        <Textarea v-model="resumeAnomalie" rows="5" cols="100" autoResize />
+                        <Textarea v-model="resumeAnomalie" rows="5" cols="40" />
                         <label>Resumo da Anomalia</label>
                     </FloatLabel>
                     <div class="groupQuestion">
@@ -268,7 +269,7 @@ export default{
                         <Calendar v-model="dateAnomalie" dateFormat="dd/mm/yy" touchUI/>
                     </div>
                 </div>
-                <div style="display: flex; width: 100%;">
+                <div class="bottomBox">
                     <div class="optionsSide">
                         <div class="groupQuestion">
                             <span>Departamento Responsável:</span>
@@ -333,7 +334,7 @@ export default{
                                 placeholder="Selecione o impacto">
                             </Dropdown>
                         </div>
-                        <div class="groupQuestion">
+                        <div class="groupQuestion" v-show="userInfo?.accessLevel === 0">
                             <span>Selecione o status</span>
                             <Dropdown 
                                 v-model="statusAnomalie" 
@@ -344,7 +345,7 @@ export default{
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="buttonsBottom">
                     <Button @click="createAnomalie()">Enviar Anomalia</Button>
                     <Button @click="clearForm() & closeModal()">Cancelar</Button>
                 </div>
@@ -367,7 +368,11 @@ export default{
     width: 90%;
     height: 100%;
     margin-top: 50px;
-    background-color: white;
+    /* background-color: white; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 Button{
     margin: 10px;
@@ -379,6 +384,14 @@ Button{
 .titleDialog{
     font-weight: bolder;
     font-size: larger;
+}
+.topBox{
+    display: flex;
+    gap: 20px;
+}
+.bottomBox{
+    display: flex;
+    width: 100%;
 }
 .formAnomalies{
     margin: 10px;
@@ -395,5 +408,19 @@ Button{
 .optionsSide{
     width: 100%;
     gap: 10px;
+}
+@media (max-width:500px){
+    .topBox{
+        flex-direction: column;
+        max-width: 100%;
+    }
+    .bottomBox{
+        flex-direction: column;
+    }
+    .buttonsBottom{
+        display: flex;
+
+    }
+
 }
 </style>
