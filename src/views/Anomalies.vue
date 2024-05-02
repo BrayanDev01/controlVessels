@@ -12,10 +12,13 @@ export default{
         return{
             userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             anomalies:[],
+            active: 0,
             visible: false,
             resumeAnomalie: '',
             dateAnomalie: null,
             departmentResp: '',
+            reasonAnomalie:'',
+            envolvedInAnomalie: '',
             typeAnomalie:'',
             baseAnomalie:'',
             placeAnomalie:'',
@@ -205,11 +208,20 @@ export default{
         },
         tostAdvice(cor, msg){
             this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
+        },
+        onAdvancedUpload(e){
+            console.log("AQUI FOI", e.files[0])
+        },
+        upload(e){
+            console.log(e)
         }
 
     },
     created(){
-        this.getAnomalies()
+        if(this.userInfo.accessLevel === 0){
+            this.getAnomalies()
+        } return
+        
     }
 }
 </script>
@@ -259,7 +271,7 @@ export default{
                 <div class="titleDialog">Cadastrar Anomalia</div>
             </template>
             <div class="formAnomalies">
-                <div class="topBox">
+                <!-- <div class="topBox">
                     <FloatLabel>
                         <Textarea v-model="resumeAnomalie" rows="5" cols="40" />
                         <label>Resumo da Anomalia</label>
@@ -344,7 +356,64 @@ export default{
                             </Dropdown>
                         </div>
                     </div>
-                </div>
+                </div> -->
+                <TabView style="width: 100%;" v-model:activeIndex="active">
+                    <TabPanel header="Ocorrência">
+                        <div class="topBox">
+                            <div>
+                                <FloatLabel>
+                                    <Textarea v-model="resumeAnomalie" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Resumo da Anomalia :</label>
+                                </FloatLabel>
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Data da ocorrência :</span>
+                                <Calendar v-model="dateAnomalie" dateFormat="dd/mm/yy" touchUI/>
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Local:</span>
+                                <Dropdown 
+                                    v-model="placeAnomalie" 
+                                    :options="localOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o local">
+                                </Dropdown>                            
+                            </div>
+                        </div>
+                        <div class="topBox">
+                            <div class="groupQuestion">
+                                <span>Causa da ocorrência:</span>
+                                <InputText id="username" style="width: 100%;" v-model="reasonAnomalie" />
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Envolvidos:</span>
+                                <InputText id="username" style="width: 100%;" v-model="envolvedInAnomalie" />
+                            </div>                          
+                        </div>
+                        <div>
+                            <FileUpload 
+                                name="archives[]"
+                                :multiple="true" 
+                                :maxFileSize="1000000" 
+                                :auto="true"
+                                @uploader="onAdvancedUpload"
+                            >
+                                <template #empty>
+                                    <div style="display: flex; flex-direction: column; align-items: center">
+                                        <i class="pi pi-cloud-upload" style="font-size: 2.5rem"></i>
+                                        <span>Arraste e solte os itens aqui</span>
+
+                                    </div>
+                                </template>
+                            </FileUpload>
+                        </div>
+                    </TabPanel>
+                    <TabPanel header="Informações">
+                        <p>
+                            teste Informações
+                        </p>
+                    </TabPanel>
+                </TabView>
                 <div class="buttonsBottom">
                     <Button @click="createAnomalie()">Enviar Anomalia</Button>
                     <Button @click="clearForm() & closeModal()">Cancelar</Button>
@@ -401,6 +470,7 @@ Button{
 }
 .groupQuestion{
     display: flex;
+    width: 100%;
     flex-direction: column;
     gap: 10px;
     margin: 10px;

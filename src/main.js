@@ -24,6 +24,8 @@ import FloatLabel from 'primevue/floatlabel';
 import ProgressSpinner from 'primevue/progressspinner';
 import SpeedDial from 'primevue/speeddial';
 import Tag from 'primevue/tag';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -39,6 +41,8 @@ const pinia = createPinia()
 
 
 app.use(PrimeVue);
+app.component('TabView', TabView);
+app.component('TabPanel', TabPanel);
 app.component('Button', Button);
 app.component('FloatLabel', FloatLabel);
 app.component('InputNumber', InputNumber);
