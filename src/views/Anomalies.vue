@@ -12,6 +12,7 @@ export default{
         return{
             userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             anomalies:[],
+            uploadedFile: null,
             active: 0,
             visible: false,
             resumeAnomalie: '',
@@ -116,6 +117,10 @@ export default{
                 resumeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 status: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS}
+            },
+            headers: {
+                'X-Parse-Application-Id': 'zFnXp8duZFOLBWfnqnj9hPbPcXd1YYBv7155jKyu',
+                'X-Parse-REST-API-Key': 'rakSaff8FUcVOjYQA6BKavwi1Gb01KQvV54Ju3Iq',
             }
 
         }
@@ -209,11 +214,8 @@ export default{
         tostAdvice(cor, msg){
             this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
         },
-        onAdvancedUpload(e){
-            console.log("AQUI FOI", e.files[0])
-        },
-        upload(e){
-            console.log(e)
+        async uploadFile(){
+            
         }
 
     },
@@ -271,92 +273,6 @@ export default{
                 <div class="titleDialog">Cadastrar Anomalia</div>
             </template>
             <div class="formAnomalies">
-                <!-- <div class="topBox">
-                    <FloatLabel>
-                        <Textarea v-model="resumeAnomalie" rows="5" cols="40" />
-                        <label>Resumo da Anomalia</label>
-                    </FloatLabel>
-                    <div class="groupQuestion">
-                        <span>Data da ocorrência</span>
-                        <Calendar v-model="dateAnomalie" dateFormat="dd/mm/yy" touchUI/>
-                    </div>
-                </div>
-                <div class="bottomBox">
-                    <div class="optionsSide">
-                        <div class="groupQuestion">
-                            <span>Departamento Responsável:</span>
-                            <Dropdown 
-                                v-model="departmentResp" 
-                                :options="departments"
-                                optionLabel="name" 
-                                placeholder="Selecione o Departamento">
-                            </Dropdown>
-                        </div>
-                        <div class="groupQuestion">
-                            <span>Tipo de Anomalia:</span>
-                            <Dropdown 
-                                v-model="typeAnomalie" 
-                                :options="typesOptions"
-                                optionLabel="name" 
-                                placeholder="Selecione o tipo">
-                            </Dropdown>
-                        </div>
-                        <div class="groupQuestion">
-                            <span>Base:</span>
-                            <Dropdown 
-                                v-model="baseAnomalie" 
-                                :options="baseOptions"
-                                optionLabel="name" 
-                                placeholder="Selecione a base">
-                            </Dropdown>
-                        </div>
-                        <div class="groupQuestion">
-                            <span>Local:</span>
-                            <Dropdown 
-                                v-model="placeAnomalie" 
-                                :options="localOptions"
-                                optionLabel="name" 
-                                placeholder="Selecione o local">
-                            </Dropdown>                            
-                        </div>
-                    </div>
-                    <div class="optionsSide">
-                        <div class="groupQuestion">
-                            <span>Tipo de equipamento:</span>
-                            <Dropdown 
-                                v-model="equipamentAnomalie" 
-                                :options="equipamentOptions"
-                                optionLabel="name" 
-                                placeholder="Selecione o tipo de equipamento">
-                            </Dropdown>
-                        </div>
-                        <div class="groupQuestion">
-                            <span>Nome do equipamento:</span>
-                            <FloatLabel>
-                                <InputText id="username" style="width: 100%;" v-model="nameEquipament" />
-                                <label for="username">Equipamento</label>
-                            </FloatLabel>
-                        </div>
-                        <div class="groupQuestion">
-                            <span>Selecione o impacto:</span>
-                            <Dropdown 
-                                v-model="impactAnomalie" 
-                                :options="impactOptions"
-                                optionLabel="name" 
-                                placeholder="Selecione o impacto">
-                            </Dropdown>
-                        </div>
-                        <div class="groupQuestion" v-show="userInfo?.accessLevel === 0">
-                            <span>Selecione o status</span>
-                            <Dropdown 
-                                v-model="statusAnomalie" 
-                                :options="statusOptions"
-                                optionLabel="name" 
-                                placeholder="Selecione o status">
-                            </Dropdown>
-                        </div>
-                    </div>
-                </div> -->
                 <TabView style="width: 100%;" v-model:activeIndex="active">
                     <TabPanel header="Ocorrência">
                         <div class="topBox">
@@ -372,7 +288,7 @@ export default{
                             </div>
                             <div class="groupQuestion">
                                 <span>Local:</span>
-                                <Dropdown 
+                                <Dropdown
                                     v-model="placeAnomalie" 
                                     :options="localOptions"
                                     optionLabel="name" 
@@ -393,10 +309,11 @@ export default{
                         <div>
                             <FileUpload 
                                 name="archives[]"
-                                :multiple="true" 
-                                :maxFileSize="1000000" 
-                                :auto="true"
-                                @uploader="onAdvancedUpload"
+                                v-model="uploadedFile"
+                                :headers="headers"
+                                :multiple="true"
+                                customUpload
+                                :uploadHandler="uploadFile"
                             >
                                 <template #empty>
                                     <div style="display: flex; flex-direction: column; align-items: center">
@@ -409,9 +326,66 @@ export default{
                         </div>
                     </TabPanel>
                     <TabPanel header="Informações">
-                        <p>
-                            teste Informações
-                        </p>
+                        <div style="display: flex; gap: 20px;width: 100%;">
+                            <div style="width: 100%;">
+                                <div class="groupQuestion">
+                                    <span>Departamento Responsável:</span>
+                                    <Dropdown 
+                                        v-model="departmentResp" 
+                                        :options="departments"
+                                        optionLabel="name" 
+                                        placeholder="Selecione o Departamento">
+                                    </Dropdown>
+                                </div>
+                                <div class="groupQuestion">
+                                    <span>Tipo de Anomalia:</span>
+                                    <Dropdown 
+                                        v-model="typeAnomalie" 
+                                        :options="typesOptions"
+                                        optionLabel="name" 
+                                        placeholder="Selecione o tipo">
+                                    </Dropdown>
+                                </div>
+                                <div class="groupQuestion">
+                                    <span>Base:</span>
+                                    <Dropdown 
+                                        v-model="baseAnomalie" 
+                                        :options="baseOptions"
+                                        optionLabel="name" 
+                                        placeholder="Selecione a base">
+                                    </Dropdown>
+                                </div>
+                            </div>
+                            <div style="width: 100%;">
+                                <div class="groupQuestion">
+                                    <span>Tipo de equipamento:</span>
+                                    <Dropdown 
+                                        v-model="equipamentAnomalie" 
+                                        :options="equipamentOptions"
+                                        optionLabel="name" 
+                                        placeholder="Selecione o tipo de equipamento">
+                                    </Dropdown>
+                                </div>
+                                <div class="groupQuestion">
+                                    <span>Selecione o impacto:</span>
+                                    <Dropdown 
+                                        v-model="impactAnomalie" 
+                                        :options="impactOptions"
+                                        optionLabel="name" 
+                                        placeholder="Selecione o impacto">
+                                    </Dropdown>
+                                </div>
+                                <div class="groupQuestion" v-show="userInfo?.accessLevel === 0">
+                                    <span>Selecione o status</span>
+                                    <Dropdown 
+                                        v-model="statusAnomalie" 
+                                        :options="statusOptions"
+                                        optionLabel="name" 
+                                        placeholder="Selecione o status">
+                                    </Dropdown>
+                                </div>
+                            </div>
+                        </div>
                     </TabPanel>
                 </TabView>
                 <div class="buttonsBottom">
