@@ -214,8 +214,9 @@ export default{
         tostAdvice(cor, msg){
             this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
         },
-        async uploadFile(){
-            
+        uploadFile(e){
+            console.log("FOI")
+            console.log(e.files[0])          
         }
 
     },
@@ -309,11 +310,9 @@ export default{
                         <div>
                             <FileUpload 
                                 name="archives[]"
-                                v-model="uploadedFile"
-                                :headers="headers"
                                 :multiple="true"
-                                customUpload
-                                :uploadHandler="uploadFile"
+                                :customUpload="true"
+                                @uploader="uploadFile($event)"
                             >
                                 <template #empty>
                                     <div style="display: flex; flex-direction: column; align-items: center">
