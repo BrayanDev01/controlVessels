@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from '../views/Home.vue'
-import Form from '../views/Form.vue'
-import Login from '../views/Login.vue'
-import NotFound from '../views/NotFound.vue'
-import VesselView from '../views/VesselView.vue'
+import Home from '../views/Home.vue';
+import Form from '../views/Form.vue';
+import Login from '../views/Login.vue';
+import NotFound from '../views/NotFound.vue';
+import VesselView from '../views/VesselView.vue';
+import Locations from '../views/Locations.vue';
+import Anomalies from '../views/Anomalies.vue'
 import { userInfoStore } from "../store/UserInfos";
 
 
@@ -24,6 +26,11 @@ const routes = [
         component: Form
     },
     {
+        path:'/locations',
+        name:'locations',
+        component: Locations
+    },
+    {
         path:'/vesselView/:id',
         name:'vesselview',
         component: VesselView
@@ -32,6 +39,11 @@ const routes = [
         path: '/:pathMatch(.*)*', 
         name: 'NotFound', 
         component: NotFound 
+    },
+    {
+        path: '/anomalies',
+        name: 'anomalies',
+        component: Anomalies
     }
 ]
 

@@ -94,7 +94,15 @@ export default{
         <div class="dashboard">
             <div class="vesselSide">
                 <div class="titleSide">Embarcações</div>
-                <DataTable :value="vessels" tableStyle="min-width: 50rem" @rowSelect="goToView" selectionMode="single" dataKey="id">
+                <DataTable 
+                    :value="vessels" 
+                    tableStyle="min-width: 50rem" 
+                    @rowSelect="goToView" 
+                    selectionMode="single" 
+                    dataKey="id"
+                    :rows="8"
+                    paginator
+                >
                     <Column field="name" header="Nome"></Column>
                     <Column field="status" header="Status"></Column>
                     <Column field="location" header="Localização"></Column>
@@ -137,19 +145,19 @@ export default{
                 </Dialog>
                 <Toast></Toast>
             </div>
-
         </div>
-
     </div>
 </template>
 
 <style scoped>
 .main{
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     background-color: var(--gray-bg-gc);
     display: flex;
     flex-direction: column;
+    overflow-y: hidden;
 }
 .titleSide{
     width: 100%;
@@ -162,10 +170,13 @@ export default{
 }
 
 .dashboard{
+    max-width: 100dvw;
+    flex-wrap: wrap;
     display: flex;
     justify-content: center;
-    margin: 30px 0 0 0 ;
+    margin: 30px 0px ;
     gap: 20px;
+    
 }
 .vesselSide, .reportSide{
     width: 45%;
