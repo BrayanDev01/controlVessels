@@ -8,7 +8,47 @@ export default{
         return {
             userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             position: 'center',
-            visible: false
+            visible: false,
+            items: [
+                {
+                    label: 'Dashboard',
+                    icon: 'pi pi-home',
+                    command: () => {
+                        this.$router.push('/home');
+                        // this.$toast.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+                    }
+                },
+                {
+                    label: 'Navegrãos',
+                    icon: 'pi pi-objects-column',
+                    command: () => {
+                        this.$router.push('/form');
+                        // this.$toast.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
+                    }
+                },
+                {
+                    label: 'Localizações',
+                    icon: 'pi pi-map',
+                    command: () => {
+                        this.$router.push('/locations');
+                        // this.$toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+                    }
+                },
+                {
+                    label: 'Anomalias',
+                    icon: 'pi pi-tag',
+                    command: () => {
+                        this.$router.push('/anomalies');
+                    }
+                },
+                {
+                    label: 'Sair',
+                    icon: 'pi pi-sign-out',
+                    command: () => {
+                        this.logOut();
+                    }
+                }
+            ]
         }
     },
     computed:{
@@ -67,10 +107,28 @@ export default{
             <router-link to="/form" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Formulário</div>
             </router-link>
+            <!-- <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+                <div>Localizações</div>
+            </router-link>
+            <router-link to="/anomalies" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+                <div>Anomalias</div>
+            </router-link> -->
             <div class="buttonLink" @click="logOut()">
                 <div>Sair</div>
             </div>
         </div>
+        <div class="teste">
+            <SpeedDial 
+                :model="items"
+                showIcon="pi pi-bars"
+                hideIcon="pi pi-times"
+                direction="down"
+                :style="{ right: '10px', top: '10px' }"
+                :tooltipOptions="{ position: 'left' }" 
+            />
+        </div>
+        
+
     </div>
     
     <Dialog 
@@ -120,6 +178,9 @@ img{
     height: 5rem;
     margin: 0 0 0 50px;
 }
+.teste{
+    display: none;
+}
 
 @media (max-width: 500px) {
 
@@ -128,9 +189,12 @@ img{
         margin: 0px;
     }
     .options{
-        
+        display: none;
         margin: 0 15px 0 0;
         
+    }
+    .teste{
+        display: flex;
     }
 }
 </style>

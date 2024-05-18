@@ -16,7 +16,8 @@ export default{
                 { port: "Uni-z" },
                 { port: "Bertuol" },
                 { port: "Arthur" },
-                { port: "Ciamport"} ,
+                { port: "Ciamport"},
+                { port: "Cargil"}
             ],
             cities:[
                 {city: "Miritituba"},
@@ -319,9 +320,7 @@ export default{
             }
 
         },
-
-        editMode(event){
-            
+        editMode(event){   
             // console.log(event)
             this.objectId = event.data.objectId;
             this.barcacaSelected = event.data.barcaca;
@@ -372,7 +371,7 @@ export default{
         },
         calcularTempoTotalCargo(){
 
-             // Dividir o tempo de operação em horas e minutos
+            // Dividir o tempo de operação em horas e minutos
             const [horasOperacao, minutosOperacao] = this.cargoOperationTime.split(':').map(Number);
             // Dividir o tempo de atraso em horas e minutos
             const [horasChuva, minutosChuva] = this.cargoRainTime.split(':').map(Number);
@@ -396,7 +395,7 @@ export default{
         },
         calcularTempoTotalUncargo(){
 
-             // Dividir o tempo de operação em horas e minutos
+            // Dividir o tempo de operação em horas e minutos
             const [horasOperacao, minutosOperacao] = this.uncargoOperationTime.split(':').map(Number);
             // Dividir o tempo de atraso em horas e minutos
             const [horasChuva, minutosChuva] = this.uncargoRainTime.split(':').map(Number);
