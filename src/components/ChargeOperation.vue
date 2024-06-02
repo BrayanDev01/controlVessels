@@ -23,7 +23,8 @@ export default{
                 {city: "Miritituba"},
                 {city: "Manaus"},
                 {city: "Santarém"},
-                {city: "Santana"}
+                {city: "Santana"},
+                {city: "Barcarena"}
             ],
             frota:[
                 {barcaca: "NVG X (10)"},
@@ -61,7 +62,12 @@ export default{
                 {barcaca: "NG 15"},
                 {barcaca: "NG 16"},
                 {barcaca: "NG 17"},
-                {barcaca: "NG 18"}                
+                {barcaca: "NG 18"},
+                {barcaca: "NG 02"},
+                {barcaca: "NG 07"},
+                {barcaca: "NG 08"},
+                {barcaca: "NG 09"},
+                {barcaca: "NG 10"},      
             ],
             metaKey: null,
             visible: false,
