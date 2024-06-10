@@ -14,6 +14,7 @@ export default{
             anomalies:[],
             uploadedFile: null,
             active: 0,
+            loadingCreate: false,
             visible: false,
             resumeAnomalie: '',
             dateAnomalie: null,
@@ -27,6 +28,8 @@ export default{
             nameEquipament:'',
             impactAnomalie:'',
             statusAnomalie:'',
+            resumeQuality:'',
+            archives:[],
             departments:[
                 {name:"Comercial"},
                 {name:"Controladoria"},
@@ -103,6 +106,9 @@ export default{
             statusOptions:[
                 {name:"Ainda não analisado"},
                 {name:"Em análise"},
+                {name:"Solucionado"},
+                {name:"Em tratativa"},
+                {name:"Análise de Eficácia"}, 
                 {name:"Fechado"}
             ],
             filters:{
@@ -117,12 +123,7 @@ export default{
                 resumeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 status: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS}
-            },
-            headers: {
-                'X-Parse-Application-Id': 'zFnXp8duZFOLBWfnqnj9hPbPcXd1YYBv7155jKyu',
-                'X-Parse-REST-API-Key': 'rakSaff8FUcVOjYQA6BKavwi1Gb01KQvV54Ju3Iq',
             }
-
         }
     },
     methods:{
@@ -214,9 +215,29 @@ export default{
         tostAdvice(cor, msg){
             this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
         },
-        uploadFile(e){
-            console.log("FOI")
-            console.log(e.files[0])          
+        foi(e){
+            const response = JSON.parse(e.xhr.responseText);
+            console.log(response);
+            this.archives = [...this.archives, ...response.files];
+        },
+        async teste(){
+            let input = document.getElementById('inputFile')
+
+            console.log(input.files[0])
+
+            let formData = new FormData();
+            formData.append('files', input.files[0])
+
+            console.log('>> formData >> ', formData);
+
+            await axios.post('https://apiconnect.3nf.com.br/upload', formData, {headers: {'Content-Type': 'multipart/form-data'}}
+            ).then((response)=> {
+                console.log('SUCCESS!!', response);
+            })
+            .catch((error)=> {
+                console.log('FAILURE!!', error);
+            });
+
         }
 
     },
@@ -312,7 +333,6 @@ export default{
                                 name="archives[]"
                                 :multiple="true"
                                 :customUpload="true"
-                                @uploader="uploadFile($event)"
                             >
                                 <template #empty>
                                     <div style="display: flex; flex-direction: column; align-items: center">
@@ -386,9 +406,44 @@ export default{
                             </div>
                         </div>
                     </TabPanel>
+                    <TabPanel header="Pós-analise">
+                        <div class="topBox">
+                            <div >
+                                <FloatLabel>
+                                    <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Resumo do Avaliador :</label>
+                                </FloatLabel>
+                            </div>
+                            <div class="boxUpload">
+                                <FileUpload 
+                                    mode="basic" 
+                                    name="files"
+                                    :auto="true"
+                                    :multiple="true"
+                                    @upload="foi($event)"
+                                    url="https://apiconnect.3nf.com.br/upload"
+                                />
+                                <div v-for="(file, i) in archives" :key="i" 
+                                    style="display: flex; margin: 10px; flex-wrap: wrap;"
+                                >
+                                    <div 
+                                        class="uploadBox"
+                                    >
+                                        <img :src="file.location" alt="teste" width="100" height="100">
+                                        <div style="display: flex; gap: 15px; padding: 10px;">
+                                            <i class="pi pi-times" style="font-size: 1rem;"></i>
+                                            <i class="pi pi-download" style="font-size: 1rem;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <Divider></Divider>
+                        
+                    </TabPanel>
                 </TabView>
                 <div class="buttonsBottom">
-                    <Button @click="createAnomalie()">Enviar Anomalia</Button>
+                    <Button @click="createAnomalie()" :loading="loadingCreate">Enviar Anomalia</Button>
                     <Button @click="clearForm() & closeModal()">Cancelar</Button>
                 </div>
             </div>
@@ -452,6 +507,23 @@ Button{
     width: 100%;
     gap: 10px;
 }
+.boxUpload{
+    width: 100%;
+    overflow: auto;
+    max-height: 300px; 
+    display: flex;
+    flex-wrap: wrap;
+}
+.uploadBox{
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    border: 1px solid #cecece;
+    justify-content: space-between;
+    border-radius: 10px;
+    box-shadow: 6px 10px 22px -9px rgba(89,89,89,1);
+}
+
 @media (max-width:500px){
     .topBox{
         flex-direction: column;

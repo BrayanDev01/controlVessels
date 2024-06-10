@@ -26,6 +26,7 @@ import SpeedDial from 'primevue/speeddial';
 import Tag from 'primevue/tag';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import Divider from 'primevue/divider';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -64,6 +65,7 @@ app.component('Row', Row);
 app.component('Dialog', Dialog);
 app.component('Tag', Tag);
 app.component('SpeedDial', SpeedDial);
+app.component('Divider', Divider);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);
