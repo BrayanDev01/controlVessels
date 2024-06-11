@@ -30,6 +30,7 @@ export default{
             statusAnomalie:'',
             resumeQuality:'',
             archives:[],
+            imageFacts:[],
             departments:[
                 {name:"Comercial"},
                 {name:"Controladoria"},
@@ -215,7 +216,12 @@ export default{
         tostAdvice(cor, msg){
             this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
         },
-        foi(e){
+        beforeAnalise(e){
+            const response = JSON.parse(e.xhr.responseText);
+            console.log(response);
+            this.imageFacts = [...this.imageFacts, ...response.files];
+        },
+        afterAnalise(e){
             const response = JSON.parse(e.xhr.responseText);
             console.log(response);
             this.archives = [...this.archives, ...response.files];
@@ -230,7 +236,7 @@ export default{
 
             console.log('>> formData >> ', formData);
 
-            await axios.post('https://apiconnect.3nf.com.br/upload', formData, {headers: {'Content-Type': 'multipart/form-data'}}
+            await axios.post('https://apiconnect.3nf.com.br/uploadAnomalias', formData, {headers: {'Content-Type': 'multipart/form-data'}}
             ).then((response)=> {
                 console.log('SUCCESS!!', response);
             })
@@ -238,6 +244,32 @@ export default{
                 console.log('FAILURE!!', error);
             });
 
+        },
+        async deleteImage(url){
+            const options = {
+                method: 'DELETE',
+                url: `https://apiconnect.3nf.com.br/uploadAnomalias`,
+                data:{
+                    fileUrl: url
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+            }).catch((error)=>{
+                console.log(error)
+            })
+        },
+        downloadImage(url){
+            window.open(url, '_blank')
+        },
+        retirarimageFacts(index){
+            if (index > -1 && index < this.imageFacts.length) {
+                this.imageFacts.splice(index, 1);
+                console.log("aqui foi")
+            } else {
+                console.log("Índice fora do intervalo");
+            }
         }
 
     },
@@ -328,20 +360,31 @@ export default{
                                 <InputText id="username" style="width: 100%;" v-model="envolvedInAnomalie" />
                             </div>                          
                         </div>
-                        <div>
-                            <FileUpload 
-                                name="archives[]"
+                        <div style="border: 1px solid red; display: flex; align-items: center;">
+                            <FileUpload
+                                mode="basic" 
+                                name="files"
                                 :multiple="true"
-                                :customUpload="true"
+                                :auto="true"
+                                @upload="beforeAnalise($event)"
+                                url="https://apiconnect.3nf.com.br/uploadAnomalias"
                             >
-                                <template #empty>
-                                    <div style="display: flex; flex-direction: column; align-items: center">
-                                        <i class="pi pi-cloud-upload" style="font-size: 2.5rem"></i>
-                                        <span>Arraste e solte os itens aqui</span>
-
-                                    </div>
-                                </template>
                             </FileUpload>
+                            <div class="boxImages">
+                                <div 
+                                    v-for="(image, index) in imageFacts" 
+                                    :key="index"
+                                >
+                                    <div 
+                                        style="width: 120px; display: flex; flex-direction: column; align-items: center;">
+                                        <img :src="image.location" alt="Teste" width="100" height="100">
+                                        <div style="display: flex;">
+                                            <Button  icon="pi pi-times" rounded  @click="retirarimageFacts(index)"></Button>
+                                            <Button  icon="pi pi-download" rounded @click="downloadImage(image.location)"></Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </TabPanel>
                     <TabPanel header="Informações">
@@ -420,7 +463,7 @@ export default{
                                     name="files"
                                     :auto="true"
                                     :multiple="true"
-                                    @upload="foi($event)"
+                                    @upload="afterAnalise($event)"
                                     url="https://apiconnect.3nf.com.br/upload"
                                 />
                                 <div v-for="(file, i) in archives" :key="i" 
@@ -522,6 +565,15 @@ Button{
     justify-content: space-between;
     border-radius: 10px;
     box-shadow: 6px 10px 22px -9px rgba(89,89,89,1);
+}
+.boxImages{
+    width: 100%;
+    height: 150px;
+    border: 1px solid green;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
 }
 
 @media (max-width:500px){
