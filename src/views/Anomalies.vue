@@ -165,7 +165,12 @@ export default{
                     equipament: this.equipamentAnomalie.name,
                     nameEquipament: this.nameEquipament,
                     impact: this.impactAnomalie.name,
-                    status: this.statusAnomalie.name
+                    status: this.statusAnomalie.name,
+                    archives: this.archives,
+                    imageFacts: this.imageFacts,
+                    reasonAnomalie: this.reasonAnomalie,
+                    envolvedInAnomalie: this.envolvedInAnomalie,
+                    resumeQuality: this.resumeQuality
                 }
 
             }
@@ -236,7 +241,9 @@ export default{
 
             console.log('>> formData >> ', formData);
 
-            await axios.post('https://apiconnect.3nf.com.br/uploadAnomalias', formData, {headers: {'Content-Type': 'multipart/form-data'}}
+            await axios.post('https://apiconnect.3nf.com.br/uploadAnomalias', 
+                formData, 
+                {headers: {'Content-Type': 'multipart/form-data'}}
             ).then((response)=> {
                 console.log('SUCCESS!!', response);
             })
@@ -245,7 +252,25 @@ export default{
             });
 
         },
-        async deleteImage(url){
+        async deleteImageBefore(url){
+            const options = {
+                method: 'DELETE',
+                url: `https://apiconnect.3nf.com.br/uploadAnomalias`,
+                data:{
+                    fileUrl: url
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+                this.$toast.add({severity:'success', summary:'Arquivo Deletado', life:3000})
+
+            }).catch((error)=>{
+                console.log(error)
+                this.$toast.add({severity:'error', summary:'Houve um problema', life:3000})
+            })
+        },
+        async deleteImageAfter(url){
             const options = {
                 method: 'DELETE',
                 url: `https://apiconnect.3nf.com.br/uploadAnomalias`,
@@ -269,6 +294,11 @@ export default{
                 console.log("aqui foi")
             } else {
                 console.log("Índice fora do intervalo");
+            }
+        },
+        retirarArchives(index){
+            if (index > -1 && index < this.archives.length) {
+                this.archives.splice(index, 1);   
             }
         }
 
