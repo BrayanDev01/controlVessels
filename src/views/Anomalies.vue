@@ -16,6 +16,7 @@ export default{
             active: 0,
             loadingCreate: false,
             visible: false,
+            objectId: null,
             resumeAnomalie: '',
             dateAnomalie: null,
             departmentResp: '',
@@ -109,7 +110,7 @@ export default{
                 {name:"Em análise"},
                 {name:"Solucionado"},
                 {name:"Em tratativa"},
-                {name:"Análise de Eficácia"}, 
+                {name:"Análise de eficácia"}, 
                 {name:"Fechado"}
             ],
             filters:{
@@ -146,7 +147,6 @@ export default{
                 console.log(error)
             })
         },
-
         async createAnomalie(){
             const options = {
                 method: 'POST',
@@ -180,10 +180,53 @@ export default{
                 this.clearForm();
                 this.closeModal();
                 this.tostAdvice('success', 'Anomalia Registrada');                
-                console.log(response)
+                // console.log(response)
             }).catch(error =>{
                 this.tostAdvice('error', 'Tivemos um erro')
                 this.clearForm();
+                console.log(error)
+            })
+            
+        },
+        async updateAnomalie(){
+            const options = {
+                method: 'PUT',
+                url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${this.objectId}`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    resumeAnomalie: this.resumeAnomalie,
+                    date: new Date(this.dateAnomalie).toISOString(),
+                    departmentResp: this.departmentResp.name,
+                    typeAnomalie: this.typeAnomalie.name,
+                    base: this.baseAnomalie.name,
+                    place: this.placeAnomalie.name,
+                    equipament: this.equipamentAnomalie.name,
+                    nameEquipament: this.nameEquipament,
+                    impact: this.impactAnomalie.name,
+                    status: this.statusAnomalie.name,
+                    archives: this.archives,
+                    imageFacts: this.imageFacts,
+                    reasonAnomalie: this.reasonAnomalie,
+                    envolvedInAnomalie: this.envolvedInAnomalie,
+                    resumeQuality: this.resumeQuality
+                }
+
+            }
+
+            await axios.request(options).then((response) =>{
+                
+                this.clearForm();
+                this.closeModal();
+                this.tostAdvice('success', 'Anomalia Atualizada');
+                this.resetData()                
+                // console.log(response)
+            }).catch(error =>{
+                this.tostAdvice('error', 'Tivemos um erro')
+                this.clearForm();
+                this.resetData();
                 console.log(error)
             })
             
@@ -198,22 +241,37 @@ export default{
 
                 case 'Ainda não analisado':
                     return 'danger';
+                
+                case 'Solucionado':
+                    return 'success';
+                
+                case 'Em tratativa':
+                    return 'warning';
+
+                case 'Análise de Eficácia':
+                    return 'info'
 
                 default:
                     return null;
             }
         },
         clearForm(){
-            this.resumeAnomalie = "";
+            this.resumeAnomalie = null;
             this.dateAnomalie = null;
-            this.departmentResp = "";
-            this.typeAnomalie = "";
-            this.baseAnomalie = "";
-            this.placeAnomalie = "";
-            this.equipamentAnomalie = "";
-            this.nameEquipament = "";
-            this.impactAnomalie = "";
-            this.statusAnomalie = "";
+            this.departmentResp = null;
+            this.typeAnomalie = null;
+            this.baseAnomalie = null;
+            this.placeAnomalie = null;
+            this.equipamentAnomalie = null;
+            this.nameEquipament = null;
+            this.impactAnomalie = null;
+            this.statusAnomalie = null;
+            this.reasonAnomalie = null;
+            this.envolvedInAnomalie = null;
+            this.imageFacts = null;
+            this.resumeQuality = null;
+            this.archives = null;
+
         },
         closeModal(){
             this.visible = false
@@ -252,7 +310,7 @@ export default{
             });
 
         },
-        async deleteImageBefore(url){
+        async deleteImageBefore(url, index){
             const options = {
                 method: 'DELETE',
                 url: `https://apiconnect.3nf.com.br/uploadAnomalias`,
@@ -264,13 +322,13 @@ export default{
             await axios.request(options).then((response)=>{
                 console.log(response)
                 this.$toast.add({severity:'success', summary:'Arquivo Deletado', life:3000})
-
+                this.retirarimageFacts(index)
             }).catch((error)=>{
                 console.log(error)
                 this.$toast.add({severity:'error', summary:'Houve um problema', life:3000})
             })
         },
-        async deleteImageAfter(url){
+        async deleteImageAfter(url, index){
             const options = {
                 method: 'DELETE',
                 url: `https://apiconnect.3nf.com.br/uploadAnomalias`,
@@ -281,8 +339,11 @@ export default{
 
             await axios.request(options).then((response)=>{
                 console.log(response)
+                this.$toast.add({severity:'successs', summary:'Arquivo Deletado', life:3000})
+                this.retirarArchives(index)
             }).catch((error)=>{
                 console.log(error)
+                this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
             })
         },
         downloadImage(url){
@@ -291,15 +352,37 @@ export default{
         retirarimageFacts(index){
             if (index > -1 && index < this.imageFacts.length) {
                 this.imageFacts.splice(index, 1);
-                console.log("aqui foi")
-            } else {
-                console.log("Índice fora do intervalo");
             }
         },
         retirarArchives(index){
             if (index > -1 && index < this.archives.length) {
                 this.archives.splice(index, 1);   
             }
+        },
+        editAnomalie(e){
+            console.log(e)
+            this.objectId = e.data.objectId;
+            this.resumeAnomalie= e.data.resumeAnomalie;
+            this.dateAnomalie= new Date(e.data.date);
+            this.departmentResp= {name: e.data.departmentResp};
+            this.reasonAnomalie= e.data.reasonAnomalie;
+            this.envolvedInAnomalie= e.data.envolvedInAnomalie;
+            this.typeAnomalie= {name: e.data.typeAnomalie};
+            this.baseAnomalie= {name: e.data.base};
+            this.placeAnomalie= {name: e.data.place}
+            this.equipamentAnomalie= {name: e.data.equipament};
+            this.nameEquipament= e.data.nameEquipament;
+            this.impactAnomalie= {name: e.data.impact};
+            this.statusAnomalie= {name: e.data.status};
+            this.resumeQuality= e.data.resumeQuality;
+            this.archives= e.data.archives;
+            this.imageFacts= e.data.imageFacts;
+
+            this.visible= true;
+        },
+        resetData(){
+            this.anomalies = [];
+            this.getAnomalies()
         }
 
     },
@@ -321,6 +404,8 @@ export default{
             <div v-show="userInfo?.accessLevel === 0">
                 <DataTable
                     :value="anomalies"
+                    selectionMode="single"
+                    @rowSelect="editAnomalie"
                     ref="charges"
                     dataKey="id"
                     :style="{width:'90dvw'}"
@@ -352,7 +437,13 @@ export default{
                 </DataTable>
             </div>
         </div>
-        <Dialog v-model:visible="visible" modal :style="{width: '60dvw'}" @hide="clearForm()" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+        <Dialog 
+            v-model:visible="visible" 
+            modal 
+            :style="{width: '60dvw'}" 
+            @hide="clearForm()" 
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+        >
             <template #header>
                 <div class="titleDialog">Cadastrar Anomalia</div>
             </template>
@@ -390,7 +481,7 @@ export default{
                                 <InputText id="username" style="width: 100%;" v-model="envolvedInAnomalie" />
                             </div>                          
                         </div>
-                        <div style="border: 1px solid red; display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center;">
                             <FileUpload
                                 mode="basic" 
                                 name="files"
@@ -409,7 +500,7 @@ export default{
                                         style="width: 120px; display: flex; flex-direction: column; align-items: center;">
                                         <img :src="image.location" alt="Teste" width="100" height="100">
                                         <div style="display: flex;">
-                                            <Button  icon="pi pi-times" rounded  @click="retirarimageFacts(index)"></Button>
+                                            <Button  icon="pi pi-times" rounded  @click="deleteImageBefore(image.location, index)"></Button>
                                             <Button  icon="pi pi-download" rounded @click="downloadImage(image.location)"></Button>
                                         </div>
                                     </div>
@@ -480,7 +571,7 @@ export default{
                         </div>
                     </TabPanel>
                     <TabPanel header="Pós-analise">
-                        <div class="topBox">
+                        <div class="topBox" v-if="userInfo?.accessLevel === 0">
                             <div >
                                 <FloatLabel>
                                     <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none;"/>
@@ -504,20 +595,41 @@ export default{
                                     >
                                         <img :src="file.location" alt="teste" width="100" height="100">
                                         <div style="display: flex; gap: 15px; padding: 10px;">
-                                            <i class="pi pi-times" style="font-size: 1rem;"></i>
-                                            <i class="pi pi-download" style="font-size: 1rem;"></i>
+                                            <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
+                                            <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div v-else >
+                            <strong>Você não tem acesso a essa aba</strong>
+                        </div>
                         <Divider></Divider>
+                        
                         
                     </TabPanel>
                 </TabView>
                 <div class="buttonsBottom">
-                    <Button @click="createAnomalie()" :loading="loadingCreate">Enviar Anomalia</Button>
-                    <Button @click="clearForm() & closeModal()">Cancelar</Button>
+                    <Button 
+                        @click="createAnomalie()" 
+                        :loading="loadingCreate"
+                        v-if="!objectId"
+                    >
+                        Enviar Anomalia
+                    </Button>
+                    <Button 
+                        @click="updateAnomalie()" 
+                        :loading="loadingCreate"
+                        v-else
+                    >
+                        Atualizar Anomalia
+                    </Button>
+                    <Button 
+                        @click="clearForm() & closeModal()"
+                    >   
+                        Cancelar
+                    </Button>
                 </div>
             </div>
         </Dialog>
@@ -599,7 +711,6 @@ Button{
 .boxImages{
     width: 100%;
     height: 150px;
-    border: 1px solid green;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
