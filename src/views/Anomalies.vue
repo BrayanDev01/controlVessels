@@ -179,7 +179,8 @@ export default{
                 
                 this.clearForm();
                 this.closeModal();
-                this.tostAdvice('success', 'Anomalia Registrada');                
+                this.tostAdvice('success', 'Anomalia Registrada');
+                this.resetData()             
                 // console.log(response)
             }).catch(error =>{
                 this.tostAdvice('error', 'Tivemos um erro')
@@ -268,9 +269,9 @@ export default{
             this.statusAnomalie = null;
             this.reasonAnomalie = null;
             this.envolvedInAnomalie = null;
-            this.imageFacts = null;
+            this.imageFacts = [];
             this.resumeQuality = null;
-            this.archives = null;
+            this.archives = [];
 
         },
         closeModal(){
@@ -498,7 +499,7 @@ export default{
                                 >
                                     <div 
                                         style="width: 120px; display: flex; flex-direction: column; align-items: center;">
-                                        <img :src="image.location" alt="Teste" width="100" height="100">
+                                        <Image :src="image.location" alt="Teste" width="100" height="100" preview ></Image>
                                         <div style="display: flex;">
                                             <Button  icon="pi pi-times" rounded  @click="deleteImageBefore(image.location, index)"></Button>
                                             <Button  icon="pi pi-download" rounded @click="downloadImage(image.location)"></Button>
@@ -593,7 +594,7 @@ export default{
                                     <div 
                                         class="uploadBox"
                                     >
-                                        <img :src="file.location" alt="teste" width="100" height="100">
+                                        <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
                                         <div style="display: flex; gap: 15px; padding: 10px;">
                                             <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
                                             <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
