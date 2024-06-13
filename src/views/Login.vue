@@ -76,18 +76,6 @@ export default {
                 console.log(error)
             })
         },
-        async teste(){
-            const options = {
-                method:'GET',
-                url:'http://54.233.189.147:3000/ferries',
-            }
-
-            await axios.request(options).then((response)=>{
-                console.log(response)
-            }).catch((error)=>{
-                console.log(error)
-            })
-        },
         verification(){
             if(this.email === ''){
                 this.change = true
@@ -105,9 +93,6 @@ export default {
     },
     computed:{
         ...mapState(userInfoStore, ['userInformations'])
-    },
-    created(){
-        this.teste()
     }
 }
 </script>
