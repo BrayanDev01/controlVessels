@@ -425,6 +425,7 @@ export default{
                             </div>
                         </div>
                     </template>
+                    <Column field="numericId" header="Código"></Column>
                     <Column field="typeAnomalie" header="Tipo" sortable></Column>
                     <Column field="base" header="Base" sortable></Column>
                     <Column field="place" header="Local" sortable></Column>
@@ -542,6 +543,14 @@ export default{
                             </div>
                             <div style="width: 100%;">
                                 <div class="groupQuestion">
+                                    <span>Nome do Equipamento:</span>
+                                    <InputText 
+                                        style="width: 100%;" 
+                                        v-model="nameEquipament"
+                                        placeholder="Nome do Equipamento" 
+                                    />
+                                </div>
+                                <div class="groupQuestion">
                                     <span>Tipo de equipamento:</span>
                                     <Dropdown 
                                         v-model="equipamentAnomalie" 
@@ -559,15 +568,17 @@ export default{
                                         placeholder="Selecione o impacto">
                                     </Dropdown>
                                 </div>
-                                <div class="groupQuestion" v-show="userInfo?.accessLevel === 0">
-                                    <span>Selecione o status</span>
-                                    <Dropdown 
-                                        v-model="statusAnomalie" 
-                                        :options="statusOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o status">
-                                    </Dropdown>
-                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">
+                                <span>Selecione o status</span>
+                                <Dropdown 
+                                    v-model="statusAnomalie" 
+                                    :options="statusOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o status">
+                                </Dropdown>
                             </div>
                         </div>
                     </TabPanel>
