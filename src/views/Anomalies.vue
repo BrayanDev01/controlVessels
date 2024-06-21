@@ -33,18 +33,18 @@ export default{
             archives:[],
             imageFacts:[],
             departments:[
-                {name:"Comercial"},
-                {name:"Controladoria"},
-                {name:"SGI"},
-                {name:"Inspeção"},
-                {name:"Manutenção"},
-                {name:"Navegação"},
-                {name:"Patrimonial"},
-                {name:"RH"},
-                {name:"Rodoviário"},
-                {name:"SESMT"},
-                {name:"Suprimentos"},
-                {name:"TI"},
+                {name:"Comercial", email:''},
+                {name:"Controladoria", email:'controller@grupocidade.com'},
+                {name:"SGI", email:'qualidade@grupocidade.com'},
+                {name:"Inspeção", email:'eltonguedes@hotmail.com'},
+                {name:"Manutenção", email:'sup.manutencao@grupocidade.com'},
+                {name:"Navegação", email:'planejamento@grupocidade.com'},
+                {name:"Patrimonial", email:'patrimonio@grupocidade.com'},
+                {name:"RH", email:'rh@grupocidade.com'},
+                {name:"Rodoviário", email:'supercisorod@grupocidade.com'},
+                {name:"SESMT", email:'sesmt@grupocidade.com'},
+                {name:"Suprimentos", email:'compras2@grupocidade.com'},
+                {name:"TI", email:'ti@grupocidade.com'},
                 {name:"Terceirizado"}
             ],
             typesOptions:[
@@ -291,14 +291,15 @@ export default{
                     base: this.baseAnomalie?.name,
                     place: this.placeAnomalie?.name,
                     equipament: this.equipamentAnomalie?.name,
-                    nameEquipament: this.nameEquipament.name,
+                    nameEquipament: this.nameEquipament?.name,
                     impact: this.impactAnomalie?.name,
                     status: this.statusAnomalie?.name,
                     archives: this.archives,
                     imageFacts: this.imageFacts,
                     reasonAnomalie: this.reasonAnomalie,
                     envolvedInAnomalie: this.envolvedInAnomalie,
-                    resumeQuality: this.resumeQuality
+                    resumeQuality: this.resumeQuality,
+                    emailResp: this.departmentResp?.email
                 }
 
             }
