@@ -235,7 +235,11 @@ export default{
                 {name:"EMP NM XXVII"},
                 {name:"EMP PETRODADO I"},
                 {name:"EMP SEU JUAREZ"},
-                {name:"EMP VALENTE DE DEUS I"}
+                {name:"EMP VALENTE DE DEUS I"},
+                {name:"Outros"},
+                {name:"Não aplicável"},
+                {name:"Caminhão "},
+                {name:"Chopin"}    
             ],
             filters:{
                 global:{ value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -510,7 +514,10 @@ export default{
             this.getAnomalies()
         },
         formatData(x){
-            return new Date(x).toLocaleString()
+            return new Date(x).toLocaleDateString()
+        },
+        exportCSV(){
+            this.$refs.anomalies.exportCSV()
         }
 
     },
@@ -534,9 +541,11 @@ export default{
                     :value="anomalies"
                     selectionMode="single"
                     @rowSelect="editAnomalie"
-                    ref="charges"
+                    ref="anomalies"
                     dataKey="id"
                     :style="{width:'90dvw'}"
+                    scrollable 
+                    scrollHeight="500px"
                     removableSort
                     v-model:filters="filters"
                     :globalFilterFields="['global', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
@@ -847,6 +856,8 @@ Button{
     flex-wrap: wrap;
 }
 .uploadBox{
+    overflow: hidden;
+    height: 100%;
     display: flex; 
     flex-direction: column; 
     align-items: center;
@@ -857,7 +868,7 @@ Button{
 }
 .boxImages{
     width: 100%;
-    height: 150px;
+    height: 100%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
