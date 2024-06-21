@@ -583,7 +583,8 @@ export default{
         </div>
         <Dialog 
             v-model:visible="visible" 
-            modal 
+            modal
+            :draggable="false"
             :style="{width: '60dvw'}" 
             @hide="clearForm()" 
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
