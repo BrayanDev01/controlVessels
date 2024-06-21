@@ -583,7 +583,8 @@ export default{
         </div>
         <Dialog 
             v-model:visible="visible" 
-            modal 
+            modal
+            :draggable="false"
             :style="{width: '60dvw'}" 
             @hide="clearForm()" 
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -786,6 +787,16 @@ export default{
                     >   
                         Cancelar
                     </Button>
+                </div>
+                <div style="width: 100%;">
+                    <Message 
+                        severity="error"
+                        :closable="false"
+                        icon="pi pi-exclamation-circle"
+                        v-if="!objectId"
+                    >
+                        Todos os campos são necessarios
+                    </Message>
                 </div>
             </div>
         </Dialog>
