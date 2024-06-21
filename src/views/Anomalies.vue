@@ -494,7 +494,7 @@ export default{
             this.objectId = e.data.objectId;
             this.resumeAnomalie= e.data.resumeAnomalie;
             this.dateAnomalie= new Date(e.data.date);
-            this.departmentResp= {name: e.data.departmentResp};
+            this.departmentResp= {name: e.data.departmentResp, email:e.data.emailResp};
             this.reasonAnomalie= e.data.reasonAnomalie;
             this.envolvedInAnomalie= e.data.envolvedInAnomalie;
             this.typeAnomalie= {name: e.data.typeAnomalie};
