@@ -508,6 +508,9 @@ export default{
         resetData(){
             this.anomalies = [];
             this.getAnomalies()
+        },
+        formatData(x){
+            return new Date(x).toLocaleString()
         }
 
     },
@@ -553,6 +556,12 @@ export default{
                     <Column field="typeAnomalie" header="Tipo" sortable></Column>
                     <Column field="base" header="Base" sortable></Column>
                     <Column field="place" header="Local" sortable></Column>
+                    <Column field="date" header="Data do ocorrido" sortable>
+                        <template #body="{data}">
+                            <div>{{ formatData(data.date) }}</div>                            
+                        </template>
+                    </Column>
+                    <Column field="nameEquipament" header="Equipamento" sortable></Column>
                     <Column field="status" header="Status" sortable>
                         <template #body="slotProps">
                             <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)"></Tag>
