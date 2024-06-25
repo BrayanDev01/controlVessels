@@ -243,6 +243,7 @@ export default{
             ],
             filters:{
                 global:{ value: null, matchMode: FilterMatchMode.CONTAINS},
+                numericId:{value: null, matchMode: FilterMatchMode.CONTAINS},
                 objectId: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 base: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 departmentResp: { value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -329,19 +330,20 @@ export default{
                 data:{
                     resumeAnomalie: this.resumeAnomalie,
                     date: new Date(this.dateAnomalie).toISOString(),
-                    departmentResp: this.departmentResp.name,
-                    typeAnomalie: this.typeAnomalie.name,
-                    base: this.baseAnomalie.name,
-                    place: this.placeAnomalie.name,
-                    equipament: this.equipamentAnomalie.name,
-                    nameEquipament: this.nameEquipament.name,
-                    impact: this.impactAnomalie.name,
-                    status: this.statusAnomalie.name,
+                    departmentResp: this.departmentResp?.name,
+                    typeAnomalie: this.typeAnomalie?.name,
+                    base: this.baseAnomalie?.name,
+                    place: this.placeAnomalie?.name,
+                    equipament: this.equipamentAnomalie?.name,
+                    nameEquipament: this.nameEquipament?.name,
+                    impact: this.impactAnomalie?.name,
+                    status: this.statusAnomalie?.name,
                     archives: this.archives,
                     imageFacts: this.imageFacts,
                     reasonAnomalie: this.reasonAnomalie,
                     envolvedInAnomalie: this.envolvedInAnomalie,
-                    resumeQuality: this.resumeQuality
+                    resumeQuality: this.resumeQuality,
+                    emailResp: this.departmentResp?.email
                 }
 
             }
@@ -549,7 +551,7 @@ export default{
                     scrollHeight="500px"
                     removableSort
                     v-model:filters="filters"
-                    :globalFilterFields="['global', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
+                    :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
                 >
                     <template #header>
                         <div style="display: flex; align-items: center; justify-content: space-between;">
