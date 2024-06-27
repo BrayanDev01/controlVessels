@@ -2,6 +2,8 @@
 import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
 import MapView from '../components/map/MapComponent.vue';
+import Dropdown from 'primevue/dropdown';
+import MultiSelect from 'primevue/multiselect';
 
 export default{
     components:{
@@ -11,8 +13,150 @@ export default{
     data(){
         return{
             vessels: null,
+            show:false,
             rowsExpanded: {},
-            loading: true
+            loading: true,
+            selectedVessel: null,
+            convoy: null,
+            captain:null,
+            actualPosition:null,
+            finalPosition:null,
+            prevision:null,
+            areaLocal:null,
+            areaOptions:[
+                {name:'Calha do Solimões'},
+                {name:'Calha do Madeira'},
+                {name:'Calha do Tapajós/Amazonas'},
+                {name:'Rotars Termicas'},
+                {name:'Apoio Porto'}
+            ],
+            ferries:[
+                {name:"ABI-01"},
+                {name:"BT BEATRIZ FARIAS II"},
+                {name:"BT CITY I"},
+                {name:"BT CITY III"},
+                {name:"BT CITY IX"},
+                {name:"BT CITY LI"},
+                {name:"BT CITY XLIII"},
+                {name:"BT CITY XV"},
+                {name:"BT CITY XX"},
+                {name:"BT CITY XXI"},
+                {name:"BT CITY XXII"},
+                {name:"BT CITY XXV"},
+                {name:"BT CITY XXXIV"},
+                {name:"BT CITY XXXIX"},
+                {name:"BT CITY XXXV"},
+                {name:"BT CT 01"},
+                {name:"BT CT 10"},
+                {name:"BT CT 11"},
+                {name:"BT CT 16"},
+                {name:"BT CT 18"},
+                {name:"BT CT 21"},
+                {name:"BT CT 22"},
+                {name:"BT CT 23"},
+                {name:"BT CT 30"},
+                {name:"BT CT 34"},
+                {name:"BT CT 35"},
+                {name:"BT CT 39"},
+                {name:"BT CT 4"},
+                {name:"BT CT 40"},
+                {name:"BT CT 41"},
+                {name:"BT CT 42"},
+                {name:"BT CT 44"},
+                {name:"BT CT 45"},
+                {name:"BT CT 47"},
+                {name:"BT CT 48"},
+                {name:"BT CT 49"},
+                {name:"BT CT 5"},
+                {name:"BT CT 53"},
+                {name:"BT CT 54"},
+                {name:"BT CT 55"},
+                {name:"BT CT 56"},
+                {name:"BT CT 58"},
+                {name:"BT CT 59"},
+                {name:"BT CT 6"},
+                {name:"BT CT 60"},
+                {name:"BT CT 61"},
+                {name:"BT CT 63"},
+                {name:"BT CT 64"},
+                {name:"BT CT 66"},
+                {name:"BT CT 67"},
+                {name:"BT CT 69"},
+                {name:"BT CT 70"},
+                {name:"BT CT 71"},
+                {name:"BT CT 72"},
+                {name:"BT CT 73"},
+                {name:"BT CT 74"},
+                {name:"BT CT 75"},
+                {name:"BT CT 79"},
+                {name:"BT CT 80"},
+                {name:"BT CT 81"},
+                {name:"BT CT 82"},
+                {name:"BT CT 86"},
+                {name:"BT CT 88"},
+                {name:"BT CT 9"},
+                {name:"BT EUDOCIA"},
+                {name:"BT GDS 62"},
+                {name:"BT GDS 63"},
+                {name:"BT GLORIA DE DEUS I"},
+                {name:"BT ITL I "},
+                {name:"BT NOSSA SENHORA DE NAZARÉ"},
+                {name:"BT PRECIOSA DE DEUS"},
+                {name:"BT PRECIOSA DE DEUS I"},
+                {name:"BT REBECCA GISLAINE"},
+                {name:"CARGA"},
+                {name:"CT 43 - BALSA TANQUE"},
+                {name:"DESCARGA"},
+                {name:"EMP BONECA DA JUJU"},
+                {name:"EMP CT 100"},
+                {name:"EMP CT 12"},
+                {name:"EMP CT 13"},
+                {name:"EMP CT 14"},
+                {name:"EMP CT 19"},
+                {name:"EMP CT 27"},
+                {name:"EMP CT 29"},
+                {name:"EMP CT 32 - EMPURRADOR"},
+                {name:"EMP CT 36"},
+                {name:"EMP CT 37"},
+                {name:"EMP CT 38"},
+                {name:"EMP CT 46"},
+                {name:"EMP CT 52"},
+                {name:"EMP CT 57"},
+                {name:"EMP CT 65"},
+                {name:"EMP CT 68"},
+                {name:"EMP CT 77"},
+                {name:"EMP CT 78"},
+                {name:"EMP CT 8"},
+                {name:"EMP CT 83"},
+                {name:"EMP CT 84"},
+                {name:"EMP EL REFUGIO"},
+                {name:"EMP ESDRAS X"},
+                {name:"EMP ITL 11"},
+                {name:"EMP ITL 13"},
+                {name:"EMP ITL 14"},
+                {name:"EMP ITL 4"},
+                {name:"EMP ITL 5"},
+                {name:"EMP ITL 6"},
+                {name:"EMP ITL 7"},
+                {name:"EMP ITL 8"},
+                {name:"EMP ITL I"},
+                {name:"EMP ITL II"},
+                {name:"EMP ITL III"},
+                {name:"EMP ITL IX"},
+                {name:"EMP ITL XII"},
+                {name:"EMP LH III"},
+                {name:"EMP MAXIMUS"},
+                {name:"EMP NM VI"},
+                {name:"EMP NM VII"},
+                {name:"EMP NM XXVII"},
+                {name:"EMP PETRODADO I"},
+                {name:"EMP SEU JUAREZ"},
+                {name:"EMP VALENTE DE DEUS I"},
+                {name:"Outros"},
+                {name:"Não aplicável"},
+                {name:"Caminhão "},
+                {name:"Chopin"}    
+            ]
         }
     },
     methods:{
@@ -37,6 +181,9 @@ export default{
         },
         onRowExpand(event){
             console.log(event.data)
+        },
+        openModal(){
+            this.show = true
         }
     },
     mounted(){
@@ -49,6 +196,14 @@ export default{
     <div class="main">
         <MenuBar></MenuBar>
         <div class="dataCentral">
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <Button
+                    style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
+                    @click="openModal()"
+                >
+                    Atualizar Localização
+                </Button>
+            </div>
             <DataTable                
                 :value="vessels"
                 :loading="loading"
@@ -132,6 +287,91 @@ export default{
                     </div>
                 </template> 
             </DataTable>
+            <Dialog
+                v-model:visible="show"
+                modal
+                header="Atualizar Localização"
+                :style="{width:'70%'}"
+                :draggable="false"
+            >
+                <div class="organizerForm">
+                    <div class="inputGroup">
+                        <span>Selecionar embarcação</span>
+                        <Dropdown
+                            v-model="selectedVessel" 
+                            :options="ferries"
+                            optionLabel="name" 
+                            placeholder="Selecione a embarcação"
+                        ></Dropdown>
+                    </div>
+                </div>
+                <div class="organizerForm">
+                    <div class="inputGroup">
+                        <span>Selecione o Comboio :</span>
+                        <MultiSelect
+                            v-model="convoy"
+                            :options="ferries"
+                            optionLabel="name"
+                            placeholder="Selecione o comboio"
+                        ></MultiSelect>
+                    </div>
+                    <div class="inputGroup">
+                        <span>Capitão :</span>
+                        <InputText 
+                            style="width: 100%;" 
+                            v-model="captain" 
+                        />
+                    </div>
+                    <div class="inputGroup">
+                        <span>Previsões :</span>
+                        <InputText 
+                            style="width: 100%;" 
+                            v-model="captain" 
+                        />
+                    </div>
+                </div>
+                <div class="organizerForm">
+                    <div class="inputGroup">
+                        <span>Posição atual :</span>
+                        <InputText 
+                            style="width: 100%;" 
+                            v-model="captain" 
+                        />
+                    </div>
+                    <div class="inputGroup">
+                        <span>Destino :</span>
+                        <InputText 
+                            style="width: 100%;" 
+                            v-model="captain" 
+                        />
+                    </div>
+                    <div class="inputGroup">
+                        <span>Area de localização :</span>
+                        <Dropdown
+                            v-model="areaLocal" 
+                            :options="areaOptions"
+                            optionLabel="name" 
+                            placeholder="Selecione a calha"
+                        ></Dropdown>
+                    </div>
+                </div>
+                <div class="organizerForm">
+                    <div class="inputGroup">
+                        <span>Latitude :</span>
+                        <InputText 
+                            style="width: 100%;" 
+                            v-model="captain" 
+                        />
+                    </div>
+                    <div class="inputGroup">
+                        <span>Longitude :</span>
+                        <InputText 
+                            style="width: 100%;" 
+                            v-model="captain" 
+                        />
+                    </div>                    
+                </div>
+            </Dialog>
         </div>
     </div>
 </template>
@@ -150,8 +390,20 @@ export default{
     width: 90%;
     height: 100%;
     margin-top: 50px;
-    background-color: white;
 }
+.organizerForm{
+    display: flex; 
+    gap:20px; 
+    margin: 20px 10px;
+    justify-content: center;
+}
+
+.inputGroup{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
 .infoSideMap{
     box-shadow: 10px 10px 16px -9px rgba(0,0,0,0.41);
     width: 100%;
