@@ -3,7 +3,6 @@ import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
 import MapView from '../components/map/MapComponent.vue';
 import Dropdown from 'primevue/dropdown';
-import MultiSelect from 'primevue/multiselect';
 
 export default{
     components:{
@@ -23,6 +22,8 @@ export default{
             finalPosition:null,
             prevision:null,
             areaLocal:null,
+            latitude: null,
+            longitude: null,
             areaOptions:[
                 {name:'Calha do Solimões'},
                 {name:'Calha do Madeira'},
@@ -156,14 +157,15 @@ export default{
                 {name:"Não aplicável"},
                 {name:"Caminhão "},
                 {name:"Chopin"}    
-            ]
+            ],
+            vesselsOptions:[]
         }
     },
     methods:{
-        async getVessels(){
+        async getVesselsOptions(){
             const options ={
                 method: 'GET',
-                url: `${import.meta.env.VITE_URL_API}classes/History`,
+                url: `${import.meta.env.VITE_URL_API}classes/Vessels`,
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
@@ -173,9 +175,36 @@ export default{
 
             await axios.request(options).then((response) =>{
                 console.log(response.data.results)
+                this.vesselsOptions = response.data.results;
                 this.vessels = response.data.results;
                 this.loading = false
             }).catch(error =>{
+                console.log(error)
+            })
+        },
+        async attVessel(id){
+            const options ={
+                method: 'PUT',
+                url: `${import.meta.env.VITE_URL_API}classes/Vessels/${id}`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    actualPosition: this.actualPosition,
+                    captain: this.captain,
+                    convoy: this.convoy,
+                    destination: this.finalPosition,
+                    latitude:this.latitude,
+                    longitude: this.longitude,
+                    prevision: this.prevision,
+                    status: this.status
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+            }).catch((error)=>{
                 console.log(error)
             })
         },
@@ -184,10 +213,22 @@ export default{
         },
         openModal(){
             this.show = true
+        },
+        clearModal(){
+            this.selectedVessel= null;
+            this.convoy = null;
+            this.captain = null;
+            this.actualPosition = null;
+            this.finalPosition = null;
+            this.prevision = null;
+            this.areaLocal = null;
+            this.latitude = null;
+            this.longitude = null;
         }
     },
     mounted(){
-        this.getVessels()
+        // this.getVessels();
+        this.getVesselsOptions();
     }
 }
 </script>
@@ -196,7 +237,7 @@ export default{
     <div class="main">
         <MenuBar></MenuBar>
         <div class="dataCentral">
-            <div style="width: 100%; display: flex; justify-content: center;">
+            <div style="width: 100%; display: flex; justify-content: center; margin: 20px 0px">
                 <Button
                     style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
                     @click="openModal()"
@@ -210,9 +251,12 @@ export default{
                 dataKey="objectId"
                 tableStyle="min-width: 50rem"
                 :expandedRows="rowsExpanded"
+                scrollable 
+                scrollHeight="650px"
+
             >
                 <Column expander style="width: 5rem" />
-                <Column field="Ferrie.name" header="Embarcação"></Column>
+                <Column field="name" header="Embarcação"></Column>
                 <Column field="convoy" header="Comboio"></Column>
                 <Column field="actualPosition" header="Posição atual"></Column>
                 <Column field="prevision" header="Previsão"></Column>
@@ -220,13 +264,13 @@ export default{
                 <template #expansion="slotProps">
                     <div style="display: flex; gap: 5px;">
                         <MapView 
-                            :latitude="slotProps.data.localization.latitude"
-                            :longitude="slotProps.data.localization.longitude"
+                            :latitude="slotProps.data.latitude"
+                            :longitude="slotProps.data.longitude"
                             :largura="400"
                             :altura="400"
                         ></MapView>
                         <div class="infoSideMap">
-                            <div class="ferrieSection">
+                            <div class="infoSection">
                                 <div class="titleForm">Informações da Embarcação</div>
                                 <div class="ferriesInfos">
                                     <div class="inputGroupInfo">
@@ -235,7 +279,7 @@ export default{
                                                 Nome:
                                             </div>
                                             <div class="infoAnswer">
-                                                {{ slotProps.data.Ferrie.name }}
+                                                {{ slotProps.data.name }}
                                             </div>
                                         </div>
                                         <div class="inputInfo">
@@ -243,7 +287,7 @@ export default{
                                                 Tipo de embarcação:
                                             </div>
                                             <div class="infoAnswer">
-                                                {{ slotProps.data.Ferrie.typeVessel }}
+                                                {{ slotProps.data.typeVessel }}
                                             </div>
                                         </div>
                                     </div>
@@ -271,7 +315,7 @@ export default{
                                         </div>
                                         
                                     </div>
-                                    <div class="inputGroupInfo">
+                                    <div class="inputGroupInfo2">
                                         <div>
                                             <div class="infoTitle">Destino:</div>
                                             <div class="infoAnswer">{{ slotProps.data.destination }}</div>
@@ -293,13 +337,15 @@ export default{
                 header="Atualizar Localização"
                 :style="{width:'70%'}"
                 :draggable="false"
+                @hide="clearModal()"
             >
                 <div class="organizerForm">
                     <div class="inputGroup">
                         <span>Selecionar embarcação</span>
                         <Dropdown
                             v-model="selectedVessel" 
-                            :options="ferries"
+                            @update:modelValue="console.log(this.selectedVessel)"
+                            :options="vesselsOptions"
                             optionLabel="name" 
                             placeholder="Selecione a embarcação"
                         ></Dropdown>
@@ -310,6 +356,8 @@ export default{
                         <span>Selecione o Comboio :</span>
                         <MultiSelect
                             v-model="convoy"
+                            filter
+                            :maxSelectedLabels="3"
                             :options="ferries"
                             optionLabel="name"
                             placeholder="Selecione o comboio"
@@ -326,7 +374,7 @@ export default{
                         <span>Previsões :</span>
                         <InputText 
                             style="width: 100%;" 
-                            v-model="captain" 
+                            v-model="prevision" 
                         />
                     </div>
                 </div>
@@ -335,14 +383,14 @@ export default{
                         <span>Posição atual :</span>
                         <InputText 
                             style="width: 100%;" 
-                            v-model="captain" 
+                            v-model="actualPosition" 
                         />
                     </div>
                     <div class="inputGroup">
                         <span>Destino :</span>
                         <InputText 
                             style="width: 100%;" 
-                            v-model="captain" 
+                            v-model="finalPosition" 
                         />
                     </div>
                     <div class="inputGroup">
@@ -360,16 +408,27 @@ export default{
                         <span>Latitude :</span>
                         <InputText 
                             style="width: 100%;" 
-                            v-model="captain" 
+                            v-model="latitude" 
                         />
                     </div>
                     <div class="inputGroup">
                         <span>Longitude :</span>
                         <InputText 
                             style="width: 100%;" 
-                            v-model="captain" 
+                            v-model="longitude" 
                         />
                     </div>                    
+                </div>
+                <div style="display: flex;gap:10px">
+                    <Button
+                        class="acceptButton"
+                        label="Atualizar"
+                        @click="attVessel(this.selectedVessel.objectId)"
+                    ></Button>
+                    <Button
+                        class="rejectButton"
+                        label="Cancelar"
+                    ></Button>
                 </div>
             </Dialog>
         </div>
@@ -377,6 +436,16 @@ export default{
 </template>
 
 <style scoped>
+.acceptButton{
+    background-color: var(--secondary-color-gc);
+    border: 1px solid var(--secondary-color-gc);
+    border: none;
+}
+.rejectButton{
+    background-color: var(--white-gc);
+    border: 1px solid var(--primary-color-gc);
+    color: var(--primary-color-gc);
+}
 .main{
     width: 100dvw;
     height: 100%;
@@ -410,6 +479,7 @@ export default{
     min-height: 100%;
     display: flex;
     gap: 9px;
+    margin: 10px;
 }
 .ferrieSection{
     display: flex;
@@ -417,6 +487,13 @@ export default{
     align-items: center;
     width: 50%;
     height: 100%;
+}
+.infoSection{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .titleForm{
     font-size: large;
@@ -437,6 +514,11 @@ export default{
     display: flex;
     flex-direction: column;
     width: 100%;
+}
+.inputGroupInfo2{
+    display: flex;
+    flex-direction: column;
+    width: auto;
 }
 .infoTitle{
     color: gray;

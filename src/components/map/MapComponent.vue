@@ -14,8 +14,8 @@
   const map = shallowRef(null);
 
   const props = defineProps({
-    latitude: Number,
-    longitude: Number
+    latitude: String,
+    longitude: String
   })
   
   const { latitude } = toRefs(props)
