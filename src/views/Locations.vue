@@ -198,7 +198,21 @@ export default{
                     latitude:this.latitude,
                     longitude: this.longitude,
                     prevision: this.prevision,
-                    status: this.status
+                    status: this.status,
+                    history:{
+                        __op: "Add",
+                        objects:[{
+                            actualPosition: this.actualPosition,
+                            captain: this.captain,
+                            convoy: this.convoy,
+                            destination: this.finalPosition,
+                            latitude:this.latitude,
+                            longitude: this.longitude,
+                            prevision: this.prevision,
+                            status: this.status,
+                            date: new Date().toISOString()                            
+                        }]
+                    }
                 }
             }
 
@@ -215,6 +229,7 @@ export default{
             this.show = true
         },
         clearModal(){
+            this.show = false
             this.selectedVessel= null;
             this.convoy = null;
             this.captain = null;
@@ -224,6 +239,11 @@ export default{
             this.areaLocal = null;
             this.latitude = null;
             this.longitude = null;
+        },
+        arrayConcat(array){
+            const toString = array.map(item => item.name);
+
+            return toString.join(', ')
         }
     },
     mounted(){
@@ -257,7 +277,11 @@ export default{
             >
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Embarcação"></Column>
-                <Column field="convoy" header="Comboio"></Column>
+                <Column field="convoy" header="Comboio">
+                    <template  #body="{data}">
+                        <div>{{ arrayConcat(data.convoy) }}</div>
+                    </template>
+                </Column>
                 <Column field="actualPosition" header="Posição atual"></Column>
                 <Column field="prevision" header="Previsão"></Column>
                 <Column field="destination" header="Destino"></Column>
@@ -303,7 +327,8 @@ export default{
                                         </div>
                                         <div>
                                             <div class="infoTitle">Comboio:</div>
-                                            <div class="infoAnswer">{{ slotProps.data.convoy }}</div>
+                                            <!-- <div class="infoAnswer">{{ slotProps.data.convoy }}</div> -->
+                                            <div class="infoAnswer">{{ arrayConcat(slotProps.data.convoy) }}</div>
                                         </div>
                                         <div>
                                             <div class="infoTitle">Previsão:</div>
@@ -326,7 +351,10 @@ export default{
                                         </div>
                                     </div>                                    
                                 </div>
-                            </div>                            
+                                <div 
+                                    class="linkButton"
+                                >Vizualizar histórico >></div>
+                            </div>                         
                         </div>
                     </div>
                 </template> 
@@ -426,6 +454,7 @@ export default{
                         @click="attVessel(this.selectedVessel.objectId)"
                     ></Button>
                     <Button
+                        @click="clearModal()"
                         class="rejectButton"
                         label="Cancelar"
                     ></Button>
@@ -436,6 +465,11 @@ export default{
 </template>
 
 <style scoped>
+.linkButton{
+    margin: 10px;
+    color: blue;
+    text-decoration:underline;
+}
 .acceptButton{
     background-color: var(--secondary-color-gc);
     border: 1px solid var(--secondary-color-gc);
@@ -485,7 +519,7 @@ export default{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    width: 100%;
     height: 100%;
 }
 .infoSection{
@@ -518,7 +552,7 @@ export default{
 .inputGroupInfo2{
     display: flex;
     flex-direction: column;
-    width: auto;
+    width: 50%;
 }
 .infoTitle{
     color: gray;
