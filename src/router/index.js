@@ -6,6 +6,7 @@ import NotFound from '../views/NotFound.vue';
 import VesselView from '../views/VesselView.vue';
 import Locations from '../views/Locations.vue';
 import Anomalies from '../views/Anomalies.vue'
+import HistoricForm from '../views/HistoricForm.vue'
 import { userInfoStore } from "../store/UserInfos";
 
 
@@ -44,6 +45,11 @@ const routes = [
         path: '/anomalies',
         name: 'anomalies',
         component: Anomalies
+    },
+    {
+        path: '/historic/:id',
+        name: 'historic',
+        component: HistoricForm
     }
 ]
 
