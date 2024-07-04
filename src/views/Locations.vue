@@ -244,6 +244,11 @@ export default{
             const toString = array.map(item => item.name);
 
             return toString.join(', ')
+        },
+        goToHistoric(id){
+            // this.$router.push({path:`/historic/${id}`});
+
+            window.open(`/historic/${id}`, '_blank');            
         }
     },
     mounted(){
