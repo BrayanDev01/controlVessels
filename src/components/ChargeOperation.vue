@@ -466,7 +466,15 @@ export default{
                     
                 </template>
                 <Column sortable field="numericId" header="Codigo"></Column>
+                <Column sortable field="pusher" header="Empurrador"></Column>
+                <Column sortable field="" header="Rota">
+                    <template #body="{data}">
+                        <div>{{ `${data.cargo.city.city} - ${data.uncargo.city.city}` }}</div>
+                    </template>
+                </Column>
                 <Column sortable field="barcaca.barcaca" header="Barcaça"></Column>
+                <Column sortable field="product" header="Produto"></Column>
+                <Column sortable field="productVolume" header="Total"></Column>          
                 <Column sortable field="cargo.docking.date" header="Atracação Carregamento">
                     <template #body="{ data }">
                         {{ formatDate(data.cargo.docking.date) }}
@@ -481,6 +489,11 @@ export default{
                         {{ formatDate(data.cargo.undocking.date) }}
                     </template>
                 </Column>
+                <Column field="cargo.tempoChuva" header="Chuva"></Column>
+                <Column field="cargo.tempoMaster" header="Master"></Column>
+                <Column field="cargo.tempoNavegrãos" header="Navegrãos"></Column>
+                <Column field="cargo.tempoOperacao" header="Operação"></Column>
+                <Column field="cargo.tempoTotal" header="Tempo Total"></Column>                
                 <Column sortable field="uncargo.docking.date" header="Atracação Descarregamento">
                     <template #body="{ data }">
                         {{ formatDate(data.uncargo.docking.date) }}
@@ -495,6 +508,17 @@ export default{
                         {{ formatDate(data.uncargo.undocking.date) }}
                     </template>
                 </Column>
+                <Column field="uncargo.tempoChuvaUncargo" header="Chuva"></Column>
+                <Column field="uncargo.tempoMasterUncargo" header="Master"></Column>
+                <Column field="uncargo.tempoNavegrãosUncargo" header="Navegrãos"></Column>
+                <Column field="uncargo.tempoOperacaoUncargo" header="Operação"></Column>
+                <Column field="uncargo.tempoTotal" header="Tempo Total"></Column>
+                <Column sortable field="uncargo.undocking.date" header="Desatracação Descarregamento">
+                    <template #body="{ data }">
+                        {{ formatDate(data.uncargo.undocking.date) }}
+                    </template>
+                </Column>
+                <Column sortable field="cargo.tempoTotal" header="Tempo Total"></Column>
             </DataTable>
         </div>
         <Dialog
