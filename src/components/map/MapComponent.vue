@@ -20,9 +20,10 @@
   
   const { latitude } = toRefs(props)
   const { longitude } = toRefs(props)
+  const { markerUrl } = toRefs(props)
   const rota = caminho
 
-  const cordinades = { lat: latitude, long: longitude}
+  const cordinades = { lat: latitude, long: longitude }
 
   onMounted(() => {
     config.apiKey = `${import.meta.env.VITE_KEY_MAP}`;
@@ -38,7 +39,7 @@
     
 
     const customMarker = document.createElement('div');
-    customMarker.style.backgroundImage = 'url(src/assets/logo_poseidon.png)';
+    customMarker.style.backgroundImage = 'url(/logo_poseidon.png)';
     customMarker.style.backgroundSize = 'cover';
     customMarker.style.width = '40px';
     customMarker.style.height = '40px'; 

@@ -244,6 +244,11 @@ export default{
             const toString = array.map(item => item.name);
 
             return toString.join(', ')
+        },
+        goToHistoric(id){
+            // this.$router.push({path:`/historic/${id}`});
+
+            window.open(`/historic/${id}`, '_blank');            
         }
     },
     mounted(){
@@ -290,8 +295,6 @@ export default{
                         <MapView 
                             :latitude="slotProps.data.latitude"
                             :longitude="slotProps.data.longitude"
-                            :largura="400"
-                            :altura="400"
                         ></MapView>
                         <div class="infoSideMap">
                             <div class="infoSection">
@@ -353,6 +356,7 @@ export default{
                                 </div>
                                 <div 
                                     class="linkButton"
+                                    @click="goToHistoric(slotProps.data.objectId)"
                                 >Vizualizar histórico >></div>
                             </div>                         
                         </div>
@@ -469,6 +473,7 @@ export default{
     margin: 10px;
     color: blue;
     text-decoration:underline;
+    cursor: pointer;
 }
 .acceptButton{
     background-color: var(--secondary-color-gc);
@@ -509,6 +514,8 @@ export default{
 
 .infoSideMap{
     box-shadow: 10px 10px 16px -9px rgba(0,0,0,0.41);
+    border-radius: 10px;
+    border: 1px solid rgb(230, 230, 230);
     width: 100%;
     min-height: 100%;
     display: flex;
