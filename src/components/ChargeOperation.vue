@@ -480,6 +480,10 @@ export default{
                         {{ formatDate(data.cargo.docking.date) }}
                     </template>
                 </Column>
+                <Column field="cargo.tempoChuva" header="Chuva"></Column>
+                <Column field="cargo.tempoMaster" header="Master"></Column>
+                <Column field="cargo.tempoNavegrãos" header="Navegrãos"></Column>
+                <Column field="cargo.tempoOperacao" header="Operação"></Column>
                 <Column sortable field="cargo.undocking.date" header="Desatracação Carregamento">
                     <template #body="{ data }">
                         {{ formatDate(data.cargo.undocking.date) }}
@@ -495,6 +499,10 @@ export default{
                         {{ formatDate(data.uncargo.docking.date) }}
                     </template>
                 </Column>
+                <Column field="uncargo.tempoChuva" header="Chuva"></Column>
+                <Column field="uncargo.tempoMaster" header="Master"></Column>
+                <Column field="uncargo.tempoNavegrãos" header="Navegrãos"></Column>
+                <Column field="uncargo.tempoOperacao" header="Operação"></Column>
                 <Column sortable field="uncargo.undocking.date" header="Desatracação Descarregamento">
                     <template #body="{ data }">
                         {{ formatDate(data.uncargo.undocking.date) }}
