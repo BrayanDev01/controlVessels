@@ -467,6 +467,7 @@ export default{
                 </template>
                 <Column sortable field="numericId" header="Codigo"></Column>
                 <Column sortable field="pusher" header="Empurrador"></Column>
+                <Column sortable field="vessel" header="Navio"></Column>
                 <Column sortable field="" header="Rota">
                     <template #body="{data}">
                         <div>{{ `${data.cargo.city.city} - ${data.uncargo.city.city}` }}</div>
