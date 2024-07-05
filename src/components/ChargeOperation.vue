@@ -454,7 +454,7 @@ export default{
                 :globalFilterFields="['objectId', 'numericId', 'pusher', 'vessel', 'barcaca.barcaca', 'cargo.docking.date', 'cargo.undocking.date', 'uncargo.docking.date', 'uncargo.undocking.date']"
             >
                 <template #header>
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div class="organizerHeadDataTable">
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <InputText v-model="filters['global'].value" placeholder="Digite o que procura" />
@@ -748,6 +748,11 @@ export default{
 </template>
 
 <style scoped>
+.organizerHeadDataTable{
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+}
 header{
     display: flex;
     justify-content: flex-end
@@ -821,6 +826,8 @@ Button{
     .groupItem{
         flex-direction: column;
     }
-
+    .organizerHeadDataTable{
+        flex-direction: column;
+    }
 }
 </style>
