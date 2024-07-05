@@ -505,12 +505,6 @@ export default{
                 <Column field="uncargo.tempoNavegrãosUncargo" header="Navegrãos"></Column>
                 <Column field="uncargo.tempoOperacaoUncargo" header="Operação"></Column>
                 <Column field="uncargo.tempoTotal" header="Tempo Total"></Column>
-                <Column sortable field="uncargo.undocking.date" header="Desatracação Descarregamento">
-                    <template #body="{ data }">
-                        {{ formatDate(data.uncargo.undocking.date) }}
-                    </template>
-                </Column>
-                <Column sortable field="cargo.tempoTotal" header="Tempo Total"></Column>
             </DataTable>
         </div>
         <Dialog
