@@ -218,6 +218,7 @@ export default{
 
             await axios.request(options).then((response)=>{
                 console.log(response)
+                this.clearModal()
             }).catch((error)=>{
                 console.log(error)
             })
@@ -229,6 +230,10 @@ export default{
             this.show = true
         },
         clearModal(){
+            this.loading = true;
+            this.vessels = []
+            this.getVesselsOptions()
+            
             this.show = false
             this.selectedVessel= null;
             this.convoy = null;
@@ -241,7 +246,7 @@ export default{
             this.longitude = null;
         },
         arrayConcat(array){
-            const toString = array.map(item => item.name);
+            const toString = (array || [] || null).map(item => item.name);
 
             return toString.join(', ')
         },
