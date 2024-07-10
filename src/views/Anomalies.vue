@@ -225,6 +225,7 @@ export default{
                 {name:"EMP ITL II"},
                 {name:"EMP ITL III"},
                 {name:"EMP ITL IX"},
+                {name:"EMP ITL X"},
                 {name:"EMP ITL XII"},
                 {name:"EMP LH III"},
                 {name:"EMP MAXIMUS"},
@@ -580,6 +581,7 @@ export default{
                     <Column field="equipament" header="Equipamento" sortable></Column>
                     <Column field="departmentResp" header="Departamento Responsável" sortable></Column>                    
                 </DataTable>
+                <div style="width: 100%; height: 200px; background-color: white; margin: 20px 0px ;"></div>
             </div>
         </div>
         <Dialog 
@@ -818,7 +820,6 @@ export default{
     width: 90%;
     height: 100%;
     margin-top: 50px;
-    /* background-color: white; */
     display: flex;
     flex-direction: column;
     justify-content: center;
