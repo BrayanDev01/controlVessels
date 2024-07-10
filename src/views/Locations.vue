@@ -30,7 +30,8 @@ export default{
                 {name:'Calha do Madeira'},
                 {name:'Calha do Tapajós/Amazonas'},
                 {name:'Rotas Termicas'},
-                {name:'Apoio Porto'}
+                {name:'Rota Peru'},
+                {name:'Apoio Porto'}                
             ],
             ferries:[
                 {name:"ABI-01"},
@@ -428,9 +429,16 @@ export default{
                     </div>
                     <div class="inputGroup">
                         <span>Previsões :</span>
-                        <InputText 
+                        <!-- <InputText 
                             style="width: 100%;" 
                             v-model="prevision" 
+                        /> -->
+                        <Calendar 
+                            v-model="prevision" 
+                            showIcon 
+                            iconDisplay="input"
+                            showTime 
+                            hourFormat="24"
                         />
                     </div>
                 </div>
