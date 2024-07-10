@@ -3,6 +3,7 @@ import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
 import MapView from '../components/map/MapComponent.vue';
 import Dropdown from 'primevue/dropdown';
+import { FilterMatchMode } from 'primevue/api';
 
 export default{
     components:{
@@ -28,7 +29,7 @@ export default{
                 {name:'Calha do Solimões'},
                 {name:'Calha do Madeira'},
                 {name:'Calha do Tapajós/Amazonas'},
-                {name:'Rotars Termicas'},
+                {name:'Rotas Termicas'},
                 {name:'Apoio Porto'}
             ],
             ferries:[
@@ -153,12 +154,21 @@ export default{
                 {name:"EMP PETRODADO I"},
                 {name:"EMP SEU JUAREZ"},
                 {name:"EMP VALENTE DE DEUS I"},
-                {name:"Outros"},
-                {name:"Não aplicável"},
-                {name:"Caminhão "},
-                {name:"Chopin"}    
+                {name:"CT 02"},
+                {name:"GALO DA SERRA 43"},
+                {name:"WACCUM I"},
+                {name:"WACCUM"} 
             ],
-            vesselsOptions:[]
+            vesselsOptions:[],
+            filters:{
+                global:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                name:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                convoy:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                actualPosition:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                destination:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                prevision:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                captain:{value:null, matchMode: FilterMatchMode.CONTAINS}
+            }
         }
     },
     methods:{
@@ -283,8 +293,16 @@ export default{
                 :expandedRows="rowsExpanded"
                 scrollable 
                 scrollHeight="650px"
-
-            >
+                v-model:filters="filters"
+                :globalFilterFields="['global', 'name', 'convoy', 'actualPosition', 'prevision', 'destination']">
+                <template #header>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <FloatLabel>
+                            <InputText id="username" v-model="filters['global'].value"/>
+                            <label for="username">Pesquisa Global</label>
+                        </FloatLabel>
+                    </div>
+                </template>
                 <Column expander style="width: 5rem" />
                 <Column field="name" header="Embarcação"></Column>
                 <Column field="convoy" header="Comboio">
@@ -385,6 +403,7 @@ export default{
                             :options="vesselsOptions"
                             optionLabel="name" 
                             placeholder="Selecione a embarcação"
+                            filter
                         ></Dropdown>
                     </div>
                 </div>
