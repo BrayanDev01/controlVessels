@@ -175,19 +175,19 @@ export default{
     methods:{
         async getVesselsOptions(){
             const options ={
-                method: 'GET',
-                url: `${import.meta.env.VITE_URL_API}classes/Vessels`,
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}functions/locationsToday`,
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
                 },
-                params:{include: 'Ferrie', order: "-createdAt"}
+                params:{order: "-name"}                
             }
 
             await axios.request(options).then((response) =>{
-                console.log(response.data.results)
-                this.vesselsOptions = response.data.results;
-                this.vessels = response.data.results;
+                console.log(response.data.result)
+                this.vesselsOptions = response.data.result;
+                this.vessels = response.data.result;
                 this.loading = false
             }).catch(error =>{
                 console.log(error)
@@ -293,6 +293,7 @@ export default{
                 tableStyle="min-width: 50rem"
                 :expandedRows="rowsExpanded"
                 scrollable 
+                removableSort
                 scrollHeight="650px"
                 v-model:filters="filters"
                 :globalFilterFields="['global', 'name', 'convoy', 'actualPosition', 'prevision', 'destination']">
@@ -304,8 +305,13 @@ export default{
                         </FloatLabel>
                     </div>
                 </template>
+                <template #empty>
+                    <div style="width: 100%; display: flex; justify-content: center;">
+                        <strong>Sem dados atualizados</strong>
+                    </div>
+                </template>
                 <Column expander style="width: 5rem" />
-                <Column field="name" header="Embarcação"></Column>
+                <Column field="name" header="Embarcação" sortable></Column>
                 <Column field="convoy" header="Comboio">
                     <template  #body="{data}">
                         <div>{{ arrayConcat(data.convoy) }}</div>
