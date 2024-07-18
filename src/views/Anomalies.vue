@@ -40,7 +40,7 @@ export default{
                 {name:"Navegação", email:'planejamento@grupocidade.com'},
                 {name:"Patrimonial", email:'patrimonio@grupocidade.com'},
                 {name:"RH", email:'rh@grupocidade.com'},
-                {name:"Rodoviário", email:'supercisorod@grupocidade.com'},
+                {name:"Rodoviário", email:'supervisorod@grupocidade.com'},
                 {name:"SESMT", email:'sesmt@grupocidade.com'},
                 {name:"Suprimentos", email:'compras2@grupocidade.com'},
                 {name:"TI", email:'ti@grupocidade.com'},
