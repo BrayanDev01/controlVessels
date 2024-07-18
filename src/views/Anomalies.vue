@@ -444,7 +444,7 @@ export default{
         async deleteImageBefore(url, index){
             const options = {
                 method: 'DELETE',
-                url: `https://apiconnect.3nf.com.br/uploadAnomalias`,
+                url: `https://connectapi.3nf.com.br/uploadAnomalias`,
                 data:{
                     fileUrl: url
                 }
@@ -462,7 +462,7 @@ export default{
         async deleteImageAfter(url, index){
             const options = {
                 method: 'DELETE',
-                url: `https://apiconnect.3nf.com.br/uploadAnomalias`,
+                url: `https://connectapi.3nf.com.br/uploadAnomalias`,
                 data:{
                     fileUrl: url
                 }
@@ -636,7 +636,7 @@ export default{
                                 :multiple="true"
                                 :auto="true"
                                 @upload="beforeAnalise($event)"
-                                url="https://apiconnect.3nf.com.br/uploadAnomalias"
+                                url="https://connectapi.3nf.com.br/uploadAnomalias"
                             >
                             </FileUpload>
                             <div class="boxImages">
@@ -745,7 +745,7 @@ export default{
                                     :auto="true"
                                     :multiple="true"
                                     @upload="afterAnalise($event)"
-                                    url="https://apiconnect.3nf.com.br/upload"
+                                    url="https://connectapi.3nf.com.br/upload"
                                 />
                                 <div v-for="(file, i) in archives" :key="i" 
                                     style="display: flex; margin: 10px; flex-wrap: wrap;"
