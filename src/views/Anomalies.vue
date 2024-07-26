@@ -239,6 +239,7 @@ export default{
                 {name:"EMP PETRODADO I"},
                 {name:"EMP SEU JUAREZ"},
                 {name:"EMP VALENTE DE DEUS I"},
+                {name:"EMP CT 76"},
                 {name: "Wacco"},
                 {name: "Pranchinha"},
                 {name:"Outros"},
