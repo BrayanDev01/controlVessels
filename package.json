@@ -12,6 +12,7 @@
   "dependencies": {
     "@maptiler/sdk": "^2.0.0",
     "axios": "^1.5.1",
+    "chart.js": "^4.4.3",
     "pinia": "^2.1.7",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",

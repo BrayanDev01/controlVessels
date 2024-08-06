@@ -31,6 +31,10 @@ export default{
             resumeQuality:'',
             archives:[],
             imageFacts:[],
+            qtdAnomaliesData: null,
+            optionsChartData: this.setChartOptions(),
+            typeAnomaliesData: null,
+            baseAnomaliesData: null,
             departments:[
                 {name:"Comercial", email:''},
                 {name:"Controladoria", email:'controller@3nf.com.br'},
@@ -369,6 +373,25 @@ export default{
             })
             
         },
+        async getQntAnomalies(){
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesStatusCounts`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+                this.qtdAnomaliesData = this.organizeQtdAnomalies(response.data.result.statusArray, response.data.result.countArray )
+                this.typeAnomaliesData = this.organizeQtdAnomalies(response.data.result.typeArray, response.data.result.countTypesArray)
+                this.baseAnomaliesData = this.organizeQtdAnomalies(response.data.result.baseArray, response.data.result.countBasesArray)
+            }).catch((error)=>{
+                console.log(error)
+            })
+        },
         getStatusLabel(status) {
             switch (status) {
                 case 'Fechado':
@@ -527,14 +550,87 @@ export default{
         },
         exportCSV(){
             this.$refs.anomalies.exportCSV()
+        },
+        organizeQtdAnomalies(x, y){
+            return{
+                labels: x,
+                datasets:[
+                    {
+                        label:'Anomalias',
+                        data: y,
+                        backgroundColor: [
+                            'rgba(249, 115, 22, 0.2)', 
+                            'rgba(6, 182, 212, 0.2)', 
+                            'rgb(107, 114, 128, 0.2)', 
+                            'rgba(139, 92, 246, 0.2)', 
+                            'rgba(227, 153, 145, 0.8)', 
+                            'rgba(218, 200, 27, 0.59)', 
+                            'rgba(54, 185, 27, 0.59)'
+                        ],
+                        borderColor: [
+                            'rgb(249, 115, 22)', 
+                            'rgb(6, 182, 212)', 
+                            'rgb(107, 114, 128)', 
+                            'rgb(139, 92, 246)',
+                            'rgb(255,77,77)',
+                            'rgb(255,255,128)',
+                            'rgb(149,255,128)'
+                        ],
+                        borderWidth: 1
+                    }
+                ]
+            }
+        },
+        setChartOptions() {
+            const documentStyle = getComputedStyle(document.documentElement);
+            const textColor = documentStyle.getPropertyValue('--text-color');
+            const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+            const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+            return {
+                indexAxis: 'y',
+                maintainAspectRatio: false,
+                aspectRatio: 0.8,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: textColor
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: textColorSecondary,
+                            font: {
+                                weight: 500
+                            }
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: textColorSecondary
+                        },
+                        grid: {
+                            color: surfaceBorder,
+                            drawBorder: false
+                        }
+                    }
+                }
+            };
         }
 
     },
     created(){
         if(this.userInfo.accessLevel === 0){
             this.getAnomalies()
-        } return
+        }else{return}
         
+        this.getQntAnomalies()
     }
 }
 </script>
@@ -588,7 +684,20 @@ export default{
                     <Column field="equipament" header="Equipamento" sortable></Column>
                     <Column field="departmentResp" header="Departamento Responsável" sortable></Column>                    
                 </DataTable>
-                <div style="width: 100%; height: 200px; background-color: white; margin: 20px 0px ;"></div>
+                <div style="width: 100%; height: 100%; background-color: white; margin: 20px 0px ; padding: 30px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                    <div class="cardGraph">
+                        <strong>Quantidade de Anomalias</strong>
+                        <Chart type="bar" :data="qtdAnomaliesData" style="width: 100%; height: 100%;"/>
+                    </div>
+                    <div class="cardGraph">
+                        <strong>Tipos de Anomalias</strong>
+                        <Chart type="bar" :data="typeAnomaliesData" :options="optionsChartData" style="width: 100%; height: 100%;"/>
+                    </div>
+                    <div class="cardGraph">
+                        <strong>Anomalias por Bases</strong>
+                        <Chart type="pie" :data="baseAnomaliesData" style="width: 100%; height: 100%;"/>
+                    </div>
+                </div>
             </div>
         </div>
         <Dialog 
@@ -893,6 +1002,27 @@ Button{
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
+}
+
+.cardGraph{
+    width: 600px;
+    height: 400px;
+    padding: 10px;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+canvas{
+    width: 100%;
+    height: 100%;
+}
+.p-chart{
+    display: flex;
+    justify-content: center;
 }
 
 @media (max-width:500px){
