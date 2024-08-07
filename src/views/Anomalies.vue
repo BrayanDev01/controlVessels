@@ -35,6 +35,7 @@ export default{
             optionsChartData: this.setChartOptions(),
             typeAnomaliesData: null,
             baseAnomaliesData: null,
+            monthAnomaliesData: null,
             departments:[
                 {name:"Comercial", email:''},
                 {name:"Controladoria", email:'controller@3nf.com.br'},
@@ -388,6 +389,7 @@ export default{
                 this.qtdAnomaliesData = this.organizeQtdAnomalies(response.data.result.statusArray, response.data.result.countArray )
                 this.typeAnomaliesData = this.organizeQtdAnomalies(response.data.result.typeArray, response.data.result.countTypesArray)
                 this.baseAnomaliesData = this.organizeQtdAnomalies(response.data.result.baseArray, response.data.result.countBasesArray)
+                this.monthAnomaliesData = this.organizeQtdAnomalies(response.data.result.monthArray, response.data.result.countMonthArray)
             }).catch((error)=>{
                 console.log(error)
             })
@@ -696,6 +698,10 @@ export default{
                     <div class="cardGraph">
                         <strong>Anomalias por Bases</strong>
                         <Chart type="pie" :data="baseAnomaliesData" style="width: 100%; height: 100%;"/>
+                    </div>
+                    <div class="cardGraph">
+                        <strong>Anomalias por Mês</strong>
+                        <Chart type="bar" :data="monthAnomaliesData" style="width: 100%; height: 100%;"/>
                     </div>
                 </div>
             </div>
