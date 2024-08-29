@@ -312,7 +312,7 @@ export default{
                     envolvedInAnomalie: this.envolvedInAnomalie,
                     resumeQuality: this.resumeQuality,
                     emailResp: this.departmentResp?.email,
-                    reportFor: this.userInfo.objectId
+                    reportFor: { "__type": "Pointer", "className": "_User", "objectId": this.userInfo.objectId }
                 }
 
             }
