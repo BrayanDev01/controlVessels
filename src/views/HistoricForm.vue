@@ -19,6 +19,7 @@ import axios from 'axios';
         const options ={
           method: 'GET',
           url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${id}`,
+          params:{include:'reportFor'},
           headers: {
             'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
             'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
@@ -110,7 +111,11 @@ import axios from 'axios';
           <div class="inputGroup">
             <strong>Tipo de anomalia :</strong>
             <div style="max-width: 100%;">{{ infos?.typeAnomalie }}</div>
-          </div>  
+          </div>
+          <div class="inputGroup">
+            <strong>Criado da anomalia :</strong>
+            <div style="max-width: 100%;">{{ infos.reportFor?.fullName }}</div>
+          </div> 
         </div>
     </section>
     <section class="sectionActual">
@@ -119,7 +124,13 @@ import axios from 'axios';
           <Image :src="image.location" alt="image" width="200" style="margin: 10px;" preview></Image>
         </div>
       </div>
-    </section>  
+    </section>
+    <section class="sectionActual">
+      <div class="inputGroup">
+        <strong>Analise :</strong>
+        <div style="max-width: 100%;">{{ infos?.resumeQuality }}</div>
+      </div>      
+    </section>
     </div>
       <Button class="printBtn" @click="printRelatorio()">Imprimir</Button>
     </div>
