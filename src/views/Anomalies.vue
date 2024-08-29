@@ -311,7 +311,8 @@ export default{
                     reasonAnomalie: this.reasonAnomalie,
                     envolvedInAnomalie: this.envolvedInAnomalie,
                     resumeQuality: this.resumeQuality,
-                    emailResp: this.departmentResp?.email
+                    emailResp: this.departmentResp?.email,
+                    reportFor: this.userInfo.objectId
                 }
 
             }
@@ -419,6 +420,7 @@ export default{
             }
         },
         clearForm(){
+            this.objectId = null
             this.resumeAnomalie = null;
             this.dateAnomalie = null;
             this.departmentResp = null;
@@ -624,6 +626,9 @@ export default{
                     }
                 }
             };
+        },
+        printAnomalie(id){
+            window.open(`/historic/${id}`, '_blank');
         }
 
     },
@@ -652,7 +657,7 @@ export default{
                     dataKey="id"
                     :style="{width:'90dvw'}"
                     scrollable 
-                    scrollHeight="500px"
+                    scrollHeight="600px"
                     removableSort
                     v-model:filters="filters"
                     :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
@@ -684,7 +689,8 @@ export default{
                         </template>
                     </Column>
                     <Column field="equipament" header="Equipamento" sortable></Column>
-                    <Column field="departmentResp" header="Departamento Responsável" sortable></Column>                    
+                    <Column field="departmentResp" header="Departamento Responsável" sortable></Column>
+                    <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
                 </DataTable>
                 <div style="width: 100%; height: 100%; background-color: white; margin: 20px 0px ; padding: 30px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
                     <div class="cardGraph">
@@ -702,6 +708,15 @@ export default{
                     <div class="cardGraph">
                         <strong>Anomalias por Mês</strong>
                         <Chart type="bar" :data="monthAnomaliesData" style="width: 100%; height: 100%;"/>
+                    </div>
+                    <div style="width: 100%;">
+                        <Message 
+                        severity="warn"
+                        :closable="false"
+                        icon="pi pi-exclamation-circle"
+                    >
+                        Total de amostras analisadas: {{ anomalies ? anomalies.length : 0 }}
+                    </Message>                        
                     </div>
                 </div>
             </div>
@@ -893,6 +908,12 @@ export default{
                     </TabPanel>
                 </TabView>
                 <div class="buttonsBottom">
+                    <Button 
+                        @click="printAnomalie(this.objectId)"
+                        v-show="!!objectId"
+                    >
+                        Imprimir
+                    </Button>                    
                     <Button 
                         @click="createAnomalie()" 
                         :loading="loadingCreate"

@@ -10,14 +10,15 @@ import axios from 'axios';
       return {
         latitude: "38.376129",
         longitude: "-75.055186",
-        infos: null   
+        infos: null,
+        loading: true
       };
     },
     methods: {
-      async getVessel(id){
+      async getAnomalie(id){
         const options ={
           method: 'GET',
-          url: `${import.meta.env.VITE_URL_API}classes/Vessels/${id}`,
+          url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${id}`,
           headers: {
             'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
             'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
@@ -27,6 +28,7 @@ import axios from 'axios';
         await axios.request(options).then((response)=>{
           console.log(response)
           this.infos = response.data
+          this.loading = false
         }).catch((error)=>{
           console.log(error)
         })
@@ -34,90 +36,101 @@ import axios from 'axios';
       formatDate(x){
         return new Date(x).toLocaleString()
       },
-      arrayConcat(array){
-        const toString = array.map(item => item.name);
-
-        return toString.join(', ')
-      },
       printRelatorio(){
         window.print()
       }
     },
     created(){
-      this.getVessel(this.$route.params.id)      
+      this.getAnomalie(this.$route.params.id)      
     }
   };
 </script>
 
 <template>
-    <div style="width: 100%; height: 100%; background-color: gray;">
+    <div style="width: 100%; min-height: 29.7cm; height: 100%;background-color: gray;" class="backgroundPrint">
       <div class="form-container">
-        <strong class="titleCenter">Relatorio da embarcação:  {{ infos.name }}</strong>
+        <div class="titleCenter" style="display: flex; flex-direction: column; align-items: center;">
+          <strong>Relatorio de Anomalia:  {{ infos?.numericId }}</strong>
+          <div style="border: 1px solid gray; padding: 10px; border-radius: 10px; margin: 10px;">{{ infos?.status }}</div>
+        </div>
         <section class="sectionActual">
-          <strong style="margin: 10px; width: 100%; display: flex; justify-content: center;">Ultima atualização</strong>
-              <div style="display: flex; width: 100%; margin: 5px;">
-                  <div class="inputGroup">
-                      <span>Comandante :</span>
-                      <div>{{ infos?.captain }}</div>
-                  </div>  
-                  <div class="inputGroup">
-                      <span>Destino :</span>
-                      <div>{{ infos?.destination }}</div>
-                  </div>
-                  <div class="inputGroup">
-                      <span>Posição Atual :</span>
-                      <div>{{ infos?.actualPosition }}</div>
-                  </div>
-                  <div class="inputGroup">
-                      <span>Previsão :</span>
-                      <div>{{ infos?.prevision }}</div>
-                  </div>
+          <div style="display: flex; width: 100%; margin: 5px;">
+            <div class="inputGroup">
+              <strong>Resumo da anomalia :</strong>
+              <div>{{ infos?.resumeAnomalie }}</div>
+            </div>
+          </div>
+          <div style="display: flex; width: 100%; margin: 5px;">
+            <div class="inputGroup">
+              <strong>Causa da anomalia :</strong>
+              <div style="max-width: 100%;">{{ infos?.reasonAnomalie }}</div>
+            </div>
+            <div class="inputGroup">
+                  <strong>Envolvidos na anomalia :</strong>
+                  <div style="max-width: 100%;">{{ infos?.envolvedInAnomalie }}</div>
               </div>
-              <div style="display: flex; width: 100%; margin: 5px;">
-                  <div class="inputGroup">
-                      <span>Balsas no comboio :</span>
-                      <div style="max-width: 100%;">{{ arrayConcat(infos?.convoy) }}</div>
-                  </div>
-                  <div class="inputGroup">
-                      <span>Ultima Atualização :</span>
-                      <div>{{ formatDate(infos?.updatedAt) }}</div>
-                  </div>
-              </div>
-              <div style="display: flex; justify-content: center; padding: 20px;">
-                  <MapView 
-                      :latitude="infos?.latitude"
-                      :longitude="infos?.longitude"
-                      class="adjust"
-                  ></MapView>                    
-              </div>
-          </section>
-          <section>
-              <strong style="margin: 10px; width: 100%; display: flex; justify-content: center;">Historico :</strong>
-              <div>
-                <DataTable
-                  :value="infos.history"
-                  dataKey="objectId" 
-                >
-                <Column field="captain" header="Comandante"></Column>
-                  <Column field="convoy" header="Comboio">
-                    <template #body="{data}">
-                      <div>{{ arrayConcat(data.convoy) }}</div>
-                    </template>
-                  </Column>
-                  <Column field="actualPosition" header="Posição atual"></Column>
-                  <Column field="prevision" header="Previsão"></Column>
-                  <Column field="destination" header="Destino"></Column>
-                  <Column field="date" header="Data">
-                    <template #body="{data}">
-                      <div>{{ new Date(data.date).toLocaleDateString() }}</div>
-                    </template>
-                  </Column>
-                </DataTable>
-              </div>
-          </section>         
+          </div>
+          <div style="display: flex; justify-content: center; padding: 20px;">
+          </div>
+      </section>
+      <section class="sectionActual">
+        <div style="display: flex; width: 100%; margin: 5px;">
+          <div class="inputGroup">
+            <strong>Base: :</strong>
+            <div>{{ infos?.base }}</div>
+          </div>
+          <div class="inputGroup">
+            <strong>Departamento responsável:</strong>
+            <div>{{ infos?.departmentResp }}</div>
+          </div>
+          <div class="inputGroup">
+            <strong>Email do responsável: :</strong>
+            <div>{{ infos?.emailResp }}</div>
+          </div>
+        </div>
+        <div style="display: flex; width: 100%; margin: 5px;">
+          <div class="inputGroup">
+            <strong>Equipamento :</strong>
+            <div style="max-width: 100%;">{{ infos?.equipament }}</div>
+          </div>
+          <div class="inputGroup">
+            <strong>Nome do equipamento :</strong>
+            <div style="max-width: 100%;">{{ infos?.nameEquipament }}</div>
+          </div>
+          <div class="inputGroup">
+            <strong>Impacto :</strong>
+            <div style="max-width: 100%;">{{ infos?.impact }}</div>
+          </div>
+        </div>
+        <div style="display: flex; width: 100%; margin: 5px;">
+          <div class="inputGroup">
+            <strong>Local :</strong>
+            <div style="max-width: 100%;">{{ infos?.place }}</div>
+          </div>
+          <div class="inputGroup">
+            <strong>Tipo de anomalia :</strong>
+            <div style="max-width: 100%;">{{ infos?.typeAnomalie }}</div>
+          </div>  
+        </div>
+    </section>
+    <section class="sectionActual">
+      <div style="display: flex; flex-wrap: wrap;width: 100%; margin: 5px;">
+        <div v-for="(image, index) in infos.imageFacts" :key="index">
+          <Image :src="image.location" alt="image" width="200" style="margin: 10px;" preview></Image>
+        </div>
       </div>
+    </section>  
+    </div>
       <Button class="printBtn" @click="printRelatorio()">Imprimir</Button>
     </div>
+    <Dialog
+      v-model:visible="loading"
+      modal
+      :closable="false"
+      style="background-color: none;"
+    >
+      <ProgressSpinner />
+    </Dialog>
   </template>
   
   <style scoped>
@@ -141,6 +154,7 @@ import axios from 'axios';
   }
   .sectionActual{
     border: 1px solid black;
+    margin: 20px 0px;
   }
   .inputGroup{
     display: flex;
@@ -151,7 +165,8 @@ import axios from 'axios';
   }
   .form-container {
     width: 21cm;
-    /* height: 29.7cm; */
+    min-height: 29.7cm;
+    height: 100%;
     padding: 1cm;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -191,6 +206,9 @@ import axios from 'axios';
   @media print {
     .printBtn{
       display: none;
+    }
+    .backgroundPrint{
+      background-color: white;
     }
   }
   </style>
