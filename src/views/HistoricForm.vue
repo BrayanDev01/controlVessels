@@ -10,8 +10,7 @@ import axios from 'axios';
       return {
         latitude: "38.376129",
         longitude: "-75.055186",
-        infos: null,
-        loading: true
+        infos: null
       };
     },
     methods: {
@@ -30,6 +29,8 @@ import axios from 'axios';
           console.log(response)
           this.infos = response.data
           this.loading = false
+          
+          document.title = "Relatorio de anomalia - "+this.infos.numericId
         }).catch((error)=>{
           console.log(error)
         })
@@ -42,7 +43,7 @@ import axios from 'axios';
       }
     },
     created(){
-      this.getAnomalie(this.$route.params.id)      
+      this.getAnomalie(this.$route.params.id)
     }
   };
 </script>
@@ -77,7 +78,7 @@ import axios from 'axios';
       <section class="sectionActual">
         <div style="display: flex; width: 100%; margin: 5px;">
           <div class="inputGroup">
-            <strong>Base: :</strong>
+            <strong>Base:</strong>
             <div>{{ infos?.base }}</div>
           </div>
           <div class="inputGroup">
@@ -125,23 +126,23 @@ import axios from 'axios';
         </div>
       </div>
     </section>
+    <div class="titleCenter" style="display: flex; flex-direction: column; align-items: center;">
+      <strong>Analise da qualidade :</strong>
+    </div>
     <section class="sectionActual">
       <div class="inputGroup">
         <strong>Analise :</strong>
-        <div style="max-width: 100%;">{{ infos?.resumeQuality }}</div>
+        <div style="width: 90%;">{{ infos?.resumeQuality }}</div>
+        <div style="display: flex; flex-wrap: wrap;width: 100%; margin: 5px;">
+          <div v-for="(image, index) in infos.archives" :key="index">
+            <Image :src="image.location" alt="image" width="200" style="margin: 10px;" preview></Image>
+          </div>
+        </div>
       </div>      
     </section>
     </div>
       <Button class="printBtn" @click="printRelatorio()">Imprimir</Button>
     </div>
-    <Dialog
-      v-model:visible="loading"
-      modal
-      :closable="false"
-      style="background-color: none;"
-    >
-      <ProgressSpinner />
-    </Dialog>
   </template>
   
   <style scoped>
