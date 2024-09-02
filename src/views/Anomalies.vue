@@ -633,11 +633,8 @@ export default{
 
     },
     created(){
-        if(this.userInfo.accessLevel === 0){
-            this.getAnomalies()
-        }else{return}
-        
-        this.getQntAnomalies()
+        this.getAnomalies();        
+        this.getQntAnomalies();
     }
 }
 </script>
@@ -648,7 +645,7 @@ export default{
             <div class="header">
                 <Button @click="visible=true">Nova Anomalia</Button>
             </div>
-            <div v-show="userInfo?.accessLevel === 0">
+            <div>
                 <DataTable
                     :value="anomalies"
                     selectionMode="single"
@@ -785,7 +782,7 @@ export default{
                                         style="width: 120px; display: flex; flex-direction: column; align-items: center;">
                                         <Image :src="image.location" alt="Teste" width="100" height="100" preview ></Image>
                                         <div style="display: flex;">
-                                            <Button  icon="pi pi-times" rounded  @click="deleteImageBefore(image.location, index)"></Button>
+                                            <Button  icon="pi pi-times" rounded  @click="deleteImageBefore(image.location, index)" v-show="userInfo?.accessLevel === 0"></Button>
                                             <Button  icon="pi pi-download" rounded @click="downloadImage(image.location)"></Button>
                                         </div>
                                     </div>
@@ -925,6 +922,7 @@ export default{
                         @click="updateAnomalie()" 
                         :loading="loadingCreate"
                         v-else
+                        v-show="userInfo?.accessLevel === 0"
                     >
                         Atualizar Anomalia
                     </Button>
