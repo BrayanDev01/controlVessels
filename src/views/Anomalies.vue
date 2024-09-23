@@ -288,6 +288,8 @@ export default{
             })
         },
         async createAnomalie(){
+            this.loadingCreate = true;
+
             const options = {
                 method: 'POST',
                 url: `${import.meta.env.VITE_URL_API}classes/Anomalies`,
@@ -322,16 +324,21 @@ export default{
                 this.clearForm();
                 this.closeModal();
                 this.tostAdvice('success', 'Anomalia Registrada');
-                this.resetData()             
+                this.resetData()           
+                this.loadingCreate = false;  
                 // console.log(response)
             }).catch(error =>{
                 this.tostAdvice('error', 'Tivemos um erro')
                 this.clearForm();
+                this.loadingCreate = false;
                 console.log(error)
             })
             
         },
         async updateAnomalie(){
+            
+            this.loadingCreate = true;
+
             const options = {
                 method: 'PUT',
                 url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${this.objectId}`,
@@ -365,12 +372,14 @@ export default{
                 this.clearForm();
                 this.closeModal();
                 this.tostAdvice('success', 'Anomalia Atualizada');
-                this.resetData()                
+                this.resetData()     
+                this.loadingCreate = false;           
                 // console.log(response)
             }).catch(error =>{
                 this.tostAdvice('error', 'Tivemos um erro')
                 this.clearForm();
                 this.resetData();
+                this.loadingCreate = false;
                 console.log(error)
             })
             
@@ -913,7 +922,8 @@ export default{
                         Imprimir
                     </Button>                    
                     <Button 
-                        @click="createAnomalie()" 
+                        @click="createAnomalie()"
+                        :disabled="loadingCreate"
                         :loading="loadingCreate"
                         v-if="!objectId"
                     >
@@ -922,6 +932,7 @@ export default{
                     <Button 
                         @click="updateAnomalie()" 
                         :loading="loadingCreate"
+                        :disabled="loadingCreate"
                         v-else
                         v-show="userInfo?.accessLevel === 0"
                     >
