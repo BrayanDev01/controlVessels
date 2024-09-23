@@ -780,7 +780,7 @@ export default{
                                 :auto="true"
                                 @upload="beforeAnalise($event)"
                                 url="https://connectapi.3nf.com.br/uploadAnomalias"
-                                v-show="userInfo?.accessLevel === 0"
+                                v-show="!objectId"
                             >
                             </FileUpload>
                             <div class="boxImages">
