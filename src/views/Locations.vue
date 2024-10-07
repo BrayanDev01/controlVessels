@@ -270,6 +270,7 @@ export default{
     mounted(){
         // this.getVessels();
         this.getVesselsOptions();
+        document.title = "Localização | Controle de Embarcação"
     }
 }
 </script>

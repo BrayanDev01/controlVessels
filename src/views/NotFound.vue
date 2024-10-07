@@ -9,6 +9,9 @@ export default{
         goToHome(){
             this.$router.push('/')
         }
+    },
+    created(){
+        document.title="Not Found | Controle de Embarcação"
     }
 }
 </script>
