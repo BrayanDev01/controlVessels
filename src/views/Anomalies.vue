@@ -644,6 +644,7 @@ export default{
     created(){
         this.getAnomalies();        
         this.getQntAnomalies();
+        document.title="Anomalias | Controle de Embarcação"
     }
 }
 </script>

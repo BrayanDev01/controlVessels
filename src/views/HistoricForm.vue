@@ -43,7 +43,7 @@ import axios from 'axios';
       }
     },
     created(){
-      this.getAnomalie(this.$route.params.id)
+      this.getAnomalie(this.$route.params.id);
     }
   };
 </script>

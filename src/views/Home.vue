@@ -20,6 +20,9 @@ export default{
     },
     computed:{
         ...mapState(userInfoStore, ['userInformations'])
+    },
+    created(){
+        document.title = "Home | Controle de Embarcações"
     }
 }
 </script>
