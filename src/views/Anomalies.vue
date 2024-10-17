@@ -932,7 +932,7 @@ export default{
                         </div>
                     </TabPanel>
                     <TabPanel header="Pós-analise">
-                        <div class="topBox" v-if="userInfo?.accessLevel === 0">
+                        <div class="topBox" v-if="userInfo?.department === 'Qualidade'">
                             <div style="width: 100%; display: flex; gap: 10px;">
                                 <div>
                                     <FloatLabel>
@@ -973,36 +973,13 @@ export default{
                         
                     </TabPanel>
                     <TabPanel header="Retratação do setor">
-                        <div class="topBox collum" v-if="userInfo?.accessLevel === 0">
+                        <div class="topBox collum">
                             <div style="display: flex; gap: 10px;">
-                                <div>
+                                <div style="width: 100%;">
                                     <FloatLabel>
-                                        <Textarea v-model="gestorArgument" rows="5" cols="40" style="resize: none;"/>
+                                        <Textarea v-model="gestorArgument" rows="5" cols="40" style="resize: none; width: 100%;"/>
                                         <label>Retratação do Gestor :</label>
                                     </FloatLabel>
-                                </div>
-                                <div class="boxUpload">
-                                    <FileUpload 
-                                        mode="basic" 
-                                        name="files"
-                                        :auto="true"
-                                        :multiple="true"
-                                        @upload="afterAnalise($event)"
-                                        url="https://connectapi.3nf.com.br/upload"
-                                    />
-                                    <div v-for="(file, i) in archives" :key="i" 
-                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
-                                    >
-                                        <div 
-                                            class="uploadBox"
-                                        >
-                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
-                                            <div style="display: flex; gap: 15px; padding: 10px;">
-                                                <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
-                                                <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div style="width: 100%; display: flex; gap: 10px;">
@@ -1020,10 +997,6 @@ export default{
                                 </FloatLabel>                                
                             </div>
                         </div>
-                        <div v-else >
-                            <strong>Você não tem acesso a essa aba</strong>
-                        </div>
-                        <Divider></Divider>
                         
                         
                     </TabPanel>                    
