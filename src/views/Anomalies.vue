@@ -29,6 +29,12 @@ export default{
             impactAnomalie:'',
             statusAnomalie:'',
             resumeQuality:'',
+            gestorArgument: '',
+            causeAfterAnalise: '',
+            actionOfContention: '',
+            contramedida: '',
+            pendencies: [],
+            selectedPendencie: null,
             archives:[],
             imageFacts:[],
             qtdAnomaliesData: null,
@@ -314,7 +320,11 @@ export default{
                     envolvedInAnomalie: this.envolvedInAnomalie,
                     resumeQuality: this.resumeQuality,
                     emailResp: this.departmentResp?.email,
-                    reportFor: { "__type": "Pointer", "className": "_User", "objectId": this.userInfo.objectId }
+                    reportFor: { "__type": "Pointer", "className": "_User", "objectId": this.userInfo.objectId },
+                    causeAfterAnalise: this.causeAfterAnalise,
+                    actionOfContention: this.actionOfContention,
+                    contramedida: this.contramedida,
+                    gestorArgument: this.gestorArgument
                 }
 
             }
@@ -362,7 +372,11 @@ export default{
                     reasonAnomalie: this.reasonAnomalie,
                     envolvedInAnomalie: this.envolvedInAnomalie,
                     resumeQuality: this.resumeQuality,
-                    emailResp: this.departmentResp?.email
+                    emailResp: this.departmentResp?.email,
+                    causeAfterAnalise: this.causeAfterAnalise,
+                    actionOfContention: this.actionOfContention,
+                    contramedida: this.contramedida,
+                    gestorArgument: this.gestorArgument
                 }
 
             }
@@ -445,6 +459,10 @@ export default{
             this.imageFacts = [];
             this.resumeQuality = null;
             this.archives = [];
+            this.causeAfterAnalise= null,
+            this.actionOfContention= null,
+            this.contramedida= null,
+            this.gestorArgument= null
 
         },
         closeModal(){
@@ -551,6 +569,10 @@ export default{
             this.resumeQuality= e.data.resumeQuality;
             this.archives= e.data.archives;
             this.imageFacts= e.data.imageFacts;
+            this.causeAfterAnalise= e.data.causeAfterAnalise;
+            this.contramedida= e.data.contramedida
+            this.actionOfContention= e.data.actionOfContention;
+            this.gestorArgument = e.data.gestorArgument;
 
             this.visible= true;
         },
@@ -638,6 +660,30 @@ export default{
         },
         printAnomalie(id){
             window.open(`/historic/${id}`, '_blank');
+        },
+        async getPendenciasBySector(){
+            const options = {
+                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesForSector`,
+                params:{order: "-createdAt"},
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    sector: this.userInfo.department
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+                this.pendencies = response.data.result
+            }).catch(error =>{
+                console.log(error)
+            })
+        },
+        searchPendencie(e){
+            this.filters['global'].value = e.value.numericId
         }
 
     },
@@ -645,6 +691,7 @@ export default{
         this.getAnomalies();        
         this.getQntAnomalies();
         document.title="Anomalias | Controle de Embarcação"
+        this.getPendenciasBySector()
     }
 }
 </script>
@@ -675,7 +722,15 @@ export default{
                                 <InputText id="username" v-model="filters['global'].value"/>
                                 <label for="username">Global Search</label>
                             </FloatLabel>
-                            <div>
+                            <div style="display: flex; align-items: center;">
+                                <Dropdown
+                                    v-model="selectedPendencie"
+                                    :options="pendencies"
+                                    optionLabel="numericId"
+                                    placeholder="Pendências"
+                                    @change="searchPendencie($event)"
+                                    v-show="userInfo.accessLevel < 1"
+                                ></Dropdown>
                                 <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" v-show="userInfo.accessLevel < 1"/>
                             </div>
                         </div>
@@ -759,7 +814,8 @@ export default{
                                     v-model="placeAnomalie" 
                                     :options="localOptions"
                                     optionLabel="name" 
-                                    placeholder="Selecione o local">
+                                    placeholder="Selecione o local"
+                                >
                                 </Dropdown>                            
                             </div>
                         </div>
@@ -877,31 +933,33 @@ export default{
                     </TabPanel>
                     <TabPanel header="Pós-analise">
                         <div class="topBox" v-if="userInfo?.accessLevel === 0">
-                            <div >
-                                <FloatLabel>
-                                    <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Resumo do Avaliador :</label>
-                                </FloatLabel>
-                            </div>
-                            <div class="boxUpload">
-                                <FileUpload 
-                                    mode="basic" 
-                                    name="files"
-                                    :auto="true"
-                                    :multiple="true"
-                                    @upload="afterAnalise($event)"
-                                    url="https://connectapi.3nf.com.br/upload"
-                                />
-                                <div v-for="(file, i) in archives" :key="i" 
-                                    style="display: flex; margin: 10px; flex-wrap: wrap;"
-                                >
-                                    <div 
-                                        class="uploadBox"
+                            <div style="width: 100%; display: flex; gap: 10px;">
+                                <div>
+                                    <FloatLabel>
+                                        <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none;"/>
+                                        <label>Resumo do Avaliador :</label>
+                                    </FloatLabel>
+                                </div>
+                                <div class="boxUpload">
+                                    <FileUpload 
+                                        mode="basic" 
+                                        name="files"
+                                        :auto="true"
+                                        :multiple="true"
+                                        @upload="afterAnalise($event)"
+                                        url="https://connectapi.3nf.com.br/upload"
+                                    />
+                                    <div v-for="(file, i) in archives" :key="i" 
+                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
                                     >
-                                        <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
-                                        <div style="display: flex; gap: 15px; padding: 10px;">
-                                            <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
-                                            <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
+                                        <div 
+                                            class="uploadBox"
+                                        >
+                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
+                                            <div style="display: flex; gap: 15px; padding: 10px;">
+                                                <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
+                                                <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -914,6 +972,61 @@ export default{
                         
                         
                     </TabPanel>
+                    <TabPanel header="Retratação do setor">
+                        <div class="topBox collum" v-if="userInfo?.accessLevel === 0">
+                            <div style="display: flex; gap: 10px;">
+                                <div>
+                                    <FloatLabel>
+                                        <Textarea v-model="gestorArgument" rows="5" cols="40" style="resize: none;"/>
+                                        <label>Retratação do Gestor :</label>
+                                    </FloatLabel>
+                                </div>
+                                <div class="boxUpload">
+                                    <FileUpload 
+                                        mode="basic" 
+                                        name="files"
+                                        :auto="true"
+                                        :multiple="true"
+                                        @upload="afterAnalise($event)"
+                                        url="https://connectapi.3nf.com.br/upload"
+                                    />
+                                    <div v-for="(file, i) in archives" :key="i" 
+                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
+                                    >
+                                        <div 
+                                            class="uploadBox"
+                                        >
+                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
+                                            <div style="display: flex; gap: 15px; padding: 10px;">
+                                                <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
+                                                <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width: 100%; display: flex; gap: 10px;">
+                                <FloatLabel>
+                                    <Textarea v-model="causeAfterAnalise" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Causa :</label>
+                                </FloatLabel>
+                                <FloatLabel>
+                                    <Textarea v-model="actionOfContention" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Ação de contenção :</label>
+                                </FloatLabel>
+                                <FloatLabel>
+                                    <Textarea v-model="contramedida" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Contramedida :</label>
+                                </FloatLabel>                                
+                            </div>
+                        </div>
+                        <div v-else >
+                            <strong>Você não tem acesso a essa aba</strong>
+                        </div>
+                        <Divider></Divider>
+                        
+                        
+                    </TabPanel>                    
                 </TabView>
                 <div class="buttonsBottom">
                     <Button 
@@ -1052,6 +1165,9 @@ Button{
     flex-direction: column;
     align-items: center;
 
+}
+.collum{
+    flex-direction: column;
 }
 
 canvas{
