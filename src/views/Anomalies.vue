@@ -280,7 +280,7 @@ export default{
             const options = {
                 method: 'GET',
                 url: `${import.meta.env.VITE_URL_API}classes/Anomalies`,
-                params:{order: "-createdAt"},
+                params: {include: 'reportFor', order: '-createdAt'},
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
@@ -289,7 +289,7 @@ export default{
 
             await axios.request(options).then((response) =>{
                 this.anomalies = response.data.results
-                console.log(response)
+                console.log("GET ANOMALIES",response)
             }).catch(error =>{
                 console.log(error)
             })
@@ -752,7 +752,8 @@ export default{
                         </template>
                     </Column>
                     <Column field="equipament" header="Equipamento" sortable></Column>
-                    <Column field="departmentResp" header="Departamento Responsável" sortable></Column>
+                    <Column field="reportFor.username" header="Criado por"></Column>
+                    <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
                 </DataTable>
                 <div style="width: 100%; height: 100%; background-color: white; margin: 20px 0px ; padding: 30px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
