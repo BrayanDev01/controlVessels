@@ -685,6 +685,11 @@ export default{
         },
         searchPendencie(e){
             this.filters['global'].value = e.value.numericId
+        },
+        enableButton(){
+            if( this.nameEquipament && this.resumeAnomalie && this.dateAnomalie && this.departmentResp && this.typeAnomalie && this.baseAnomalie && this.placeAnomalie && this.equipamentAnomalie && this.impactAnomalie){
+                return false
+            }return true
         }
 
     },
@@ -721,7 +726,7 @@ export default{
                         <div style="display: flex; align-items: center; justify-content: space-between;">
                             <FloatLabel>
                                 <InputText id="username" v-model="filters['global'].value"/>
-                                <label for="username">Global Search</label>
+                                <label for="username">Procure o desejado</label>
                             </FloatLabel>
                             <div style="display: flex; align-items: center;">
                                 <Dropdown
@@ -751,7 +756,7 @@ export default{
                             <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)"></Tag>
                         </template>
                     </Column>
-                    <Column field="equipament" header="Equipamento" sortable></Column>
+                    <Column field="equipament" header="Tipo Equip." sortable></Column>
                     <Column field="reportFor.username" header="Criado por"></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
@@ -984,7 +989,7 @@ export default{
                                     </FloatLabel>
                                 </div>
                             </div>
-                            <div style="width: 100%; display: flex; gap: 10px;">
+                            <div style="width: 100%; display: flex; gap: 10px; justify-content: space-between">
                                 <FloatLabel>
                                     <Textarea v-model="causeAfterAnalise" rows="5" cols="40" style="resize: none;"/>
                                     <label>Causa :</label>
@@ -1012,9 +1017,10 @@ export default{
                     </Button>                    
                     <Button 
                         @click="createAnomalie()"
-                        :disabled="loadingCreate"
+                        :disabled="enableButton()"
                         :loading="loadingCreate"
                         v-if="!objectId"
+
                     >
                         Enviar Anomalia
                     </Button>
