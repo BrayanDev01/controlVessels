@@ -37,6 +37,7 @@ export default{
             selectedPendencie: null,
             archives:[],
             imageFacts:[],
+            archivesRetrated: [],
             qtdAnomaliesData: null,
             optionsChartData: this.setChartOptions(),
             typeAnomaliesData: null,
@@ -325,7 +326,8 @@ export default{
                     causeAfterAnalise: this.causeAfterAnalise,
                     actionOfContention: this.actionOfContention,
                     contramedida: this.contramedida,
-                    gestorArgument: this.gestorArgument
+                    gestorArgument: this.gestorArgument,
+                    archivesRetrated: this.archivesRetrated
                 }
 
             }
@@ -377,7 +379,8 @@ export default{
                     causeAfterAnalise: this.causeAfterAnalise,
                     actionOfContention: this.actionOfContention,
                     contramedida: this.contramedida,
-                    gestorArgument: this.gestorArgument
+                    gestorArgument: this.gestorArgument,
+                    archivesRetrated: this.archivesRetrated
                 }
 
             }
@@ -464,6 +467,7 @@ export default{
             this.actionOfContention= null,
             this.contramedida= null,
             this.gestorArgument= null
+            this.archivesRetrated = [];
 
         },
         closeModal(){
@@ -479,8 +483,13 @@ export default{
         },
         afterAnalise(e){
             const response = JSON.parse(e.xhr.responseText);
-            console.log(response);
+            // console.log(response);
             this.archives = [...this.archives, ...response.files];
+        },
+        afterGestor(e){
+            const response = JSON.parse(e.xhr.responseText);
+            console.log(response);
+            this.archivesRetrated = [...this.archivesRetrated, ...response.files];
         },
         async teste(){
             let input = document.getElementById('inputFile')
@@ -539,6 +548,24 @@ export default{
                 this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
             })
         },
+        async deleteImageGestor(url, index){
+            const options = {
+                method: 'DELETE',
+                url: `https://connectapi.3nf.com.br/uploadAnomalias`,
+                data:{
+                    fileUrl: url
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+                this.$toast.add({severity:'successs', summary:'Arquivo Deletado', life:3000})
+                this.retirarArchivesGestor(index)
+            }).catch((error)=>{
+                console.log(error)
+                this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
+            })
+        },
         downloadImage(url){
             window.open(url, '_blank')
         },
@@ -550,6 +577,11 @@ export default{
         retirarArchives(index){
             if (index > -1 && index < this.archives.length) {
                 this.archives.splice(index, 1);   
+            }
+        },
+        retirarArchivesGestor(index){
+            if (index > -1 && index < this.archivesRetrated.length) {
+                this.archivesRetrated.splice(index, 1);   
             }
         },
         editAnomalie(e){
@@ -574,6 +606,7 @@ export default{
             this.contramedida= e.data.contramedida
             this.actionOfContention= e.data.actionOfContention;
             this.gestorArgument = e.data.gestorArgument;
+            this.archivesRetrated = e.data.archivesRetrated;
 
             this.visible= true;
         },
@@ -939,11 +972,11 @@ export default{
                         </div>
                     </TabPanel>
                     <TabPanel header="Pós-analise">
-                        <div class="topBox" v-if="userInfo?.department === 'Qualidade'">
-                            <div style="width: 100%; display: flex; gap: 10px;">
+                        <div class="topBox">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div>
                                     <FloatLabel>
-                                        <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none;"/>
+                                        <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none; width: 100%;"/>
                                         <label>Resumo do Avaliador :</label>
                                     </FloatLabel>
                                 </div>
@@ -972,9 +1005,9 @@ export default{
                                 </div>
                             </div>
                         </div>
-                        <div v-else >
+                        <!-- <div v-else >
                             <strong>Você não tem acesso a essa aba</strong>
-                        </div>
+                        </div> -->
                         <Divider></Divider>
                         
                         
@@ -1002,6 +1035,31 @@ export default{
                                     <Textarea v-model="contramedida" rows="5" cols="40" style="resize: none;"/>
                                     <label>Contramedida :</label>
                                 </FloatLabel>                                
+                            </div>
+                            <div>
+                                <div class="boxUpload">
+                                    <FileUpload 
+                                        mode="basic" 
+                                        name="files"
+                                        :auto="true"
+                                        :multiple="true"
+                                        @upload="afterGestor($event)"
+                                        url="https://connectapi.3nf.com.br/upload"
+                                    />
+                                    <div v-for="(file, i) in archivesRetrated" :key="i" 
+                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
+                                    >
+                                        <div 
+                                            class="uploadBox"
+                                        >
+                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
+                                            <div style="display: flex; gap: 15px; padding: 10px;">
+                                                <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageGestor(file.location, i)"></i>
+                                                <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
