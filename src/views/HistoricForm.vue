@@ -74,73 +74,96 @@ import axios from 'axios';
           </div>
           <div style="display: flex; justify-content: center; padding: 20px;">
           </div>
-      </section>
-      <section class="sectionActual">
-        <div style="display: flex; width: 100%; margin: 5px;">
-          <div class="inputGroup">
-            <strong>Base:</strong>
-            <div>{{ infos?.base }}</div>
+        </section>
+        <section class="sectionActual">
+          <div style="display: flex; width: 100%; margin: 5px;">
+            <div class="inputGroup">
+              <strong>Base:</strong>
+              <div>{{ infos?.base }}</div>
+            </div>
+            <div class="inputGroup">
+              <strong>Departamento responsável:</strong>
+              <div>{{ infos?.departmentResp }}</div>
+            </div>
+            <div class="inputGroup">
+              <strong>Email do responsável: :</strong>
+              <div>{{ infos?.emailResp }}</div>
+            </div>
           </div>
-          <div class="inputGroup">
-            <strong>Departamento responsável:</strong>
-            <div>{{ infos?.departmentResp }}</div>
+          <div style="display: flex; width: 100%; margin: 5px;">
+            <div class="inputGroup">
+              <strong>Equipamento :</strong>
+              <div style="max-width: 100%;">{{ infos?.equipament }}</div>
+            </div>
+            <div class="inputGroup">
+              <strong>Nome do equipamento :</strong>
+              <div style="max-width: 100%;">{{ infos?.nameEquipament }}</div>
+            </div>
+            <div class="inputGroup">
+              <strong>Impacto :</strong>
+              <div style="max-width: 100%;">{{ infos?.impact }}</div>
+            </div>
           </div>
-          <div class="inputGroup">
-            <strong>Email do responsável: :</strong>
-            <div>{{ infos?.emailResp }}</div>
+          <div style="display: flex; width: 100%; margin: 5px;">
+            <div class="inputGroup">
+              <strong>Local :</strong>
+              <div style="max-width: 100%;">{{ infos?.place }}</div>
+            </div>
+            <div class="inputGroup">
+              <strong>Tipo de anomalia :</strong>
+              <div style="max-width: 100%;">{{ infos?.typeAnomalie }}</div>
+            </div>
+            <div class="inputGroup">
+              <strong>Criado da anomalia :</strong>
+              <div style="max-width: 100%;">{{ infos.reportFor?.fullName }}</div>
+            </div> 
           </div>
+        </section>
+        <section class="sectionActual">
+          <div style="display: flex; flex-wrap: wrap;width: 100%; margin: 5px;">
+            <div v-for="(image, index) in infos.imageFacts" :key="index">
+              <Image :src="image.location" alt="image" width="200" style="margin: 10px;" preview></Image>
+            </div>
+          </div>
+        </section>
+
+        <div class="titleCenter" style="display: flex; flex-direction: column; align-items: center;">
+          <strong>Retratação do setor :</strong>
         </div>
-        <div style="display: flex; width: 100%; margin: 5px;">
+        <section class="sectionActual">
           <div class="inputGroup">
-            <strong>Equipamento :</strong>
-            <div style="max-width: 100%;">{{ infos?.equipament }}</div>
+            <strong>Resumo do setor :</strong>
+            <div style="width: 90%;">{{ infos?.gestorArgument }}</div>
           </div>
           <div class="inputGroup">
-            <strong>Nome do equipamento :</strong>
-            <div style="max-width: 100%;">{{ infos?.nameEquipament }}</div>
+            <strong>Causa :</strong>
+            <div style="width: 90%;">{{ infos?.causeAfterAnalise }}</div>
           </div>
           <div class="inputGroup">
-            <strong>Impacto :</strong>
-            <div style="max-width: 100%;">{{ infos?.impact }}</div>
-          </div>
-        </div>
-        <div style="display: flex; width: 100%; margin: 5px;">
-          <div class="inputGroup">
-            <strong>Local :</strong>
-            <div style="max-width: 100%;">{{ infos?.place }}</div>
-          </div>
-          <div class="inputGroup">
-            <strong>Tipo de anomalia :</strong>
-            <div style="max-width: 100%;">{{ infos?.typeAnomalie }}</div>
-          </div>
-          <div class="inputGroup">
-            <strong>Criado da anomalia :</strong>
-            <div style="max-width: 100%;">{{ infos.reportFor?.fullName }}</div>
+            <strong>Ação de contenção :</strong>
+            <div style="width: 90%;">{{ infos?.actionOfContention }}</div>
           </div> 
+          <div class="inputGroup">
+            <strong>Contramedida :</strong>
+            <div style="width: 90%;">{{ infos?.contramedida }}</div>
+          </div>   
+        </section>
+
+        <div class="titleCenter" style="display: flex; flex-direction: column; align-items: center;">
+          <strong>Analise da qualidade :</strong>
         </div>
-    </section>
-    <section class="sectionActual">
-      <div style="display: flex; flex-wrap: wrap;width: 100%; margin: 5px;">
-        <div v-for="(image, index) in infos.imageFacts" :key="index">
-          <Image :src="image.location" alt="image" width="200" style="margin: 10px;" preview></Image>
-        </div>
+        <section class="sectionActual">
+          <div class="inputGroup">
+            <strong>Analise :</strong>
+            <div style="width: 90%;">{{ infos?.resumeQuality }}</div>
+            <div style="display: flex; flex-wrap: wrap;width: 100%; margin: 5px;">
+              <div v-for="(image, index) in infos.archives" :key="index">
+                <Image :src="image.location" alt="image" width="200" style="margin: 10px;" preview></Image>
+              </div>
+            </div>
+          </div>      
+        </section>
       </div>
-    </section>
-    <div class="titleCenter" style="display: flex; flex-direction: column; align-items: center;">
-      <strong>Analise da qualidade :</strong>
-    </div>
-    <section class="sectionActual">
-      <div class="inputGroup">
-        <strong>Analise :</strong>
-        <div style="width: 90%;">{{ infos?.resumeQuality }}</div>
-        <div style="display: flex; flex-wrap: wrap;width: 100%; margin: 5px;">
-          <div v-for="(image, index) in infos.archives" :key="index">
-            <Image :src="image.location" alt="image" width="200" style="margin: 10px;" preview></Image>
-          </div>
-        </div>
-      </div>      
-    </section>
-    </div>
       <Button class="printBtn" @click="printRelatorio()">Imprimir</Button>
     </div>
   </template>
