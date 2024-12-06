@@ -1093,7 +1093,6 @@ export default{
                         :loading="loadingCreate"
                         :disabled="loadingCreate"
                         v-else
-                        v-show="userInfo?.accessLevel === 0"
                     >
                         Atualizar Anomalia
                     </Button>
