@@ -484,7 +484,7 @@ export default{
         },
         beforeAnalise(e){
             const response = JSON.parse(e.xhr.responseText);
-            console.log(response);
+            // console.log(response);
             this.imageFacts = [...this.imageFacts, ...response.files];
         },
         afterAnalise(e){
@@ -494,7 +494,7 @@ export default{
         },
         afterGestor(e){
             const response = JSON.parse(e.xhr.responseText);
-            console.log(response);
+            // console.log(response);
             this.archivesRetrated = [...this.archivesRetrated, ...response.files];
         },
         async teste(){
@@ -592,6 +592,10 @@ export default{
         },
         editAnomalie(e){
             console.log(e)
+            if(!e.data.archivesRetrated){
+                this.archivesRetrated = [];
+            }else{this.archivesRetrated = e.data.archivesRetrated;}
+
             this.objectId = e.data.objectId;
             this.resumeAnomalie= e.data.resumeAnomalie;
             this.dateAnomalie= new Date(e.data.date);
@@ -612,7 +616,7 @@ export default{
             this.contramedida= e.data.contramedida
             this.actionOfContention= e.data.actionOfContention;
             this.gestorArgument = e.data.gestorArgument;
-            this.archivesRetrated = e.data.archivesRetrated;
+            
 
             this.visible= true;
         },
