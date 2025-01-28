@@ -887,7 +887,6 @@ export default{
                                 :auto="true"
                                 @upload="beforeAnalise($event)"
                                 url="https://connectapi.3nf.com.br/uploadAnomalias"
-                                v-show="!objectId"
                             >
                             </FileUpload>
                             <div class="boxImages">
@@ -1064,8 +1063,8 @@ export default{
                                         >
                                             <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
                                             <div style="display: flex; gap: 15px; padding: 10px;">
-                                                <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageGestor(file.location, i)"></i>
-                                                <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
+                                                <i class="pi pi-times" style="font-size: 1rem; cursor: pointer;" @click="deleteImageGestor(file.location, i)"></i>
+                                                <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadImage(file.location)"></i>
                                             </div>
                                         </div>
                                     </div>
