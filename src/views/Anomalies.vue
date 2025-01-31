@@ -264,7 +264,8 @@ export default{
                 {name:"Outros"},
                 {name:"Não aplicável"},
                 {name:"Caminhão "},
-                {name:"Chopin"}    
+                {name:"Chopin"},
+                {name: "CT 28"}
             ],
             filters:{
                 global:{ value: null, matchMode: FilterMatchMode.CONTAINS},
