@@ -89,7 +89,8 @@ export default{
                 {name:"Porto Cidade"},
                 {name:"Refinaria (REAM)"},
                 {name:"Terminal ABI"},
-                {name:"Viagem"}
+                {name:"Viagem"},
+                {name:"Terminal TFB"}
             ],
             equipamentTypeOptions:[
                 {name:"Balsa"},
