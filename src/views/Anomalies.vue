@@ -33,6 +33,7 @@ export default{
             causeAfterAnalise: '',
             actionOfContention: '',
             contramedida: '',
+            criticalityAnomalie: null,
             pendencies: [],
             selectedPendencie: null,
             archives:[],
@@ -43,6 +44,11 @@ export default{
             typeAnomaliesData: null,
             baseAnomaliesData: null,
             monthAnomaliesData: null,
+            criticalityOptions:[
+                {name: "Prioridade Alta"},
+                {name: "Prioridade Media"},
+                {name: "Prioridade Baixa"}
+            ],
             departments:[
                 {name:"Comercial", email:''},
                 {name:"Controladoria", email:'controller@3nf.com.br'},
@@ -336,7 +342,8 @@ export default{
                     actionOfContention: this.actionOfContention,
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
-                    archivesRetrated: this.archivesRetrated
+                    archivesRetrated: this.archivesRetrated,
+                    criticalityAnomalie: this.criticalityAnomalie.name
                 }
 
             }
@@ -389,7 +396,8 @@ export default{
                     actionOfContention: this.actionOfContention,
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
-                    archivesRetrated: this.archivesRetrated
+                    archivesRetrated: this.archivesRetrated,
+                    criticalityAnomalie: this.criticalityAnomalie.name
                 }
 
             }
@@ -477,6 +485,7 @@ export default{
             this.contramedida= null,
             this.gestorArgument= null
             this.archivesRetrated = [];
+            this.criticalityAnomalie = null
 
         },
         closeModal(){
@@ -619,6 +628,7 @@ export default{
             this.contramedida= e.data.contramedida
             this.actionOfContention= e.data.actionOfContention;
             this.gestorArgument = e.data.gestorArgument;
+            this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
             
 
             this.visible= true;
@@ -799,11 +809,18 @@ export default{
                     <Column field="nameEquipament" header="Equipamento" sortable></Column>
                     <Column field="status" header="Status" sortable>
                         <template #body="slotProps">
-                            <Tag :value="slotProps.data.status" :severity="getStatusLabel(slotProps.data.status)"></Tag>
+                            <div style="display: flex; justify-content: center;">
+                                <Tag 
+                                    :value="slotProps.data.status" 
+                                    :severity="getStatusLabel(slotProps.data.status)"
+                                    style="text-align: center;"
+                                ></Tag>
+                            </div>
                         </template>
                     </Column>
                     <Column field="equipament" header="Tipo Equip." sortable></Column>
                     <Column field="reportFor.username" header="Criado por"></Column>
+                    <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
                 </DataTable>
@@ -979,6 +996,15 @@ export default{
                                     :options="statusOptions"
                                     optionLabel="name" 
                                     placeholder="Selecione o status">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion" style="width: 30%;">
+                                <span>Selecione a criticidade</span>
+                                <Dropdown 
+                                    v-model="criticalityAnomalie" 
+                                    :options="criticalityOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione a criticidade">
                                 </Dropdown>
                             </div>
                         </div>
