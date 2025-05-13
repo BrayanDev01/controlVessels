@@ -30,6 +30,8 @@ import Divider from 'primevue/divider';
 import Image from 'primevue/image';
 import Message from 'primevue/message';
 import Chart from 'primevue/chart';
+import Stepper from 'primevue/stepper';
+import StepperPanel from 'primevue/stepperpanel';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -72,6 +74,8 @@ app.component('Divider', Divider);
 app.component('Image', Image);
 app.component('Message', Message);
 app.component('Chart', Chart);
+app.component('Stepper', Stepper);
+app.component('StepperPanel', StepperPanel);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);
