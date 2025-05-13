@@ -198,7 +198,7 @@ export default{
                         </div>
                     </template>
                 </Column>
-                <Column field="avaliationCalibration.actions"></Column>
+                <Column field="avaliationCalibration.acoesTomadas"></Column>
                 <Column field="obs"></Column>
             </DataTable>
         </div>
