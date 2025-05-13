@@ -18,16 +18,16 @@ export default{
                         // this.$toast.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
                     }
                 },
+                // {
+                //     label: 'Navegrãos',
+                //     icon: 'pi pi-objects-column',
+                //     command: () => {
+                //         this.$router.push('/form');
+                //         // this.$toast.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
+                //     }
+                // },
                 {
-                    label: 'Navegrãos',
-                    icon: 'pi pi-objects-column',
-                    command: () => {
-                        this.$router.push('/form');
-                        // this.$toast.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
-                    }
-                },
-                {
-                    label: 'Localizações',
+                    label: 'Intrumentos',
                     icon: 'pi pi-map',
                     command: () => {
                         this.$router.push('/locations');
@@ -104,11 +104,11 @@ export default{
             <router-link to="/home" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Home</div>
             </router-link>
-            <router-link to="/form" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+            <!-- <router-link to="/form" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Formulário</div>
-            </router-link>
+            </router-link> -->
             <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
-                <div>Localizações</div>
+                <div>Instrumentos</div>
             </router-link>
             <router-link to="/anomalies" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Anomalias</div>

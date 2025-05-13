@@ -14,7 +14,7 @@ export default{
             vessels: null,
             showAddEquipament: false,
             rowsExpanded: {},
-            loading: false,
+            loading: true,
             selectedVessel: null,
             convoy: null,
             captain:null,
@@ -24,49 +24,7 @@ export default{
             areaLocal:null,
             latitude: null,
             longitude: null,
-            equipaments:[
-                {
-                    item: 1,
-                    description: "Densimetro",
-                    infoMed:{
-                        setor: "Densimetro",
-                        marca: "Densimetro",
-                        modelo: "Densimetro",
-                        nSerieLacre: "Densimetro",
-                        etiquetaIdentificacao: "Densimetro",
-                        faixaMedicao: "Densimetro",
-                        resolucao: {
-                            valor: "Densimetro",
-                            un: "Densimetro"
-                        },
-                        classe: "Densimetro",
-                        localizacao: {
-                            setor: "Densimetro",
-                            responsavel: "Densimetro"
-                        },
-                        tolerancia: {
-                            valor: "Densimetro",
-                            un: "Densimetro"
-                        }
-                    },
-                    calibrationInterval: {
-                        date: "Densimetro",
-                        validade: "Densimetro",
-                        diasVencer: "Densimetro",
-                        periodoMeses: "Densimetro"
-                    },
-                    calibrationResults: {
-                        laboratorioEngenheiro: "Densimetro",
-                        nCertificadoArt: "Densimetro"
-                    },
-                    avaliationCalibration: {
-                        status: "Densimetro",
-                        document: "Densimetro",
-                        actions: 1
-                    },
-                    obs: "Densimetro"
-                }
-            ],
+            equipaments:[],
             vesselsOptions:[],
             filters:{
                 global:{value:null, matchMode: FilterMatchMode.CONTAINS},
@@ -80,8 +38,39 @@ export default{
         }
     },
     methods:{
+        async getEquipaments(){
+            const options ={
+                method: 'GET',
+                url: `${import.meta.env.VITE_URL_API}classes/instrumentMed`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            }
+            
+            await axios.request(options).then((response) => {
+                console.log(response)
+                this.equipaments = response.data.results
+                this.loading = false
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
+        downloadFile(file){
+            console.log(file)
+            window.open(file.location, '_blank')
+        },
+        formatDate(value){
+            return new Date(value).toLocaleDateString('pt-BR')
+        },
+        resetData(){
+            this.loading = true
+            this.equipaments = []
+            this.getEquipaments()
+        }
     },
     mounted(){
+        this.getEquipaments()
         document.title = "Materiais de Inspeção | Controle de Embarcação"
     }
 }
@@ -183,14 +172,32 @@ export default{
                 <Column field="infoMed.localizacao.responsavel"></Column>
                 <Column field="infoMed.tolerancia.valor"></Column>
                 <Column field="infoMed.tolerancia.un"></Column>
-                <Column field="calibrationInterval.date"></Column>
-                <Column field="calibrationInterval.validade"></Column>
+                <Column field="calibrationInterval.date">
+                    <template #body="slotProps">
+                        <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                            {{ formatDate(slotProps.data.calibrationInterval.date) }}
+                        </div>
+                    </template>
+                </Column>
+                <Column field="calibrationInterval.validade">
+                    <template #body="slotProps">
+                        <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                            {{ formatDate(slotProps.data.calibrationInterval.validade) }}
+                        </div>
+                    </template>
+                </Column>
                 <Column field="calibrationInterval.diasVencer"></Column>
                 <Column field="calibrationInterval.periodoMeses"></Column>
                 <Column field="calibrationResults.laboratorioEngenheiro"></Column>
                 <Column field="calibrationResults.nCertificadoArt"></Column>
                 <Column field="avaliationCalibration.status"></Column>
-                <Column field="avaliationCalibration.document"></Column>
+                <Column field="avaliationCalibration.document">
+                    <template #body="slotProps">
+                        <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                            <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadFile(slotProps.data.avaliationCalibration.document)"></i>                            
+                        </div>
+                    </template>
+                </Column>
                 <Column field="avaliationCalibration.actions"></Column>
                 <Column field="obs"></Column>
             </DataTable>
@@ -198,6 +205,7 @@ export default{
         <addEquipament
             v-model:visible="showAddEquipament"
             @update:visible="showAddEquipament = $event"
+            @reGet="resetData()"
         ></addEquipament>
     </div>
 </template>

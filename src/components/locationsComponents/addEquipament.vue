@@ -1,8 +1,148 @@
 <script>
+import axios from 'axios'
+
 export default {
     data(){
         return{
+            description: null,
+            setor: null,
+            marca: null,
+            modelo: null,
+            nSerieLacre: null,
+            etiquetaIdentificacao: null,
+            faixaMedicao: null,
+            classe:null,
+            valorResolucao: null,
+            unResolucao: null,
+            setorLocalizacao: null,
+            responsavel: null,
+            valorTolerancia: null,
+            unTolerancia: null,
+            dataCalibracao: null,
+            validadeCalibracao: null,
+            daysToInvalid: null,
+            monthsToInvalid: null,
+            labEng: null,
+            numberCertificado: null,
+            status: null,
+            document:null,
+            acoesTomadas: null,
+            quaisAcoes: null,
+            observacao: null,
 
+
+            statusOptions:[
+                {name: 'Conforme'},
+                {name: 'Não Conforme'}
+            ],
+            unMedOptions:[
+                {name: 'g/cm³'},
+                {name: 'g/ml'},
+                {name: 'Cº'},
+                {name: 'M'},                
+            ],
+            loading: false
+        }
+    },
+    methods:{
+        async createEquipament(){
+            this.loading = true
+
+            const options ={
+                url: `${import.meta.env.VITE_URL_API}classes/instrumentMed`,
+                method: 'POST',
+                headers: {
+                    'X-Parse-REST-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    description: this.description,
+                    infoMed: {
+                        setor: this.setor,
+                        marca: this.marca,
+                        modelo: this.modelo,
+                        nSerieLacre: this.nSerieLacre,
+                        etiquetaIdentificacao: this.etiquetaIdentificacao,
+                        faixaMedicao: this.faixaMedicao,
+                        resolucao: {
+                            valor: this.valorResolucao,
+                            un: this.unResolucao?.name
+                        },
+                        classe: this.classe,
+                        localizacao: {
+                            setor: this.setor,
+                            responsavel: this.responsavel
+                        },
+                        tolerancia: {
+                            valor: this.valorTolerancia,
+                            un: this.unTolerancia?.name
+                        }         
+                    },
+                    calibrationInterval: {
+                        date: this.dataCalibracao,
+                        validade: this.validadeCalibracao,
+                        diasVencer: this.daysToInvalid,
+                        periodoMeses: this.monthsToInvalid
+                    },
+                    calibrationResults: {
+                        laboratorioEngenheiro: this.labEng,
+                        nCertificadoArt: this.numberCertificado,
+                    },
+                    avaliationCalibration: {
+                        status: this.status?.name,
+                        document: this.document,
+                        acoesTomadas: this.acoesTomadas,
+                        quaisAcoes: this.quaisAcoes,
+                    },
+                    obs: this.observacao
+                }
+            }
+
+            await axios.request(options).then((response) => {
+                console.log(response);
+                this.$emit('update:visible', false)
+                this.$emit('reGet')
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        clearForm(){
+            this.description = null
+            this.setor = null
+            this.marca = null
+            this.modelo = null
+            this.nSerieLacre = null
+            this.etiquetaIdentificacao = null
+            this.faixaMedicao = null
+            this.classe = null
+            this.valorResolucao = null
+            this.unResolucao = null
+            this.setorLocalizacao = null
+            this.responsavel = null
+            this.valorTolerancia = null
+            this.unTolerancia = null
+            this.dataCalibracao = null
+            this.validadeCalibracao = null
+            this.daysToInvalid = null
+            this.monthsToInvalid = null
+            this.labEng = null
+            this.numberCertificado = null
+            this.status = null
+            this.document = null
+            this.acoesTomadas = null
+            this.quaisAcoes = null
+            this.verde = null
+            this.loading = false
+        },
+        afterSend(e){
+            const response = JSON.parse(e.xhr.responseText);
+            this.document = response.files[0]
+        },
+        cleanDownload(){
+            this.document = null
+        },
+        downloadDocument(location){
+            window.open(location, '_blank');
         }
     }
 }
@@ -21,14 +161,14 @@ export default {
                 <StepperPanel header="Informações">
                     <template #content="{nextCallback}">
                         <div class="flex gap-5 w-full">
-                            <div class="rightSide">
+                            <div class="leftSide">
                                 <div class="groupInput">
                                     <span>Descrição :</span>
-                                    <TextArea
+                                    <Textarea
                                         v-model="description"
                                         rows="5" 
                                         cols="50"
-                                    ></TextArea>                                    
+                                    ></Textarea>                                    
                                 </div>
                                 <div class="organizerInputs">
                                     <div class="groupInput">
@@ -81,7 +221,7 @@ export default {
                                     </div>
                                 </div>
                             </div>
-                            <div class="leftSide">
+                            <div class="rightSide">
                                 <div style="display: flex; flex-direction: column; align-items: center;">
                                     <strong>Resolução :</strong>
                                     <div class="organizerInputs">                                        
@@ -93,9 +233,12 @@ export default {
                                         </div>
                                         <div class="groupInput">
                                             <span>Un. :</span>
-                                            <InputText
+                                            <Dropdown
                                                 v-model="unResolucao"
-                                            ></InputText>
+                                                :options="unMedOptions"
+                                                optionLabel="name"
+                                                placeholder="Selecione a Unidade"
+                                            ></Dropdown>
                                         </div>
                                     </div>
                                 </div>
@@ -127,15 +270,18 @@ export default {
                                         </div>
                                         <div class="groupInput">
                                             <span>Un. :</span>
-                                            <InputText
-                                                v-model="un"
-                                            ></InputText>
+                                            <Dropdown
+                                                v-model="unTolerancia"
+                                                :options="unMedOptions"
+                                                optionLabel="name"
+                                                placeholder="Selecione a Unidade"
+                                            ></Dropdown>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div style="display: flex; justify-content: flex-end;">
+                        <div style="display: flex; justify-content: flex-end; margin: 10px;">
                             <Button
                                 label="Proximo"
                                 @click="nextCallback"
@@ -145,8 +291,157 @@ export default {
                         </div>
                     </template>
                 </StepperPanel>
-                <StepperPanel header="Calibração"></StepperPanel>
-                <StepperPanel header="Avaliação"></StepperPanel>
+                <StepperPanel header="Calibração">
+                    <template #content="{prevCallback, nextCallback}">
+                        <div class="flex">
+                            <div class="leftSide">
+                                <strong>Intervalo de Calibração</strong>
+                                <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Data da Calibração :</span>
+                                        <Calendar
+                                            v-model="dataCalibracao"
+                                            dateFormat="dd/mm/yy"
+                                        ></Calendar>
+                                    </div>
+                                    <div class="groupInput">
+                                        <span>Validade :</span>
+                                        <Calendar
+                                            v-model="validadeCalibracao"
+                                            dateFormat="dd/mm/yy"
+                                        ></Calendar>
+                                    </div>
+                                </div>
+                                <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Dias a vencer :</span>
+                                        <InputNumber
+                                            v-model="daysToInvalid"
+                                        ></InputNumber>
+                                    </div>
+                                    <div class="groupInput">
+                                        <span>Periodo (meses) :</span>
+                                        <InputNumber
+                                            v-model="monthsToInvalid"
+                                        ></InputNumber>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rightSide">
+                                <strong>Resultados da Calibração</strong>
+                                <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Laboratório / Engenheiro :</span>
+                                        <InputText
+                                            v-model="labEng"
+                                        ></InputText>
+                                    </div>
+                                    <div class="groupInput">
+                                        <span>Nº Certificado / ART :</span>
+                                        <InputText
+                                            v-model="numberCertificado"
+                                        ></InputText>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="flex justify-content-between m-5">
+                            <Button
+                                label="Anterior"
+                                @click="prevCallback"
+                                icon="pi pi-arrow-left"
+                                iconPos="left"
+                            ></Button>
+                            <Button
+                                label="Proximo"
+                                @click="nextCallback"
+                                icon="pi pi-arrow-right"
+                                iconPos="right"
+                            ></Button>
+                        </div>
+                    </template>
+                </StepperPanel>
+                <StepperPanel header="Avaliação">
+                    <template #content="{prevCallback}">
+                        <div class="flex">
+                            <div class="leftSide">
+                                <strong>Avaliação da Calibração</strong>
+                                <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Situação Atual :</span>
+                                        <Dropdown
+                                            v-model="status"
+                                            :options="statusOptions"
+                                            optionLabel="name"
+                                            placeholder="Selecione a situação"
+                                        ></Dropdown>
+                                    </div>
+                                    <div class="groupInput">
+                                        <span>Documento :</span>
+                                        <FileUpload
+                                            v-if="!document"
+                                            mode="basic"
+                                            name="files"
+                                            :auto="true"
+                                            chooseLabel="Documento da Calibração"
+                                            @upload="afterSend($event)"
+                                            url="https://connectapi.3nf.com.br/upload"
+                                        ></FileUpload>
+                                        <div v-else style="display: flex; flex-direction: column; align-items: center;">
+                                            <i class="pi pi-file" style="font-size: 2.5rem"></i>
+                                            <div class="flex gap-2">
+                                                <Button icon="pi pi-download" rounded @click="downloadDocument(this.document.location)"/>
+                                                <Button icon="pi pi-times" rounded @click="cleanDownload(this.document.location)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Ações Tomadas :</span>
+                                        <InputText
+                                            v-model="acoesTomadas"
+                                        ></InputText>
+                                    </div>
+                                    <div class="groupInput">
+                                        <span>Quais ações ?</span>
+                                        <Textarea
+                                            v-model="quaisAcoes"
+                                            rows="5"
+                                            cols="30"
+                                        ></Textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rightSide">
+                                <strong>Observação</strong>
+                                <Textarea
+                                    v-model="observacao"
+                                    rows="8"
+                                    cols="50"
+                                    class="mt-3"
+                                ></Textarea>
+                            </div>
+                        </div>
+                        <div class="flex justify-content-between m-5">
+                            <Button
+                                label="Anterior"
+                                @click="prevCallback"
+                                icon="pi pi-arrow-left"
+                                iconPos="left"
+                            ></Button>
+                            <Button
+                                label="Cadastrar Equipamento"
+                                @click="createEquipament()"
+                                icon="pi pi-check"
+                                iconPos="right"
+                                class="p-button-success"
+                                :loading="loading"
+                            ></Button>
+                        </div>
+                    </template>
+                </StepperPanel>
             </Stepper>
         </div>
     </Dialog>
@@ -160,7 +455,7 @@ export default {
 }
 .organizerInputs{
     display: flex;
-    gap: 10px;
+    gap: 20px;
     margin: 10px 0;
 }
 .rightSide, .leftSide{
