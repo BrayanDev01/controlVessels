@@ -2,17 +2,21 @@
 import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
 import addEquipament from '../components/locationsComponents/addEquipament.vue';
+import SeeOrEditEquipament from '../components/locationsComponents/SeeOrEditEquipament.vue';
 import { FilterMatchMode } from 'primevue/api';
 
 export default{
     components:{
         MenuBar,
-        addEquipament
+        addEquipament,
+        SeeOrEditEquipament
     },
     data(){
         return{
             vessels: null,
             showAddEquipament: false,
+            showSeeOrEditEquipament: false,
+            idForEdit: null,
             rowsExpanded: {},
             loading: true,
             selectedVessel: null,
@@ -67,6 +71,10 @@ export default{
             this.loading = true
             this.equipaments = []
             this.getEquipaments()
+        },
+        seeOrEditEquipament(e){
+            this.idForEdit = e.data
+            this.showSeeOrEditEquipament = true
         }
     },
     mounted(){
@@ -88,7 +96,9 @@ export default{
                 >
                 </Button>
             </div>
-            <DataTable                
+            <DataTable
+                @row-select="seeOrEditEquipament"  
+                selectionMode="single"  
                 :value="equipaments"
                 :loading="loading"
                 dataKey="id"
@@ -207,6 +217,11 @@ export default{
             @update:visible="showAddEquipament = $event"
             @reGet="resetData()"
         ></addEquipament>
+        <SeeOrEditEquipament
+            v-model:visible="showSeeOrEditEquipament"
+            @update:visible="showSeeOrEditEquipament = $event"
+            :idEquipament="idForEdit"
+        ></SeeOrEditEquipament>
     </div>
 </template>
 
