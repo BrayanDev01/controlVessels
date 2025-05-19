@@ -1,4 +1,5 @@
 <script>
+import { data } from '@maptiler/sdk'
 import axios from 'axios'
 
 export default {
