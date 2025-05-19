@@ -1,10 +1,16 @@
 <script>
-import { data } from '@maptiler/sdk'
 import axios from 'axios'
 
 export default {
+    props: {
+        idEquipament: {
+            type: Object,
+            required: true
+        }
+    },
     data(){
         return{
+            userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             description: null,
             setor: null,
             marca: null,
@@ -19,6 +25,7 @@ export default {
             responsavel: null,
             valorTolerancia: null,
             unTolerancia: null,
+
             dataCalibracao: null,
             validadeCalibracao: null,
             daysToInvalid: null,
@@ -46,12 +53,12 @@ export default {
         }
     },
     methods:{
-        async createEquipament(){
+        async attEquipament(){
             this.loading = true
 
             const options ={
-                url: `${import.meta.env.VITE_URL_API}classes/instrumentMed`,
-                method: 'POST',
+                url: `${import.meta.env.VITE_URL_API}classes/instrumentMed/${this.idEquipament.objectId}`,
+                method: 'PUT',
                 headers: {
                     'X-Parse-REST-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
@@ -107,6 +114,24 @@ export default {
                 console.log(error);
             })
         },
+        // async getEquipament(){
+        //     this.loading = true
+
+        //     const options ={
+        //         url: `${import.meta.env.VITE_URL_API}classes/instrumentMed/${id}`,
+        //         method: 'POST',
+        //         headers: {
+        //             'X-Parse-REST-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+        //             'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+        //         }
+        //     }
+
+        //     await axios.request(options).then((response) => {
+        //         console.log(response);
+        //     }).catch((error) => {
+        //         console.log(error);
+        //     })
+        // },
         clearForm(){
             this.description = null
             this.setor = null
@@ -145,11 +170,73 @@ export default {
         downloadDocument(location){
             window.open(location, '_blank');
         },
+        // calcularDiferencas() {
+        //     if(!this.dataCalibracao || !this.validadeCalibracao) return
+
+        //     const hoje = new Date();
+        //     const dataInicial = new Date(this.dataCalibracao);
+        //     const dataFinal = new Date(this.validadeCalibracao);
+
+        //     // Calcular diferença em dias da data inicial até hoje
+        //     const diferencaEmMilissegundos = dataFinal - hoje;
+        //     const diasDeDiferenca = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));
+
+        //     // Calcular diferença em meses da data final até hoje
+        //     let anos = dataFinal.getFullYear() - hoje.getFullYear();
+        //     let meses = dataFinal.getMonth() - hoje.getMonth();
+        //     let diferencaEmMeses = anos * 12 + meses;
+
+        //     // Ajuste se o dia atual for maior que o dia da data final
+        //     if (hoje.getDate() > dataFinal.getDate()) {
+        //         diferencaEmMeses -= 1;
+        //     }
+
+        //     return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
+
+        // },
+        invalidationAcess(){
+            alert('Acesso Negado');
+            this.$emit('update:visible', false)
+        },  
+        adjustData(){
+            if(this.userInfo.department != 'Qualidade' && this.userInfo.department != 'ADMINISTRACAO'){
+                return this.invalidationAcess()
+            }
+
+
+            this.description = this.idEquipament.description
+            this.setor = this.idEquipament.infoMed.setor
+            this.marca = this.idEquipament.infoMed.marca
+            this.modelo = this.idEquipament.infoMed.modelo
+            this.nSerieLacre = this.idEquipament.infoMed.nSerieLacre
+            this.etiquetaIdentificacao = this.idEquipament.infoMed.etiquetaIdentificacao
+            this.faixaMedicao = this.idEquipament.infoMed.faixaMedicao
+            this.classe = this.idEquipament.infoMed.classe
+            this.valorResolucao = this.idEquipament.infoMed.resolucao.valor
+            this.unResolucao = {name: this.idEquipament.infoMed.resolucao.un}
+            this.setorLocalizacao = this.idEquipament.infoMed.localizacao.setor
+            this.responsavel = this.idEquipament.infoMed.localizacao.responsavel
+            this.valorTolerancia = this.idEquipament.infoMed.tolerancia.valor
+            this.unTolerancia = {name: this.idEquipament.infoMed.tolerancia.un}
+
+            this.dataCalibracao = new Date(this.idEquipament.calibrationInterval.date)
+            this.validadeCalibracao = new Date(this.idEquipament.calibrationInterval.validade)
+
+            this.labEng = this.idEquipament.calibrationResults.laboratorioEngenheiro
+            this.numberCertificado = this.idEquipament.calibrationResults.nCertificadoArt
+            this.status = {name: this.idEquipament.avaliationCalibration.status}
+            this.document = this.idEquipament.avaliationCalibration.document
+            this.acoesTomadas = this.idEquipament.avaliationCalibration.acoesTomadas
+            this.quaisAcoes = this.idEquipament.avaliationCalibration.quaisAcoes
+            this.observacao = this.idEquipament.obs
+        }
+    },
+    computed:{
         calcularDiferencas() {
             if(!this.dataCalibracao || !this.validadeCalibracao) return
 
             const hoje = new Date();
-            const dataInicial = new Date(this.dataCalibracao);
+            // const dataInicial = new Date(this.dataCalibracao);
             const dataFinal = new Date(this.validadeCalibracao);
 
             // Calcular diferença em dias da data inicial até hoje
@@ -168,7 +255,7 @@ export default {
 
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
 
-        }
+        }        
     }
 }
 </script>
@@ -179,6 +266,7 @@ export default {
         :draggable="false"
         :style="{width: '70vw'}"
         @hide="clearForm()"
+        @show="adjustData()"
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
     >
         <div>
@@ -327,7 +415,6 @@ export default {
                                         <Calendar
                                             v-model="dataCalibracao"
                                             dateFormat="dd/mm/yy"
-                                            @update:modelValue="calcularDiferencas()"
                                         ></Calendar>
                                     </div>
                                     <div class="groupInput">
@@ -335,7 +422,6 @@ export default {
                                         <Calendar
                                             v-model="validadeCalibracao"
                                             dateFormat="dd/mm/yy"
-                                            @update:modelValue="calcularDiferencas()"
                                         ></Calendar>
                                     </div>
                                 </div>
@@ -461,8 +547,8 @@ export default {
                                 iconPos="left"
                             ></Button>
                             <Button
-                                label="Cadastrar Equipamento"
-                                @click="createEquipament()"
+                                label="Atualizar Equipamento"
+                                @click="attEquipament()"
                                 icon="pi pi-check"
                                 iconPos="right"
                                 class="p-button-success"
