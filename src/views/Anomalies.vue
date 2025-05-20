@@ -857,7 +857,7 @@ export default{
             v-model:visible="visible" 
             modal
             :draggable="false"
-            :style="{width: '60dvw'}" 
+            :style="{width: '70dvw'}" 
             @hide="clearForm()" 
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
         >
@@ -1017,6 +1017,79 @@ export default{
                                         <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none; width: 100%;"/>
                                         <label>Resumo do Avaliador :</label>
                                     </FloatLabel>
+                                    <div>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-5">
+                                    <div class="groupInput w-full">
+                                        <span>Descrição do Problema ou Oportunidade de Melhoria :</span>
+                                        <Textarea 
+                                            v-model="problemOrMelhoria" 
+                                            rows="5" 
+                                            cols="40"
+                                        ></Textarea>
+                                    </div>
+                                    <div class="groupInput w-full">
+                                        <span>Abrangência da Não Conformidade :</span>
+                                        <Textarea 
+                                            v-model="abrangenceOfNonConformity" 
+                                            rows="5" 
+                                            cols="40"
+                                        ></Textarea>
+                                    </div>
+                                </div>
+                                <div class="flex gap-5">
+                                    <div class="groupInput w-full">
+                                        <span>1º Por que? :</span>
+                                        <Textarea 
+                                            v-model="why" 
+                                            rows="5" 
+                                            cols="30"
+                                        ></Textarea>
+                                    </div>
+                                    <div class="groupInput w-full">
+                                        <span>2º Por que? :</span>
+                                        <Textarea 
+                                            v-model="abrangenceOfNonConformity" 
+                                            rows="5" 
+                                            cols="30"
+                                        ></Textarea>
+                                    </div>
+                                    <div class="groupInput w-full">
+                                        <span>3º Por que? :</span>
+                                        <Textarea 
+                                            v-model="abrangenceOfNonConformity" 
+                                            rows="5" 
+                                            cols="30"
+                                        ></Textarea>
+                                    </div>
+                                </div>
+                                <div class="flex gap-5">
+                                    <div class="groupInput w-full">
+                                        <span>4º Por que? :</span>
+                                        <Textarea 
+                                            v-model="abrangenceOfNonConformity" 
+                                            rows="5" 
+                                            cols="30"
+                                        ></Textarea>
+                                    </div>
+                                    <div class="groupInput w-full">
+                                        <span>5º Por que? :</span>
+                                        <Textarea 
+                                            v-model="abrangenceOfNonConformity" 
+                                            rows="5" 
+                                            cols="30"
+                                        ></Textarea>
+                                    </div>
+                                    <div class="groupInput w-full">
+                                        <span>Resposta 5º Por que? :</span>
+                                        <Textarea 
+                                            v-model="abrangenceOfNonConformity" 
+                                            rows="5" 
+                                            cols="30"
+                                        ></Textarea>
+                                    </div>
                                 </div>
                                 <div class="boxUpload">
                                     <FileUpload 
@@ -1050,7 +1123,7 @@ export default{
                         
                         
                     </TabPanel>
-                    <TabPanel header="Retratação do setor">
+                    <TabPanel header="Analise da Causa Raiz">
                         <div class="topBox collum">
                             <div style="display: flex; gap: 10px;">
                                 <div style="width: 100%;">
