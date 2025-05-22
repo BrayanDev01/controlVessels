@@ -1,6 +1,7 @@
 <script>
 import { data } from '@maptiler/sdk'
 import axios from 'axios'
+import OverlayPanel from 'primevue/overlaypanel'
 
 export default {
     data(){
@@ -23,8 +24,10 @@ export default {
             validadeCalibracao: null,
             daysToInvalid: null,
             monthsToInvalid: null,
-            responsavelCalibracao: null,
-            emailResponsavelCalibracao: null,
+            nameResponsavel: null,
+            emailResponsavel: null,
+            responsaveis:[],
+
             labEng: null,
             numberCertificado: null,
             status: null,
@@ -87,8 +90,7 @@ export default {
                         validade: this.validadeCalibracao,
                         diasVencer: this.daysToInvalid,
                         periodoMeses: this.monthsToInvalid,
-                        responsavelCalibracao: this.responsavelCalibracao,
-                        emailResponsavelCalibracao: this.emailResponsavelCalibracao
+                        responsaveis: this.responsaveis
                     },
                     calibrationResults: {
                         laboratorioEngenheiro: this.labEng,
@@ -131,8 +133,9 @@ export default {
             this.validadeCalibracao = null
             this.daysToInvalid = null
             this.monthsToInvalid = null
-            this.responsavelCalibracao = null
-            this.emailResponsavelCalibracao = null
+            this.responsaveis = []
+            this.nameResponsavel = null
+            this.emailResponsavel = null
             this.labEng = null
             this.numberCertificado = null
             this.status = null
@@ -175,6 +178,23 @@ export default {
 
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
 
+        },
+        toggle(event){
+            this.$refs.op.toggle(event);
+        },
+        close(){
+            this.nameResponsavel = null;
+            this.emailResponsavel = null;
+            this.$refs.op.hide();
+        },
+        addResponsavel(){
+            const responsavel = {name: this.nameResponsavel, email: this.emailResponsavel}
+
+            this.responsaveis.push(responsavel)
+            this.nameResponsavel = null
+            this.emailResponsavel = null
+
+            this.close()
         }
     }
 }
@@ -362,18 +382,52 @@ export default {
                                         ></InputNumber>
                                     </div>
                                 </div>
-                                <div class="organizerInputs">
-                                    <div class="groupInput">
-                                        <span>Nome do Responsável :</span>
-                                        <InputText
-                                            v-model="responsavelCalibracao"
-                                        ></InputText>
-                                    </div>
-                                    <div class="groupInput">
-                                        <span>Email do Responsável :</span>
-                                        <InputText
-                                            v-model="emailResponsavelCalibracao"
-                                        ></InputText>
+                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                    <strong>Cadastrar Responsaveis :</strong>
+                                    <div>
+                                        <DataTable
+                                            :value="responsaveis"
+                                            tableStyle="max-width: 35rem; min-width: 30rem;"
+                                            scrollable 
+                                            scrollHeight="150px"
+                                        >
+                                            <template #header>
+                                                <div style="display: flex; justify-content: center;">
+                                                    <Button
+                                                        icon="pi pi-plus"
+                                                        label="Adicionar Responsavel" 
+                                                        @click="toggle"
+                                                    ></Button>
+                                                </div>
+                                                <OverlayPanel ref="op" appendTo="body">
+                                                    <div class="flex gap-5">
+                                                        <div style="display: flex; flex-direction: column;">
+                                                            <span>Nome do Responsavel :</span>
+                                                            <InputText
+                                                                v-model="nameResponsavel"
+                                                            ></InputText>
+                                                        </div>
+                                                        <div style="display: flex; flex-direction: column;">
+                                                            <span>Email do Responsavel :</span>
+                                                            <InputText
+                                                                v-model="emailResponsavel"
+                                                            ></InputText>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; gap: 10px; justify-content: center; margin:10px">
+                                                        <Button @click="addResponsavel">Adicionar</Button>
+                                                        <Button severity="danger" @click="close">Cancelar</Button>
+                                                    </div>
+                                                </OverlayPanel>
+                                            </template>
+                                            <template #empty>
+                                                <div style="display: flex; justify-content: center;">
+                                                    <span>Nenhum Responsavel Cadastrado</span>
+                                                </div>
+                                            </template>
+                                            <Column field="name" header="Nome"></Column>
+                                            <Column field="email" header="Email"></Column>
+                                        </DataTable>
                                     </div>
                                 </div>
                             </div>
