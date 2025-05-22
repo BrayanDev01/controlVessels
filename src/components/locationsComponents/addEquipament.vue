@@ -23,6 +23,8 @@ export default {
             validadeCalibracao: null,
             daysToInvalid: null,
             monthsToInvalid: null,
+            responsavelCalibracao: null,
+            emailResponsavelCalibracao: null,
             labEng: null,
             numberCertificado: null,
             status: null,
@@ -84,7 +86,9 @@ export default {
                         date: this.dataCalibracao,
                         validade: this.validadeCalibracao,
                         diasVencer: this.daysToInvalid,
-                        periodoMeses: this.monthsToInvalid
+                        periodoMeses: this.monthsToInvalid,
+                        responsavelCalibracao: this.responsavelCalibracao,
+                        emailResponsavelCalibracao: this.emailResponsavelCalibracao
                     },
                     calibrationResults: {
                         laboratorioEngenheiro: this.labEng,
@@ -127,6 +131,8 @@ export default {
             this.validadeCalibracao = null
             this.daysToInvalid = null
             this.monthsToInvalid = null
+            this.responsavelCalibracao = null
+            this.emailResponsavelCalibracao = null
             this.labEng = null
             this.numberCertificado = null
             this.status = null
@@ -354,6 +360,20 @@ export default {
                                             v-model="monthsToInvalid"
                                             disabled
                                         ></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Nome do Responsável :</span>
+                                        <InputText
+                                            v-model="responsavelCalibracao"
+                                        ></InputText>
+                                    </div>
+                                    <div class="groupInput">
+                                        <span>Email do Responsável :</span>
+                                        <InputText
+                                            v-model="emailResponsavelCalibracao"
+                                        ></InputText>
                                     </div>
                                 </div>
                             </div>
