@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios'
+import Column from 'primevue/column'
 
 export default {
     props: {
@@ -32,6 +33,7 @@ export default {
             monthsToInvalid: null,
             responsavelCalibracao: null,
             emailResponsavelCalibracao: null,
+            responsaveis:[],
 
             labEng: null,
             numberCertificado: null,
@@ -95,8 +97,7 @@ export default {
                         validade: this.validadeCalibracao,
                         diasVencer: this.daysToInvalid,
                         periodoMeses: this.monthsToInvalid,
-                        responsavelCalibracao: this.responsavelCalibracao,
-                        emailResponsavelCalibracao: this.emailResponsavelCalibracao
+                        responsaveis: this.responsaveis
                     },
                     calibrationResults: {
                         laboratorioEngenheiro: this.labEng,
@@ -166,6 +167,7 @@ export default {
             this.acoesTomadas = null
             this.quaisAcoes = null
             this.verde = null
+            this.responsaveis = []
             this.loading = false
         },
         afterSend(e){
@@ -231,6 +233,7 @@ export default {
             this.validadeCalibracao = new Date(this.idEquipament.calibrationInterval.validade)
             this.responsavelCalibracao = this.idEquipament.calibrationInterval.responsavelCalibracao
             this.emailResponsavelCalibracao = this.idEquipament.calibrationInterval.emailResponsavelCalibracao
+            this.responsaveis = this.idEquipament.calibrationInterval.responsaveis
 
             this.labEng = this.idEquipament.calibrationResults.laboratorioEngenheiro
             this.numberCertificado = this.idEquipament.calibrationResults.nCertificadoArt
@@ -239,6 +242,26 @@ export default {
             this.acoesTomadas = this.idEquipament.avaliationCalibration.acoesTomadas
             this.quaisAcoes = this.idEquipament.avaliationCalibration.quaisAcoes
             this.observacao = this.idEquipament.obs
+        },
+        toggle(event){
+            this.$refs.op.toggle(event);
+        },
+        close(){
+            this.nameResponsavel = null;
+            this.emailResponsavel = null;
+            this.$refs.op.hide();
+        },
+        addResponsavel(){
+            const responsavel = {name: this.nameResponsavel, email: this.emailResponsavel}
+
+            this.responsaveis.push(responsavel)
+            this.nameResponsavel = null
+            this.emailResponsavel = null
+
+            this.close()
+        },
+        deleteResponsavel(data){
+            this.responsaveis.splice(data, 1)
         }
     },
     computed:{
@@ -451,18 +474,61 @@ export default {
                                         ></InputNumber>
                                     </div>
                                 </div>
-                                <div class="organizerInputs">
-                                    <div class="groupInput">
-                                        <span>Nome do Responsável :</span>
-                                        <InputText
-                                            v-model="responsavelCalibracao"
-                                        ></InputText>
-                                    </div>
-                                    <div class="groupInput">
-                                        <span>Email do Responsável :</span>
-                                        <InputText
-                                            v-model="emailResponsavelCalibracao"
-                                        ></InputText>
+                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                    <strong>Cadastrar Responsaveis :</strong>
+                                    <div>
+                                        <DataTable
+                                            :value="responsaveis"
+                                            tableStyle="max-width: 35rem; min-width: 30rem;"
+                                            scrollable 
+                                            scrollHeight="150px"
+                                        >
+                                            <template #header>
+                                                <div style="display: flex; justify-content: center;">
+                                                    <Button
+                                                        icon="pi pi-plus"
+                                                        label="Adicionar Responsavel" 
+                                                        @click="toggle"
+                                                    ></Button>
+                                                </div>
+                                                <OverlayPanel ref="op" appendTo="body">
+                                                    <div class="flex gap-5">
+                                                        <div style="display: flex; flex-direction: column;">
+                                                            <span>Nome do Responsavel :</span>
+                                                            <InputText
+                                                                v-model="nameResponsavel"
+                                                            ></InputText>
+                                                        </div>
+                                                        <div style="display: flex; flex-direction: column;">
+                                                            <span>Email do Responsavel :</span>
+                                                            <InputText
+                                                                v-model="emailResponsavel"
+                                                            ></InputText>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; gap: 10px; justify-content: center; margin:10px">
+                                                        <Button @click="addResponsavel">Adicionar</Button>
+                                                        <Button severity="danger" @click="close">Cancelar</Button>
+                                                    </div>
+                                                </OverlayPanel>
+                                            </template>
+                                            <template #empty>
+                                                <div style="display: flex; justify-content: center;">
+                                                    <span>Nenhum Responsavel Cadastrado</span>
+                                                </div>
+                                            </template>
+                                            <Column field="name" header="Nome"></Column>
+                                            <Column field="email" header="Email"></Column>
+                                            <Column header="Acoes">
+                                                <template #body="slotProps">
+                                                    <Button
+                                                        icon="pi pi-trash"
+                                                        class="p-button-danger"
+                                                        @click="deleteResponsavel(slotProps.data)"
+                                                    ></Button>
+                                                </template>
+                                            </Column>
+                                        </DataTable>
                                     </div>
                                 </div>
                             </div>
