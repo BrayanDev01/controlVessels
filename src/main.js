@@ -32,6 +32,7 @@ import Message from 'primevue/message';
 import Chart from 'primevue/chart';
 import Stepper from 'primevue/stepper';
 import StepperPanel from 'primevue/stepperpanel';
+import OverlayPanel from 'primevue/overlaypanel';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -76,6 +77,7 @@ app.component('Message', Message);
 app.component('Chart', Chart);
 app.component('Stepper', Stepper);
 app.component('StepperPanel', StepperPanel);
+app.component('OverlayPanel', OverlayPanel);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);

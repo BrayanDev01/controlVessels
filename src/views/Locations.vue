@@ -221,6 +221,7 @@ export default{
             v-model:visible="showSeeOrEditEquipament"
             @update:visible="showSeeOrEditEquipament = $event"
             :idEquipament="idForEdit"
+            @reGet="resetData()"
         ></SeeOrEditEquipament>
     </div>
 </template>
