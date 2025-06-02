@@ -228,14 +228,14 @@ export default {
                         <div class="flex gap-5 w-full">
                             <div class="leftSide">
                                 <div class="organizerInputs">
-                                    <div class="groupInput">
+                                    <!-- <div class="groupInput">
                                         <span>Descrição :</span>
                                         <Textarea
                                             v-model="description"
                                             rows="5" 
                                             cols="30"
                                         ></Textarea>                                    
-                                    </div>
+                                    </div> -->
                                     <div class="groupInput">
                                         <span>Equipamento :</span>
                                         <Dropdown
