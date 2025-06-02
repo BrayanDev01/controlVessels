@@ -12,6 +12,7 @@ export default {
     data(){
         return{
             userInfo: JSON.parse(localStorage.getItem("loggedUser")),
+            equipamentName: null,
             description: null,
             setor: null,
             marca: null,
@@ -55,6 +56,14 @@ export default {
                 {name: 'Cº'},
                 {name: 'M'},                
             ],
+            equipaments:[
+                {name: 'Densímetro'},
+                {name: 'Termômetro Analógico'},
+                {name: 'Termômetro Digital'},
+                {name: 'Trena'},
+                {name: 'Explosímetro'},
+                {name: 'Manometro'}          
+            ],
             loading: false
         }
     },
@@ -70,6 +79,7 @@ export default {
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
                 },
                 data:{
+                    equipamentName: this.equipamentName.name,
                     description: this.description,
                     infoMed: {
                         setor: this.setor,
@@ -121,25 +131,9 @@ export default {
                 console.log(error);
             })
         },
-        // async getEquipament(){
-        //     this.loading = true
 
-        //     const options ={
-        //         url: `${import.meta.env.VITE_URL_API}classes/instrumentMed/${id}`,
-        //         method: 'POST',
-        //         headers: {
-        //             'X-Parse-REST-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-        //             'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-        //         }
-        //     }
-
-        //     await axios.request(options).then((response) => {
-        //         console.log(response);
-        //     }).catch((error) => {
-        //         console.log(error);
-        //     })
-        // },
         clearForm(){
+            this.equipamentName = null
             this.description = null
             this.setor = null
             this.marca = null
@@ -213,7 +207,7 @@ export default {
                 return this.invalidationAcess()
             }
 
-
+            this.equipamentName = {name: this.idEquipament.equipamentName}
             this.description = this.idEquipament.description
             this.setor = this.idEquipament.infoMed.setor
             this.marca = this.idEquipament.infoMed.marca
@@ -308,13 +302,24 @@ export default {
                     <template #content="{nextCallback}">
                         <div class="flex gap-5 w-full">
                             <div class="leftSide">
-                                <div class="groupInput">
-                                    <span>Descrição :</span>
-                                    <Textarea
-                                        v-model="description"
-                                        rows="5" 
-                                        cols="50"
-                                    ></Textarea>                                    
+                                <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Descrição :</span>
+                                        <Textarea
+                                            v-model="description"
+                                            rows="5" 
+                                            cols="30"
+                                        ></Textarea>                                    
+                                    </div>
+                                    <div class="groupInput">
+                                        <span>Equipamento :</span>
+                                        <Dropdown
+                                            v-model="equipamentName"
+                                            :options="equipaments"
+                                            optionLabel="name"
+                                            placeholder="Selecione o equipamento"
+                                        ></Dropdown>                                   
+                                    </div>
                                 </div>
                                 <div class="organizerInputs">
                                     <div class="groupInput">
