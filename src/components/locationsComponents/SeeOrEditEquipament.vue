@@ -50,6 +50,7 @@ export default {
                 {name: 'Não Conforme'}
             ],
             unMedOptions:[
+                {name: 'mol/mol'},
                 {name: 'μmol/mol'},
                 {name: 'g/cm³'},
                 {name: 'g/ml'},
