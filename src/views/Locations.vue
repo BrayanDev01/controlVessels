@@ -124,8 +124,8 @@ export default{
                 </template>
                 <ColumnGroup type="header">
                     <Row>
-                        <Column header="Item" :rowspan="3" field="id"></Column>
-                        <Column header="Descrição" :rowspan="3"></Column>
+                        <!-- <Column header="Item" :rowspan="3" field="id"></Column> -->
+                        <Column header="Equipamento" :rowspan="3"></Column>
                         <Column header="Informações sobre o instrumento de medição" :colspan="13"></Column>
                         <Column header="Intervalo da Calibração" :colspan="4"></Column>
                         <Column header="Resultados da Calibração" :colspan="2"></Column>
@@ -167,8 +167,8 @@ export default{
                         <Column header="Un"></Column>                   
                     </Row>
                 </ColumnGroup>
-                <Column field="item"></Column>
-                <Column field="description"></Column>
+                <!-- <Column field="item"></Column> -->
+                <Column field="equipamentName"></Column>
                 <Column field="infoMed.setor"></Column>
                 <Column field="infoMed.marca"></Column>
                 <Column field="infoMed.modelo"></Column>
