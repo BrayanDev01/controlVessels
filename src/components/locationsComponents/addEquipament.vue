@@ -44,6 +44,7 @@ export default {
                 {name: 'Não Conforme'}
             ],
             unMedOptions:[
+                {name: 'kgf/cm²'},
                 {name: 'mol/mol'},
                 {name: 'μmol/mol'},
                 {name: 'g/cm³'},
