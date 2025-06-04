@@ -65,8 +65,15 @@ export default {
                 {name: 'Termômetro Digital'},
                 {name: 'Trena'},
                 {name: 'Explosímetro'},
-                {name: 'Manômetro'},
+                {name: 'Manômetro Analógico'},
+                {name: 'Manômetro Digital'},
                 {name: 'Alicate Amperímetro'}        
+            ],
+            setores:[
+                {name: 'Navegação'},
+                {name: 'Inspeção'},
+                {name: 'Manutenção'},
+                {name: 'SESMT'}
             ],
             loading: false
         }
@@ -213,7 +220,7 @@ export default {
 
             this.equipamentName = {name: this.idEquipament.equipamentName}
             this.description = this.idEquipament.description
-            this.setor = this.idEquipament.infoMed.setor
+            this.setor = {name: this.idEquipament.infoMed.setor}
             this.marca = this.idEquipament.infoMed.marca
             this.modelo = this.idEquipament.infoMed.modelo
             this.nSerieLacre = this.idEquipament.infoMed.nSerieLacre
@@ -222,7 +229,7 @@ export default {
             this.classe = this.idEquipament.infoMed.classe
             this.valorResolucao = this.idEquipament.infoMed.resolucao.valor
             this.unResolucao = {name: this.idEquipament.infoMed.resolucao.un}
-            this.setorLocalizacao = this.idEquipament.infoMed.localizacao.setor
+            this.setorLocalizacao = {name: this.idEquipament.infoMed.localizacao.setor}
             this.responsavel = this.idEquipament.infoMed.localizacao.responsavel
             this.valorTolerancia = this.idEquipament.infoMed.tolerancia.valor
             this.unTolerancia = {name: this.idEquipament.infoMed.tolerancia.un}
@@ -240,6 +247,8 @@ export default {
             this.acoesTomadas = this.idEquipament.avaliationCalibration.acoesTomadas
             this.quaisAcoes = this.idEquipament.avaliationCalibration.quaisAcoes
             this.observacao = this.idEquipament.obs
+
+            this.calculateDate()
         },
         toggle(event){
             this.$refs.op.toggle(event);
@@ -260,6 +269,30 @@ export default {
         },
         deleteResponsavel(data){
             this.responsaveis.splice(data, 1)
+        },
+        calculateDate() {
+            if(!this.dataCalibracao || !this.validadeCalibracao) return
+
+            const hoje = new Date();
+            // const dataInicial = new Date(this.dataCalibracao);
+            const dataFinal = new Date(this.validadeCalibracao);
+
+            // Calcular diferença em dias da data inicial até hoje
+            const diferencaEmMilissegundos = dataFinal - hoje;
+            const diasDeDiferenca = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));
+
+            // Calcular diferença em meses da data final até hoje
+            let anos = dataFinal.getFullYear() - hoje.getFullYear();
+            let meses = dataFinal.getMonth() - hoje.getMonth();
+            let diferencaEmMeses = anos * 12 + meses;
+
+            // Ajuste se o dia atual for maior que o dia da data final
+            if (hoje.getDate() > dataFinal.getDate()) {
+                diferencaEmMeses -= 1;
+            }
+
+            return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
+
         }
     },
     computed:{
@@ -328,9 +361,12 @@ export default {
                                 <div class="organizerInputs">
                                     <div class="groupInput">
                                         <span>Setor :</span>
-                                        <InputText
+                                        <Dropdown
                                             v-model="setor"
-                                        ></InputText>
+                                            :options="setores"
+                                            optionLabel="name"
+                                            placeholder="Selecione o setor"
+                                        ></Dropdown>
                                     </div>
                                     <div class="groupInput">
                                         <span>Marca :</span>
@@ -402,9 +438,12 @@ export default {
                                     <div class="organizerInputs">                                        
                                         <div class="groupInput">
                                             <span>Setor :</span>
-                                            <InputText
+                                            <Dropdown
                                                 v-model="setorLocalizacao"
-                                            ></InputText>
+                                                :options="setores"
+                                                optionLabel="name"
+                                                placeholder="Selecione o setor"
+                                            ></Dropdown>
                                         </div>
                                         <div class="groupInput">
                                             <span>Responsável :</span>

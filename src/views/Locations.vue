@@ -169,7 +169,7 @@ export default{
                 </ColumnGroup>
                 <!-- <Column field="item"></Column> -->
                 <Column field="equipamentName"></Column>
-                <Column field="infoMed.setor"></Column>
+                <Column field="infoMed.setor.name"></Column>
                 <Column field="infoMed.marca"></Column>
                 <Column field="infoMed.modelo"></Column>
                 <Column field="infoMed.nSerieLacre"></Column>
@@ -178,7 +178,7 @@ export default{
                 <Column field="infoMed.resolucao.valor"></Column>
                 <Column field="infoMed.resolucao.un"></Column>
                 <Column field="infoMed.classe"></Column>
-                <Column field="infoMed.localizacao.setor"></Column>
+                <Column field="infoMed.localizacao.setor.name"></Column>
                 <Column field="infoMed.localizacao.responsavel"></Column>
                 <Column field="infoMed.tolerancia.valor"></Column>
                 <Column field="infoMed.tolerancia.un"></Column>

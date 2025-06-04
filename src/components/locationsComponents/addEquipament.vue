@@ -57,8 +57,15 @@ export default {
                 {name: 'Termômetro Digital'},
                 {name: 'Trena'},
                 {name: 'Explosímetro'},
-                {name: 'Manometro'},
-                {name: 'Alicate Amperímetro'}          
+                {name: 'Manômetro Analógico'},
+                {name: 'Manômetro Digital'},
+                {name: 'Alicate Amperímetro'}        
+            ],
+            setores:[
+                {name: 'Navegação'},
+                {name: 'Inspeção'},
+                {name: 'Manutenção'},
+                {name: 'SESMT'}
             ],
             loading: false
         }
@@ -78,7 +85,7 @@ export default {
                     equipamentName: this.equipamentName.name,
                     description: this.description,
                     infoMed: {
-                        setor: this.setor,
+                        setor: this.setor.name,
                         marca: this.marca,
                         modelo: this.modelo,
                         nSerieLacre: this.nSerieLacre,
@@ -90,7 +97,7 @@ export default {
                         },
                         classe: this.classe,
                         localizacao: {
-                            setor: this.setor,
+                            setor: this.setor.name,
                             responsavel: this.responsavel
                         },
                         tolerancia: {
@@ -250,9 +257,12 @@ export default {
                                 <div class="organizerInputs">
                                     <div class="groupInput">
                                         <span>Setor :</span>
-                                        <InputText
+                                        <Dropdown
                                             v-model="setor"
-                                        ></InputText>
+                                            :options="setores"
+                                            optionLabel="name"
+                                            placeholder="Selecione o setor" 
+                                        ></Dropdown>
                                     </div>
                                     <div class="groupInput">
                                         <span>Marca :</span>
@@ -324,9 +334,12 @@ export default {
                                     <div class="organizerInputs">                                        
                                         <div class="groupInput">
                                             <span>Setor :</span>
-                                            <InputText
+                                            <Dropdown
                                                 v-model="setorLocalizacao"
-                                            ></InputText>
+                                                :options="setores"
+                                                optionLabel="name"
+                                                placeholder="Selecione o setor"
+                                            ></Dropdown>
                                         </div>
                                         <div class="groupInput">
                                             <span>Responsável :</span>
