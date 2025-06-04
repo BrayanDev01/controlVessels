@@ -216,7 +216,104 @@ export default {
             this.emailResponsavel = null
 
             this.close()
+        },
+        checkIfAllFieldsAreFilled() {
+            const fields = [
+                this.equipamentName,
+                this.setor,
+                this.marca,
+                this.modelo,
+                this.nSerieLacre,
+                this.etiquetaIdentificacao,
+                this.faixaMedicao,
+                this.valorResolucao,
+                this.unResolucao,
+                this.classe,
+                this.responsavel,
+                this.valorTolerancia,
+                this.unTolerancia,
+                this.dataCalibracao,
+                this.validadeCalibracao,
+                this.labEng,
+                this.numberCertificado,
+                this.status,
+                this.acoesTomadas,
+                this.quaisAcoes,
+                this.observacao
+            ];
+
+            const allFieldsAreFilled = fields.every(field => field !== null && field !== '');
+
+            return allFieldsAreFilled;
         }
+    },
+    watch: {
+      equipamentName() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      description() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      setor() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      marca() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      modelo() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      nSerieLacre() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      etiquetaIdentificacao() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      faixaMedicao() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      valorResolucao() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      unResolucao() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      classe() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      responsavel() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      valorTolerancia() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      unTolerancia() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      dataCalibracao() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      validadeCalibracao() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      labEng() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      numberCertificado() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      status() {
+        this.checkIfAllFieldsAreFilled();
+      },      
+      acoesTomadas() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      quaisAcoes() {
+        this.checkIfAllFieldsAreFilled();
+      },
+      observacao() {
+        this.checkIfAllFieldsAreFilled();
+      }
     }
 }
 </script>
@@ -579,6 +676,7 @@ export default {
                                 icon="pi pi-check"
                                 iconPos="right"
                                 class="p-button-success"
+                                :disabled="!checkIfAllFieldsAreFilled()"
                                 :loading="loading"
                             ></Button>
                         </div>
