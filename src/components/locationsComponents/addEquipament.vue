@@ -57,7 +57,8 @@ export default {
                 {name: 'Termômetro Digital'},
                 {name: 'Trena'},
                 {name: 'Explosímetro'},
-                {name: 'Manometro'}          
+                {name: 'Manometro'},
+                {name: 'Alicate Amperímetro'}          
             ],
             loading: false
         }
