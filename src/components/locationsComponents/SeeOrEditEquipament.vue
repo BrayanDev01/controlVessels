@@ -50,6 +50,8 @@ export default {
                 {name: 'Não Conforme'}
             ],
             unMedOptions:[
+                {name: 'kgf/cm²'},
+                {name: 'mm'},
                 {name: 'mol/mol'},
                 {name: 'μmol/mol'},
                 {name: 'g/cm³'},
@@ -63,7 +65,7 @@ export default {
                 {name: 'Termômetro Digital'},
                 {name: 'Trena'},
                 {name: 'Explosímetro'},
-                {name: 'Manometro'},
+                {name: 'Manômetro'},
                 {name: 'Alicate Amperímetro'}        
             ],
             loading: false
