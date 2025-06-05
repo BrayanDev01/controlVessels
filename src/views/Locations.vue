@@ -160,7 +160,7 @@ export default{
                         <Column header="Valor"></Column>
                         <Column header="Un"></Column>
 
-                        <Column header="Setor"></Column>
+                        <Column header="Localidade"></Column>
                         <Column header="Responsável"></Column>
 
                         <Column header="Valor"></Column>

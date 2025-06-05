@@ -437,7 +437,7 @@ export default {
                                     <strong>Localização :</strong>
                                     <div class="organizerInputs">                                        
                                         <div class="groupInput">
-                                            <span>Setor :</span>
+                                            <span>Localidade :</span>
                                             <Dropdown
                                                 v-model="setorLocalizacao"
                                                 :options="setores"
