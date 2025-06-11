@@ -50,6 +50,9 @@ export default {
                 {name: 'Não Conforme'}
             ],
             unMedOptions:[
+                {name:  'Âmperes'},
+                {name: 'Volts'},
+                {name: 'Watts'},
                 {name: 'kgf/cm²'},
                 {name: 'mm'},
                 {name: 'mol/mol'},
