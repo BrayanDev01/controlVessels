@@ -1009,7 +1009,7 @@ export default{
                             </div>
                         </div>
                     </TabPanel>
-                    <TabPanel header="Pós-analise">
+                    <TabPanel header="Analise da Causa Raiz">
                         <div class="topBox">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div>
@@ -1123,7 +1123,7 @@ export default{
                         
                         
                     </TabPanel>
-                    <TabPanel header="Analise da Causa Raiz">
+                    <TabPanel header="Pós-analise">
                         <div class="topBox collum">
                             <div style="display: flex; gap: 10px;">
                                 <div style="width: 100%;">

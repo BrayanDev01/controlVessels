@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios'
-import Column from 'primevue/column'
+import { MockLocations } from '../../mocks/locationsMocks'
+
 
 export default {
     props: {
@@ -78,6 +79,7 @@ export default {
                 {name: 'Manutenção'},
                 {name: 'SESMT'}
             ],
+            locationOptions:[],
             loading: false
         }
     },
@@ -217,9 +219,6 @@ export default {
             this.$emit('update:visible', false)
         },  
         adjustData(){
-            if(this.userInfo.department != 'Qualidade' && this.userInfo.department != 'ADMINISTRACAO'){
-                return this.invalidationAcess()
-            }
 
             this.equipamentName = {name: this.idEquipament.equipamentName}
             this.description = this.idEquipament.description
@@ -323,6 +322,9 @@ export default {
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
 
         }        
+    },
+    created(){
+        MockLocations.getLocations().then((data) =>{ this.locationOptions = data })
     }
 }
 </script>
@@ -442,8 +444,9 @@ export default {
                                         <div class="groupInput">
                                             <span>Localidade :</span>
                                             <Dropdown
+                                                filter
                                                 v-model="setorLocalizacao"
-                                                :options="setores"
+                                                :options="locationOptions"
                                                 optionLabel="name"
                                                 placeholder="Selecione o setor"
                                             ></Dropdown>

@@ -75,6 +75,9 @@ export default{
         seeOrEditEquipament(e){
             this.idForEdit = e.data
             this.showSeeOrEditEquipament = true
+        },
+        exportCSV(){
+            this.$refs.equip.exportCSV()
         }
     },
     mounted(){
@@ -97,6 +100,7 @@ export default{
                 </Button>
             </div>
             <DataTable
+                ref="equip"
                 @row-select="seeOrEditEquipament"  
                 selectionMode="single"  
                 :value="equipaments"
@@ -108,6 +112,7 @@ export default{
                 removableSort
                 scrollHeight="600px"
                 v-model:filters="filters"
+                exportFilename="Equipamentos de Medição"
                 :globalFilterFields="['global', 'name', 'convoy', 'actualPosition', 'prevision', 'destination']">
                 <template #header>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -115,6 +120,11 @@ export default{
                             <InputText id="username" v-model="filters['global'].value"/>
                             <label for="username">Pesquisa Global</label>
                         </FloatLabel>
+                        <Button 
+                            icon="pi pi-external-link" 
+                            label="Export" 
+                            @click="exportCSV($event)"
+                        />
                     </div>
                 </template>
                 <template #empty>

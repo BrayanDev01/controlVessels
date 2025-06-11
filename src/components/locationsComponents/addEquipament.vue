@@ -1,7 +1,7 @@
 <script>
-import { data } from '@maptiler/sdk'
 import axios from 'axios'
 import OverlayPanel from 'primevue/overlaypanel'
+import { MockLocations } from '../../mocks/locationsMocks'
 
 export default {
     data(){
@@ -71,6 +71,7 @@ export default {
                 {name: 'Manutenção'},
                 {name: 'SESMT'}
             ],
+            locationsOptions:[],
             loading: false
         }
     },
@@ -89,7 +90,7 @@ export default {
                     equipamentName: this.equipamentName.name,
                     description: this.description,
                     infoMed: {
-                        setor: this.setor.name,
+                        setor: {name: this.setor.name},
                         marca: this.marca,
                         modelo: this.modelo,
                         nSerieLacre: this.nSerieLacre,
@@ -101,7 +102,7 @@ export default {
                         },
                         classe: this.classe,
                         localizacao: {
-                            setor: this.setor.name,
+                            setor: {name: this.setor.name},
                             responsavel: this.responsavel
                         },
                         tolerancia: {
@@ -318,6 +319,9 @@ export default {
       observacao() {
         this.checkIfAllFieldsAreFilled();
       }
+    },
+    created(){
+        MockLocations.getLocations().then((data) =>{ this.locationsOptions = data })
     }
 }
 </script>
@@ -436,8 +440,9 @@ export default {
                                         <div class="groupInput">
                                             <span>Localidade :</span>
                                             <Dropdown
+                                                filter
                                                 v-model="setorLocalizacao"
-                                                :options="setores"
+                                                :options="locationsOptions"
                                                 optionLabel="name"
                                                 placeholder="Selecione o setor"
                                             ></Dropdown>
