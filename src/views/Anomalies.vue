@@ -11,6 +11,7 @@ export default{
         return{
             userInfo: JSON.parse(localStorage.getItem("loggedUser")),
             anomalies:[],
+            isLoading: true,
             uploadedFile: null,
             active: 0,
             loadingCreate: false,
@@ -44,6 +45,11 @@ export default{
             typeAnomaliesData: null,
             baseAnomaliesData: null,
             monthAnomaliesData: null,
+            typeCall: null,
+            typeCallOptions:[
+                {name: "Anomalia"},
+                {name: "Não Conformidade"}
+            ],
             criticalityOptions:[
                 {name: "Prioridade Alta"},
                 {name: "Prioridade Media"},
@@ -305,7 +311,7 @@ export default{
 
             await axios.request(options).then((response) =>{
                 this.anomalies = response.data.results
-                console.log("GET ANOMALIES",response)
+                this.isLoading = false
             }).catch(error =>{
                 console.log(error)
             })
@@ -751,7 +757,7 @@ export default{
     },
     created(){
         this.getAnomalies();        
-        this.getQntAnomalies();
+        // this.getQntAnomalies();
         document.title="Anomalias | Controle de Embarcação"
         this.getPendenciasBySector()
     }
@@ -775,6 +781,7 @@ export default{
                     scrollable 
                     scrollHeight="600px"
                     removableSort
+                    :loading="isLoading"
                     v-model:filters="filters"
                     :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
                 >
@@ -796,6 +803,14 @@ export default{
                                 <Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" v-show="userInfo.accessLevel < 1"/>
                             </div>
                         </div>
+                    </template>
+                    <template #empty>
+                        <span>Não há anomalias registradas</span>
+                    </template>
+                    <template #loading>
+                        <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                            <span class="loader"></span>
+                        </div>                        
                     </template>
                     <Column field="numericId" header="Código"></Column>
                     <Column field="typeAnomalie" header="Tipo" sortable></Column>
@@ -824,7 +839,7 @@ export default{
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
                 </DataTable>
-                <div style="width: 100%; height: 100%; background-color: white; margin: 20px 0px ; padding: 30px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                <!-- <div style="width: 100%; height: 100%; background-color: white; margin: 20px 0px ; padding: 30px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
                     <div class="cardGraph">
                         <strong>Quantidade de Anomalias</strong>
                         <Chart type="bar" :data="qtdAnomaliesData" style="width: 100%; height: 100%;"/>
@@ -850,7 +865,7 @@ export default{
                         Total de amostras analisadas: {{ anomalies ? anomalies.length : 0 }}
                     </Message>                        
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <Dialog 
@@ -897,7 +912,17 @@ export default{
                             <div class="groupQuestion">
                                 <span>Envolvidos:</span>
                                 <InputText id="username" style="width: 100%;" v-model="envolvedInAnomalie" />
-                            </div>                          
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Tipo do chamado :</span>
+                                <Dropdown
+                                    v-model="typeCall"
+                                    :options="typeCallOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o tipo de chamado"
+                                    v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'DESENVOLVIMENTO' || userInfo?.department === 'LOGISTICA' || userInfo?.department === 'Qualidade'"
+                                ></Dropdown>
+                            </div>                         
                         </div>
                         <div style="display: flex; align-items: center;">
                             <FileUpload
@@ -1116,12 +1141,6 @@ export default{
                                 </div>
                             </div>
                         </div>
-                        <!-- <div v-else >
-                            <strong>Você não tem acesso a essa aba</strong>
-                        </div> -->
-                        <Divider></Divider>
-                        
-                        
                     </TabPanel>
                     <TabPanel header="Pós-analise">
                         <div class="topBox collum">
@@ -1323,9 +1342,36 @@ canvas{
     width: 100%;
     height: 100%;
 }
-.p-chart{
-    display: flex;
-    justify-content: center;
+
+.loader {
+    width: 84px;
+    height: 84px;
+    position: relative;
+}
+.loader:before , .loader:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width:84px;
+    height: 84px;
+    border-radius: 50%;
+    background:var(--secondary-color-gc);
+    animation: push 1s infinite linear alternate;
+}
+.loader:after {
+    background: var(--primary-color-gc);
+    animation-direction: alternate-reverse;
+}
+@keyframes push {
+    0% {
+        width:14px;
+        height: 14px;
+    }
+    100% {
+        width:84px;
+        height: 84px;
+    }
 }
 
 @media (max-width:500px){
