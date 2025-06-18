@@ -41,7 +41,6 @@ export default{
             imageFacts:[],
             archivesRetrated: [],
             qtdAnomaliesData: null,
-            optionsChartData: this.setChartOptions(),
             typeAnomaliesData: null,
             baseAnomaliesData: null,
             monthAnomaliesData: null,
@@ -403,7 +402,8 @@ export default{
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
-                    criticalityAnomalie: this.criticalityAnomalie.name
+                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    purgatory: this.typeCall
                 }
 
             }
@@ -491,7 +491,8 @@ export default{
             this.contramedida= null,
             this.gestorArgument= null
             this.archivesRetrated = [];
-            this.criticalityAnomalie = null
+            this.criticalityAnomalie = null;
+            this.typeCall = null
 
         },
         closeModal(){
@@ -635,6 +636,7 @@ export default{
             this.actionOfContention= e.data.actionOfContention;
             this.gestorArgument = e.data.gestorArgument;
             this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
+            this.typeCall = e.data.purgatory
             
 
             this.visible= true;
@@ -648,78 +650,6 @@ export default{
         },
         exportCSV(){
             this.$refs.anomalies.exportCSV()
-        },
-        organizeQtdAnomalies(x, y){
-            return{
-                labels: x,
-                datasets:[
-                    {
-                        label:'Anomalias',
-                        data: y,
-                        backgroundColor: [
-                            'rgba(249, 115, 22, 0.2)', 
-                            'rgba(6, 182, 212, 0.2)', 
-                            'rgb(107, 114, 128, 0.2)', 
-                            'rgba(139, 92, 246, 0.2)', 
-                            'rgba(227, 153, 145, 0.8)', 
-                            'rgba(218, 200, 27, 0.59)', 
-                            'rgba(54, 185, 27, 0.59)'
-                        ],
-                        borderColor: [
-                            'rgb(249, 115, 22)', 
-                            'rgb(6, 182, 212)', 
-                            'rgb(107, 114, 128)', 
-                            'rgb(139, 92, 246)',
-                            'rgb(255,77,77)',
-                            'rgb(255,255,128)',
-                            'rgb(149,255,128)'
-                        ],
-                        borderWidth: 1
-                    }
-                ]
-            }
-        },
-        setChartOptions() {
-            const documentStyle = getComputedStyle(document.documentElement);
-            const textColor = documentStyle.getPropertyValue('--text-color');
-            const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-            const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-            return {
-                indexAxis: 'y',
-                maintainAspectRatio: false,
-                aspectRatio: 0.8,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: textColor
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: textColorSecondary,
-                            font: {
-                                weight: 500
-                            }
-                        },
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: textColorSecondary
-                        },
-                        grid: {
-                            color: surfaceBorder,
-                            drawBorder: false
-                        }
-                    }
-                }
-            };
         },
         printAnomalie(id){
             window.open(`/historic/${id}`, '_blank');
@@ -920,7 +850,7 @@ export default{
                                     :options="typeCallOptions"
                                     optionLabel="name" 
                                     placeholder="Selecione o tipo de chamado"
-                                    v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'DESENVOLVIMENTO' || userInfo?.department === 'LOGISTICA' || userInfo?.department === 'Qualidade'"
+                                    v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'"
                                 ></Dropdown>
                             </div>                         
                         </div>
