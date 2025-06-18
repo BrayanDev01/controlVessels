@@ -101,7 +101,9 @@ export default {
     <div class="main">
         <div class="card">
             <div class="form">
-                <img src="../assets/grupo_3_nf.png" alt="grupo cidade" class="logoImg">
+                <div>
+                    <img src="../assets/QualiFix Variation.png" alt="grupo cidade" class="logoImg">
+                </div>
                 <span class=" item p-float-label">
                     <InputText id="username" v-model="user" :pt="{root:{ style: 'width: 100%'}}"/>
                     <label for="username">Usúario</label>
@@ -174,8 +176,8 @@ export default {
 }
 .logoImg{
     margin: 0 0 30px 0;
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
 }
 .form{
     display: flex;
