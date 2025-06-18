@@ -75,6 +75,10 @@ export const MockLocations ={
             { name: 'BEATRIZ FARIAS II'},
             { name: 'REBECCA GISLAINE'},
             { name: 'CT 62'},
+            {name: 'Navegação'},
+            {name: 'Inspeção'},
+            {name: 'Manutenção'},
+            {name: 'SESMT'}
         ]
     },
     getLocations(){

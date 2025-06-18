@@ -1,6 +1,5 @@
 <script>
 import axios from 'axios'
-import OverlayPanel from 'primevue/overlaypanel'
 import { MockLocations } from '../../mocks/locationsMocks'
 
 export default {

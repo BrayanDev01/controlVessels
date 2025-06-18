@@ -219,10 +219,13 @@ export default {
             this.$emit('update:visible', false)
         },  
         adjustData(){
+            console.log("EQUIPAMENTE--->", this.idEquipament)
+
+            console.log("VARIABEL --->", this.idEquipament.infoMed.localizacao.setor)
 
             this.equipamentName = {name: this.idEquipament.equipamentName}
             this.description = this.idEquipament.description
-            this.setor = {name: this.idEquipament.infoMed.setor}
+            this.setor = this.idEquipament.infoMed.setor
             this.marca = this.idEquipament.infoMed.marca
             this.modelo = this.idEquipament.infoMed.modelo
             this.nSerieLacre = this.idEquipament.infoMed.nSerieLacre
@@ -231,7 +234,7 @@ export default {
             this.classe = this.idEquipament.infoMed.classe
             this.valorResolucao = this.idEquipament.infoMed.resolucao.valor
             this.unResolucao = {name: this.idEquipament.infoMed.resolucao.un}
-            this.setorLocalizacao = {name: this.idEquipament.infoMed.localizacao.setor}
+            this.setorLocalizacao = this.idEquipament.infoMed.localizacao.setor
             this.responsavel = this.idEquipament.infoMed.localizacao.responsavel
             this.valorTolerancia = this.idEquipament.infoMed.tolerancia.valor
             this.unTolerancia = {name: this.idEquipament.infoMed.tolerancia.un}
