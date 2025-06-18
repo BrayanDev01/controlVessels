@@ -110,7 +110,7 @@ export default {
                         },
                         classe: this.classe,
                         localizacao: {
-                            setor: this.setor,
+                            setor: this.setorLocalizacao,
                             responsavel: this.responsavel
                         },
                         tolerancia: {
@@ -138,6 +138,8 @@ export default {
                     obs: this.observacao
                 }
             }
+
+            console.log(">> options >> ", options.data)
 
             await axios.request(options).then((response) => {
                 console.log(response);
@@ -348,14 +350,6 @@ export default {
                         <div class="flex gap-5 w-full">
                             <div class="leftSide">
                                 <div class="organizerInputs">
-                                    <!-- <div class="groupInput">
-                                        <span>Descrição :</span>
-                                        <Textarea
-                                            v-model="description"
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>                                    
-                                    </div> -->
                                     <div class="groupInput">
                                         <span>Equipamento :</span>
                                         <Dropdown
