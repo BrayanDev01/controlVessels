@@ -173,6 +173,8 @@ export default {
     align-items: center;
     justify-content: center;
     background-color: white;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
 .logoImg{
     margin: 0 0 30px 0;
