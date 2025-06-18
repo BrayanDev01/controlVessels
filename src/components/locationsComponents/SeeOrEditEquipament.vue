@@ -192,38 +192,11 @@ export default {
         downloadDocument(location){
             window.open(location, '_blank');
         },
-        // calcularDiferencas() {
-        //     if(!this.dataCalibracao || !this.validadeCalibracao) return
-
-        //     const hoje = new Date();
-        //     const dataInicial = new Date(this.dataCalibracao);
-        //     const dataFinal = new Date(this.validadeCalibracao);
-
-        //     // Calcular diferença em dias da data inicial até hoje
-        //     const diferencaEmMilissegundos = dataFinal - hoje;
-        //     const diasDeDiferenca = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));
-
-        //     // Calcular diferença em meses da data final até hoje
-        //     let anos = dataFinal.getFullYear() - hoje.getFullYear();
-        //     let meses = dataFinal.getMonth() - hoje.getMonth();
-        //     let diferencaEmMeses = anos * 12 + meses;
-
-        //     // Ajuste se o dia atual for maior que o dia da data final
-        //     if (hoje.getDate() > dataFinal.getDate()) {
-        //         diferencaEmMeses -= 1;
-        //     }
-
-        //     return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
-
-        // },
         invalidationAcess(){
             alert('Acesso Negado');
             this.$emit('update:visible', false)
         },  
         adjustData(){
-            console.log("EQUIPAMENTE--->", this.idEquipament)
-
-            console.log("VARIABEL --->", this.idEquipament.infoMed.localizacao.setor)
 
             this.equipamentName = {name: this.idEquipament.equipamentName}
             this.description = this.idEquipament.description

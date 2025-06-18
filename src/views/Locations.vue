@@ -32,12 +32,27 @@ export default{
             vesselsOptions:[],
             filters:{
                 global:{value:null, matchMode: FilterMatchMode.CONTAINS},
-                name:{value:null, matchMode: FilterMatchMode.CONTAINS},
-                convoy:{value:null, matchMode: FilterMatchMode.CONTAINS},
-                actualPosition:{value:null, matchMode: FilterMatchMode.CONTAINS},
-                destination:{value:null, matchMode: FilterMatchMode.CONTAINS},
-                prevision:{value:null, matchMode: FilterMatchMode.CONTAINS},
-                captain:{value:null, matchMode: FilterMatchMode.CONTAINS}
+                equipamentName:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.setor.name':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.marca':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.modelo':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.nSerieLacre':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.etiquetaIdentificacao':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.faixaMedicao':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.resolucao.valor':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.resolucao.un':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.classe':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.localizacao.setor.name':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.localizacao.responsavel':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.tolerancia.valor':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'infoMed.tolerancia.un':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'calibrationInterval.date':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'calibrationInterval.validade':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'calibrationInterval.laboratorioEngenheiro':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'calibrationInterval.nCertificadoArt':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'avaliationCalibration.status':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'avaliationCalibration.acoesTomadas':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                obs:{value:null, matchMode: FilterMatchMode.CONTAINS},
             }
         }
     },
@@ -113,7 +128,7 @@ export default{
                 scrollHeight="600px"
                 v-model:filters="filters"
                 exportFilename="Equipamentos de Medição"
-                :globalFilterFields="['global', 'name', 'convoy', 'actualPosition', 'prevision', 'destination']">
+                :globalFilterFields="['global', 'equipamentName', 'infoMed.setor.name', 'infoMed.marca', 'infoMed.modelo', 'infoMed.nSerieLacre', 'infoMed.etiquetaIdentificacao', 'infoMed.faixaMedicao', 'infoMed.resolucao.valor', 'infoMed.resolucao.un', 'infoMed.classe','infoMed.localizacao.setor.name', 'infoMed.localizacao.responsavel', 'infoMed.tolerancia.valor', 'infoMed.tolerancia.un', 'calibrationResults.laboratorioEngenheiro', 'calibrationResults.nCertificadoArt', 'avaliationCalibration.status', 'avaliationCalibration.acoesTomadas', 'obs']">
                 <template #header>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <FloatLabel>
