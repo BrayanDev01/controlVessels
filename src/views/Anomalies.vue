@@ -767,35 +767,13 @@ export default{
                     <Column field="reportFor.username" header="Criado por"></Column>
                     <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
+                    <Column header="Revisado" >
+                        <template #body="{data}">
+                            <i :class="!data.purgatory ? 'pi pi-times' : 'pi pi-check'"></i>
+                        </template>
+                    </Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
                 </DataTable>
-                <!-- <div style="width: 100%; height: 100%; background-color: white; margin: 20px 0px ; padding: 30px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-                    <div class="cardGraph">
-                        <strong>Quantidade de Anomalias</strong>
-                        <Chart type="bar" :data="qtdAnomaliesData" style="width: 100%; height: 100%;"/>
-                    </div>
-                    <div class="cardGraph">
-                        <strong>Tipos de Anomalias</strong>
-                        <Chart type="bar" :data="typeAnomaliesData" :options="optionsChartData" style="width: 100%; height: 100%;"/>
-                    </div>
-                    <div class="cardGraph">
-                        <strong>Anomalias por Bases</strong>
-                        <Chart type="pie" :data="baseAnomaliesData" style="width: 100%; height: 100%;"/>
-                    </div>
-                    <div class="cardGraph">
-                        <strong>Anomalias por Mês</strong>
-                        <Chart type="bar" :data="monthAnomaliesData" style="width: 100%; height: 100%;"/>
-                    </div>
-                    <div style="width: 100%;">
-                        <Message 
-                        severity="warn"
-                        :closable="false"
-                        icon="pi pi-exclamation-circle"
-                    >
-                        Total de amostras analisadas: {{ anomalies ? anomalies.length : 0 }}
-                    </Message>                        
-                    </div>
-                </div> -->
             </div>
         </div>
         <Dialog 
