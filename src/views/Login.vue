@@ -102,7 +102,7 @@ export default {
         <div class="card">
             <div class="form">
                 <div>
-                    <img src="../assets/QualiFix Variation.png" alt="grupo cidade" class="logoImg">
+                    <img src="../assets/qualifix_variation.png" alt="grupo cidade" class="logoImg">
                 </div>
                 <span class=" item p-float-label">
                     <InputText id="username" v-model="user" :pt="{root:{ style: 'width: 100%'}}"/>

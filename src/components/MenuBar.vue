@@ -99,7 +99,7 @@ export default{
 <template>
     <div class="topMenu">
         
-        <img src="../assets/QualiFix Black.png" alt="Grupo Cidade" style="height: 60%;">
+        <img src="../assets/qualifix_black.png" alt="Grupo Cidade" style="height: 60%;">
         <div class="options">
             <router-link to="/home" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Home</div>
