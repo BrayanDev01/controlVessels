@@ -104,9 +104,9 @@ export default{
             <router-link to="/home" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Home</div>
             </router-link>
-            <!-- <router-link to="/form" class="buttonLink" v-if="userInfo?.accessLevel < 1">
-                <div>Formulário</div>
-            </router-link> -->
+            <router-link to="/controlchanges" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+                <div>Controle de Mudanças</div>
+            </router-link>
             <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Instrumentos</div>
             </router-link>
