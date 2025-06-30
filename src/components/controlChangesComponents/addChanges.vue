@@ -3,6 +3,7 @@ import { MockOptions } from '../../mocks/optionsControlChanges.js'
 export default{
     data(){
         return{
+            userInfos: JSON.parse(localStorage.getItem("loggedUser")),
             proposalChange: null,
             origin: null,
             responsible: null,
@@ -24,6 +25,9 @@ export default{
             how: null,
             howMuch: null,
 
+            filesQualidade: [],
+
+            uploadingValue: 0,
             severityOptions:[],
             urgencyOptions:[],
             trendOptions:[],
@@ -56,6 +60,20 @@ export default{
             this.priority = null
             this.status = null
             this.matrixGUT = null
+        },
+        afterUpload(e) {
+            const response = JSON.parse(e.xhr.responseText);
+            this.filesQualidade = [...this.filesQualidade, ...response.files];
+            this.uploadingValue = 0                       
+        },
+        deleteFileQualidade(urlFile, i){
+            this.filesQualidade.splice(i, 1);
+        },
+        uploadingLogic(e){
+            this.uploadingValue = e.progress
+            if(e.progress === 100){
+                this.uploading = false
+            }
         }
     },
     watch: {
@@ -261,7 +279,7 @@ export default{
                     </div>
                 </div>
             </StepperPanel>
-            <StepperPanel header="Qualidade">
+            <StepperPanel header="Qualidade" v-show="userInfos.department === 'Qualidade'">
                 <div class="organizer">
                     <strong>Verificação de Eficácia</strong>
                     <div class="groupOfInputs">
@@ -281,6 +299,35 @@ export default{
                                 optionLabel="name"
                                 placeholder="Selecione o Status de Eficácia"
                             ></Dropdown>                            
+                        </div>
+                    </div>
+                    <div class="groupOfInputs">
+                        <div class="inputGroup">
+                            <FileUpload
+                                mode="basic" 
+                                name="files"
+                                :auto="true"
+                                url="https://connectapi.3nf.com.br/upload"
+                                @upload="afterUpload($event)"
+                                @progress="uploadingLogic($event)"
+                            ></FileUpload>
+                            <ProgressBar
+                                :value="uploadingValue"
+                            ></ProgressBar>
+                        </div>
+                        <div class="uplodsBox">
+                            <div 
+                                v-for="(file, i) in filesQualidade" 
+                                :key="i"
+                            >
+                                <div class="mediaBox">
+                                    <Image :src="file.location" width="120" height="140" preview ></Image>
+                                    <div style="display: flex; gap: 15px; padding: 10px; justify-items: center; align-items: center;">
+                                        <i class="pi pi-times" style="font-size: 1rem; cursor: pointer;" @click="deleteFileQualidade(file.location, i)"></i>
+                                        <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadFile(file)"></i>
+                                    </div>
+                                </div>            
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -327,6 +374,22 @@ export default{
     display: flex;
     flex-direction: column;
     gap: 10px; 
+}
+.uplodsBox{
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 350px;
+    overflow: auto;
+    gap: 10px;
+    max-width: 100%;
+    padding: 10px;
+}
+
+.mediaBox{
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .groupOfInputs{
     display: flex;

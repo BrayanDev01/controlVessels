@@ -33,6 +33,7 @@ import Chart from 'primevue/chart';
 import Stepper from 'primevue/stepper';
 import StepperPanel from 'primevue/stepperpanel';
 import OverlayPanel from 'primevue/overlaypanel';
+import ProgressBar from 'primevue/progressbar';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -78,6 +79,7 @@ app.component('Chart', Chart);
 app.component('Stepper', Stepper);
 app.component('StepperPanel', StepperPanel);
 app.component('OverlayPanel', OverlayPanel);
+app.component('ProgressBar', ProgressBar);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);
