@@ -1,9 +1,13 @@
 <script>
+import axios from 'axios'
 import { MockOptions } from '../../mocks/optionsControlChanges.js'
+
 export default{
     data(){
         return{
             userInfos: JSON.parse(localStorage.getItem("loggedUser")),
+            loadingButon: false,
+
             proposalChange: null,
             origin: null,
             responsible: null,
@@ -27,6 +31,8 @@ export default{
             how: null,
             howMuch: null,
 
+            comments: null,
+            efficacyStatus: null,
             filesQualidade: [],
 
             uploadingValue: 0,
@@ -48,7 +54,57 @@ export default{
         }
     },
     methods:{
+        async createChange(){
+            this.loadingButon = true
+
+            const options = {
+                url: `${import.meta.env.VITE_URL_API}classes/controlChanges`,
+                method: 'POST',
+                headers: {
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    proposalChange: this.proposalChange,
+                    origin: this.origin,
+                    responsible: this.responsible,
+                    startDate: this.startDate,
+                    endDate: this.endDate,
+                    potencialConsequences: this.potencialConsequences,
+                    severity: this.severity,
+                    urgency: this.urgency,
+                    trend: this.trend,
+                    priority: this.priority,
+                    status: this.status,
+                    matrixGUT: this.matrixGUT,
+                    alocationResponsability: this.alocationResponsability,
+                    justification: this.justification,
+                    planOfAction:{
+                        what: this.what,
+                        why: this.why,
+                        where: this.where,
+                        when: this.when,
+                        who: this.who,
+                        how: this.how,
+                        howMuch: this.howMuch
+                    },
+                    comments: this.comments,
+                    efficacyStatus: this.efficacyStatus,
+                    filesQualidade: this.filesQualidade
+                }
+            }
+
+            await axios.request(options).then((response) => {
+                console.log(response)
+                this.$toast.add({severity:'success', summary:'Alteração Criada', life:3000})
+                this.$emit('update:visible', false)
+            }).catch((error) => {
+                console.log(error)
+                this.loadingButon = false
+            })
+        },  
         clearForm(){
+            this.loadingButon = false
             this.proposalChange = null
             this.origin = null
             this.responsible = null
@@ -71,6 +127,9 @@ export default{
             this.who = null
             this.how = null
             this.howMuch = null
+
+            this.filesQualidade = []
+
         },
         afterUpload(e) {
             const response = JSON.parse(e.xhr.responseText);
@@ -362,7 +421,7 @@ export default{
         <div style="display: flex; justify-content: end; gap: 10px; margin: 20px;">
             <Button
                 label="Salvar"
-                @click="clearForm()"
+                @click="createChange()"
                 style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
             ></Button>
             <Button
@@ -371,6 +430,7 @@ export default{
                 style="background-color: var(--white-gc); color: var(--primary-color-gc); font-weight: bold;"
             ></Button>
         </div>
+        <Toast></Toast>
     </Dialog>
 </template>
 
