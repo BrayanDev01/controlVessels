@@ -16,6 +16,8 @@ export default{
             priority: null,
             status: null,
             matrixGUT: null,
+            alocationResponsability: false,
+            justification: null,
 
             what: null,
             why: null,
@@ -60,6 +62,15 @@ export default{
             this.priority = null
             this.status = null
             this.matrixGUT = null
+            this.alocationResponsability = false
+            this.justification = null
+            this.what = null
+            this.why = null
+            this.where = null
+            this.when = null
+            this.who = null
+            this.how = null
+            this.howMuch = null
         },
         afterUpload(e) {
             const response = JSON.parse(e.xhr.responseText);
@@ -78,10 +89,10 @@ export default{
     },
     watch: {
         severity(){
-            this.matrixGUT = this.severity?.value * this.urgency?.value * this.trend?.value
+            this.matrixGUT = this.severity?.value * this.urgency?.value * this.trend?.value            
             return this.matrixGUT > 11 ? this.priority = 'Tratar Com Plano de Ação' : this.priority = 'Tratar Sem Plano de Ação'
         },
-        trend(){            
+        trend(){      
             this.matrixGUT = this.severity?.value * this.urgency?.value * this.trend?.value
             return this.matrixGUT > 11 ? this.priority = 'Tratar Com Plano de Ação' : this.priority = 'Tratar Sem Plano de Ação'
         },
@@ -150,7 +161,22 @@ export default{
                                     dateFormat="dd/mm/yy"
                                 ></Calendar>
                             </div>
-                        </div>                             
+                        </div>
+                        <div class="inputGroup center">
+                            <span>Alocação ou realocação de responsabilidades e autoridades :</span>
+                            <ToggleButton v-model="alocationResponsability" onLabel="Sim" offLabel="Não" />
+                        </div>
+                        <div class="groupOfInputs" v-if="alocationResponsability">
+                            <div class="inputGroup">
+                                <span>Justificação :</span>
+                                <Textarea 
+                                    v-model="justification"
+                                    rows="5" 
+                                    cols="50"
+                                ></Textarea>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="rigthSide">
                         <div class="groupOfInputs">
@@ -375,6 +401,10 @@ export default{
     flex-direction: column;
     gap: 10px; 
 }
+.center{
+    justify-content: center;
+    align-items: center;
+}
 .uplodsBox{
     display: flex;
     flex-wrap: wrap;
@@ -395,5 +425,9 @@ export default{
     display: flex;
     margin: 10px;
     gap: 10px;
+}
+
+.switch{
+    border: 1px solid red;
 }
 </style>

@@ -34,6 +34,8 @@ import Stepper from 'primevue/stepper';
 import StepperPanel from 'primevue/stepperpanel';
 import OverlayPanel from 'primevue/overlaypanel';
 import ProgressBar from 'primevue/progressbar';
+import InputSwitch from 'primevue/inputswitch';
+import ToggleButton from 'primevue/togglebutton';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -80,6 +82,8 @@ app.component('Stepper', Stepper);
 app.component('StepperPanel', StepperPanel);
 app.component('OverlayPanel', OverlayPanel);
 app.component('ProgressBar', ProgressBar);
+app.component('InputSwitch', InputSwitch);
+app.component('ToggleButton', ToggleButton);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);
