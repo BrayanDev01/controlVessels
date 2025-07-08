@@ -2,15 +2,18 @@
 import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
 import addChanges from '../components/controlChangesComponents/addChanges.vue';
-
+import editChanges from '../components/controlChangesComponents/editChanges.vue';
 export default{
     components:{
         MenuBar,
-        addChanges
+        addChanges,
+        editChanges
     },
     data(){
         return{
             addChangesVisible: false,
+            editChangesVisible: false,
+            id: null,
             changes: []
         }
     },
@@ -34,6 +37,11 @@ export default{
         },
         formatData(data){
             return new Date(data).toLocaleDateString()
+        },
+        editDoc(e){
+            console.log(e.data.objectId)
+            this.editChangesVisible = true;
+            this.id = e.data.objectId
         }
     },
     created(){
@@ -59,6 +67,7 @@ export default{
                 :style="{width: '100%'}"
                 scrollable
                 scrollHeight="600px"
+                @row-click="editDoc($event)"
             >
                 <template #empty>
                     <div style="display: flex; justify-content: center; align-items: center;">
@@ -83,7 +92,6 @@ export default{
                 <Column field="trend.name" header="Tendência"></Column>
                 <Column field="priority" header="Prioridade"></Column>
                 <Column field="status.name" header="Status"></Column>
-
             </DataTable>
         </div>
     </div>
@@ -91,6 +99,11 @@ export default{
         :visible="addChangesVisible"
         @update:visible="addChangesVisible = $event"
     ></addChanges>
+    <editChanges
+        :visible="editChangesVisible"
+        @update:visible="editChangesVisible = $event"
+        :infoId="id"
+    ></editChanges>
 </template>
 
 <style scoped>
