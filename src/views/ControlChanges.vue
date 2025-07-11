@@ -103,6 +103,7 @@ export default{
         :visible="editChangesVisible"
         @update:visible="editChangesVisible = $event"
         :infoId="id"
+        @close="getChanges()"
     ></editChanges>
 </template>
 

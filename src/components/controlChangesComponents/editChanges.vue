@@ -16,6 +16,7 @@ export default{
             loadingButon: false,
             loadingComponent: false,
 
+            objectId: null,
             proposalChange: null,
             origin: null,
             responsible: null,
@@ -62,6 +63,23 @@ export default{
         }
     },
     methods:{
+        async deleteChange(id){
+            const options = {
+                url: `${import.meta.env.VITE_URL_API}classes/controlChanges/${id}`,
+                method: 'DELETE',
+                headers: {
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            }
+            await axios.request(options).then((response) => {
+                console.log(response)
+                this.$emit('close')
+                this.$emit('update:visible', false)
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
         async getChange(){
             this.loadingComponent = true
             const options ={
@@ -176,6 +194,7 @@ export default{
             }else{return new Date(data)}
         },
         adjustData(data){
+            this.objectId = data.objectId
             this.proposalChange = data?.proposalChange
             this.origin = data?.origin
             this.responsible = data?.responsible
@@ -484,6 +503,11 @@ export default{
             </StepperPanel>
         </Stepper>
         <div style="display: flex; justify-content: end; gap: 10px; margin: 20px;">
+            <Button
+                label="Deletar"
+                @click="deleteChange(this.objectId)"
+                v-if="userInfos.username === 'Alcilene' || userInfos.department === 'ADMINISTRACAO'"
+            ></Button>
             <Button
                 label="Atualizar"
                 @click="attChange()"
