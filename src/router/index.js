@@ -8,7 +8,9 @@ import Locations from '../views/Locations.vue';
 import Anomalies from '../views/Anomalies.vue'
 import HistoricForm from '../views/HistoricForm.vue'
 import ControlChanges from '../views/ControlChanges.vue'
+import RNC from '../views/Rnc.vue'
 import { userInfoStore } from "../store/UserInfos";
+import Purgatory from "../views/Purgatory.vue";
 
 
 const routes = [
@@ -56,6 +58,16 @@ const routes = [
         path: '/controlchanges',
         name: 'ControlChanges',
         component: ControlChanges
+    },
+    {
+        path: '/noncompliance',
+        name: 'RNC',
+        component: RNC
+    },
+    {
+        path: '/purgatory',
+        name: 'Purgatorio',
+        component: Purgatory
     }
 ]
 

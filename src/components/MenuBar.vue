@@ -107,8 +107,14 @@ export default{
             <router-link to="/controlchanges" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Controle de Mudanças</div>
             </router-link>
+            <router-link to="/noncompliance" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+                <div>No Compliance</div>
+            </router-link>
             <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Instrumentos</div>
+            </router-link>
+            <router-link to="/purgatory" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+                <div>Purgatorio</div>
             </router-link>
             <router-link to="/anomalies" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Anomalias</div>

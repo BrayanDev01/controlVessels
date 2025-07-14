@@ -297,10 +297,10 @@ export default{
         }
     },
     methods:{
-        async getAnomalies(){
+        async getRNC(){
             const options = {
                 method: 'POST',
-                url: `${import.meta.env.VITE_URL_API}functions/getAnomalyAnomalies`,
+                url: `${import.meta.env.VITE_URL_API}functions/getNonConformityAnomalies`,
                 params: {include: 'reportFor', order: '-createdAt', limit: 300},
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
@@ -309,6 +309,7 @@ export default{
             }
 
             await axios.request(options).then((response) =>{
+                console.log(response)
                 this.anomalies = response.data.result
                 this.isLoading = false
             }).catch(error =>{
@@ -654,27 +655,27 @@ export default{
         printAnomalie(id){
             window.open(`/historic/${id}`, '_blank');
         },
-        async getPendenciasBySector(){
-            const options = {
-                method: 'POST',
-                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesForSector`,
-                params:{order: "-createdAt"},
-                headers: {
-                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-                },
-                data:{
-                    sector: this.userInfo.department
-                }
-            }
+        // async getPendenciasBySector(){
+        //     const options = {
+        //         method: 'POST',
+        //         url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesForSector`,
+        //         params:{order: "-createdAt"},
+        //         headers: {
+        //             'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+        //             'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+        //         },
+        //         data:{
+        //             sector: this.userInfo.department
+        //         }
+        //     }
 
-            await axios.request(options).then((response)=>{
-                console.log(response)
-                this.pendencies = response.data.result
-            }).catch(error =>{
-                console.log(error)
-            })
-        },
+        //     await axios.request(options).then((response)=>{
+        //         console.log(response)
+        //         this.pendencies = response.data.result
+        //     }).catch(error =>{
+        //         console.log(error)
+        //     })
+        // },
         searchPendencie(e){
             this.filters['global'].value = e.value.numericId
         },
@@ -686,10 +687,10 @@ export default{
 
     },
     created(){
-        this.getAnomalies();        
+        this.getRNC();        
         // this.getQntAnomalies();
-        document.title="Anomalias | Controle de Embarcação"
-        this.getPendenciasBySector()
+        document.title="Não Conformidades | Controle de Embarcação"
+        // this.getPendenciasBySector()
     }
 }
 </script>
@@ -698,7 +699,7 @@ export default{
         <MenuBar></MenuBar>
         <div class="dataCentral">
             <div class="header">
-                <Button @click="visible=true">Nova Anomalia</Button>
+                <Button @click="visible=true">Nova Não Conformidade</Button>
             </div>
             <div>
                 <DataTable
