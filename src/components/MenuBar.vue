@@ -108,7 +108,7 @@ export default{
                 <div>Controle de Mudanças</div>
             </router-link>
             <router-link to="/noncompliance" class="buttonLink" v-if="userInfo?.accessLevel < 1">
-                <div>No Compliance</div>
+                <div>RNC</div>
             </router-link>
             <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Instrumentos</div>
