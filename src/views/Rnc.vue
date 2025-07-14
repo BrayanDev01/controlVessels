@@ -1122,7 +1122,7 @@ export default{
                         :disabled="loadingCreate"
                         v-else
                     >
-                        Atualizar Anomalia
+                        Atualizar RNC
                     </Button>
                     <Button 
                         @click="clearForm() & closeModal()"
