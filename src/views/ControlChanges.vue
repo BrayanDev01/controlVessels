@@ -91,6 +91,7 @@ export default{
                 <Column field="urgency.name" header="Urgência"></Column>
                 <Column field="trend.name" header="Tendência"></Column>
                 <Column field="priority" header="Prioridade"></Column>
+                <Column field="typeOfChange.name" header="Tipo"></Column>
                 <Column field="status.name" header="Status"></Column>
             </DataTable>
         </div>
