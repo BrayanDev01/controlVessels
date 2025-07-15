@@ -31,6 +31,7 @@ export default{
             matrixGUT: null,
             alocationResponsability: false,
             justification: null,
+            typeOfChange: null,
 
             what: null,
             why: null,
@@ -59,6 +60,13 @@ export default{
                 {name: 'Implantação Concluida'},
                 {name: 'Implantação Em Andamento'},
                 {name: 'Ainda Não Analisado'}
+            ],
+            typeChangesOptions:[
+                {name: 'Processo'},
+                {name: 'Projeto'},
+                {name: 'Legislação'},
+                {name: 'Estrutura Organizacional'},
+                {name: 'Outro'}
             ]
         }
     },
@@ -122,6 +130,7 @@ export default{
                     matrixGUT: this.matrixGUT,
                     alocationResponsability: this.alocationResponsability,
                     justification: this.justification,
+                    typeOfChange: this.typeOfChange,
                     planOfAction:{
                         what: this.what,
                         why: this.why,
@@ -170,6 +179,7 @@ export default{
             this.who = null
             this.how = null
             this.howMuch = null
+            this.typeOfChange = null
 
             this.filesQualidade = []
 
@@ -209,6 +219,7 @@ export default{
             this.matrixGUT = data?.matrixGUT
             this.alocationResponsability = data?.alocationResponsability
             this.justification = data?.justification
+            this.typeOfChange = data?.typeOfChange
 
             this.what = data?.planOfAction.what
             this.why = data?.planOfAction.why
@@ -381,6 +392,15 @@ export default{
                                     :options="statusOptions"
                                     optionLabel="name"
                                     placeholder="Selecione o Status"
+                                ></Dropdown>                        
+                            </div>
+                            <div class="inputGroup">
+                                <span>Tipo de Mudança :</span>
+                                <Dropdown
+                                    v-model="typeOfChange"
+                                    :options="typeChangesOptions"
+                                    optionLabel="name"
+                                    placeholder="Selecione o Tipo"
                                 ></Dropdown>                        
                             </div>
                         </div>
