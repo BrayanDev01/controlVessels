@@ -14,11 +14,14 @@ export default{
             addChangesVisible: false,
             editChangesVisible: false,
             id: null,
-            changes: []
+            changes: [],
+            loadData: false
         }
     },
     methods:{
         async getChanges(){
+            this.loadData = true
+
             const options = {
                 url: `${import.meta.env.VITE_URL_API}classes/controlChanges`,
                 method: 'GET',
@@ -31,8 +34,10 @@ export default{
             await axios.request(options).then((response) => {
                 this.changes = response.data.results
                 console.log(response)
+                this.loadData = false
             }).catch((error) => {
                 console.log(error)
+                this.loadData = false    
             })
         },
         formatData(data){
@@ -65,6 +70,7 @@ export default{
             <DataTable
                 :value="changes"
                 :style="{width: '100%'}"
+                :loading="loadData"
                 scrollable
                 scrollHeight="600px"
                 @row-click="editDoc($event)"
@@ -73,6 +79,11 @@ export default{
                     <div style="display: flex; justify-content: center; align-items: center;">
                         <strong>Nenhuma Mudança Cadastrada</strong>
                     </div>
+                </template>
+                <template #loading>
+                    <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                        <span class="loader"></span>
+                    </div>  
                 </template>
                 <Column field="numericId" header="Código"></Column>
                 <Column field="origin" header="Origem"></Column>
@@ -117,5 +128,35 @@ export default{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.loader {
+    width: 84px;
+    height: 84px;
+    position: relative;
+}
+.loader:before , .loader:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width:84px;
+    height: 84px;
+    border-radius: 50%;
+    background:var(--secondary-color-gc);
+    animation: push 1s infinite linear alternate;
+}
+.loader:after {
+    background: var(--primary-color-gc);
+    animation-direction: alternate-reverse;
+}
+@keyframes push {
+    0% {
+        width:14px;
+        height: 14px;
+    }
+    100% {
+        width:84px;
+        height: 84px;
+    }
 }
 </style>
