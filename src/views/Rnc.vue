@@ -45,6 +45,10 @@ export default{
             baseAnomaliesData: null,
             monthAnomaliesData: null,
             typeCall: null,
+
+            test: false,
+
+            sectorsEnvolveds: null,
             typeCallOptions:[
                 {name: "Anomalia"},
                 {name: "Não Conformidade"}
@@ -683,8 +687,16 @@ export default{
             if( this.nameEquipament && this.resumeAnomalie && this.dateAnomalie && this.departmentResp && this.typeAnomalie && this.baseAnomalie && this.placeAnomalie && this.equipamentAnomalie && this.impactAnomalie){
                 return false
             }return true
+        },
+        toggle(event) {
+            this.$refs.actionRegister.toggle(event);
         }
 
+    },
+    watch:{
+        test(value){
+            console.log(value)
+        }
     },
     created(){
         this.getRNC();        
@@ -790,7 +802,7 @@ export default{
                             <div>
                                 <FloatLabel>
                                     <Textarea v-model="resumeAnomalie" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Resumo da Anomalia :</label>
+                                    <label>Descrição da Ocorrência:</label>
                                 </FloatLabel>
                             </div>
                             <div class="groupQuestion">
@@ -809,13 +821,18 @@ export default{
                             </div>
                         </div>
                         <div class="topBox">
-                            <div class="groupQuestion">
-                                <span>Causa da ocorrência:</span>
-                                <InputText id="username" style="width: 100%;" v-model="reasonAnomalie" />
-                            </div>
-                            <div class="groupQuestion">
+                            <!-- <div class="groupQuestion">
                                 <span>Envolvidos:</span>
                                 <InputText id="username" style="width: 100%;" v-model="envolvedInAnomalie" />
+                            </div> -->
+                            <div class="groupQuestion">
+                                <span>Departamentos Envolvidos:</span>
+                                <Dropdown 
+                                    v-model="departmentResp" 
+                                    :options="departments"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o Departamento">
+                                </Dropdown>
                             </div>
                             <div class="groupQuestion">
                                 <span>Tipo do chamado :</span>
@@ -827,6 +844,76 @@ export default{
                                     v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'"
                                 ></Dropdown>
                             </div>                         
+                        </div>
+                        <div class="topBox">
+                            <div class="groupQuestion">
+                                <span>Tipo de Anomalia:</span>
+                                <Dropdown 
+                                    v-model="typeAnomalie" 
+                                    :options="typesOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o tipo">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Base:</span>
+                                <Dropdown 
+                                    v-model="baseAnomalie" 
+                                    :options="baseOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione a base">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Nome do Equipamento:</span>
+                                <Dropdown 
+                                    v-model="nameEquipament" 
+                                    :options="equipamentOptions"
+                                    filter
+                                    optionLabel="name" 
+                                    placeholder="Selecione o equipamento">
+                                </Dropdown>
+                            </div>
+                        </div>
+                        <div class="topBox">
+                            <div class="groupQuestion">
+                                <span>Tipo de equipamento:</span>
+                                <Dropdown 
+                                    v-model="equipamentAnomalie" 
+                                    :options="equipamentTypeOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o tipo de equipamento">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Selecione o impacto:</span>
+                                <Dropdown 
+                                    v-model="impactAnomalie" 
+                                    :options="impactOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o impacto">
+                                </Dropdown>
+                            </div>
+                        </div>
+                        <div class="topBox">
+                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">
+                                <span>Selecione o status</span>
+                                <Dropdown 
+                                    v-model="statusAnomalie" 
+                                    :options="statusOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o status">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion" style="width: 30%;">
+                                <span>Selecione a criticidade</span>
+                                <Dropdown 
+                                    v-model="criticalityAnomalie" 
+                                    :options="criticalityOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione a criticidade">
+                                </Dropdown>
+                            </div>
                         </div>
                         <div style="display: flex; align-items: center;">
                             <FileUpload
@@ -855,93 +942,10 @@ export default{
                             </div>
                         </div>
                     </TabPanel>
-                    <TabPanel header="Informações">
-                        <div style="display: flex; gap: 20px;width: 100%;">
-                            <div style="width: 100%;">
-                                <div class="groupQuestion">
-                                    <span>Departamento Responsável:</span>
-                                    <Dropdown 
-                                        v-model="departmentResp" 
-                                        :options="departments"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o Departamento">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Tipo de Anomalia:</span>
-                                    <Dropdown 
-                                        v-model="typeAnomalie" 
-                                        :options="typesOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o tipo">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Base:</span>
-                                    <Dropdown 
-                                        v-model="baseAnomalie" 
-                                        :options="baseOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione a base">
-                                    </Dropdown>
-                                </div>
-                            </div>
-                            <div style="width: 100%;">
-                                <div class="groupQuestion">
-                                    <span>Nome do Equipamento:</span>
-                                    <Dropdown 
-                                        v-model="nameEquipament" 
-                                        :options="equipamentOptions"
-                                        filter
-                                        optionLabel="name" 
-                                        placeholder="Selecione o equipamento">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Tipo de equipamento:</span>
-                                    <Dropdown 
-                                        v-model="equipamentAnomalie" 
-                                        :options="equipamentTypeOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o tipo de equipamento">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Selecione o impacto:</span>
-                                    <Dropdown 
-                                        v-model="impactAnomalie" 
-                                        :options="impactOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o impacto">
-                                    </Dropdown>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
-                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">
-                                <span>Selecione o status</span>
-                                <Dropdown 
-                                    v-model="statusAnomalie" 
-                                    :options="statusOptions"
-                                    optionLabel="name" 
-                                    placeholder="Selecione o status">
-                                </Dropdown>
-                            </div>
-                            <div class="groupQuestion" style="width: 30%;">
-                                <span>Selecione a criticidade</span>
-                                <Dropdown 
-                                    v-model="criticalityAnomalie" 
-                                    :options="criticalityOptions"
-                                    optionLabel="name" 
-                                    placeholder="Selecione a criticidade">
-                                </Dropdown>
-                            </div>
-                        </div>
-                    </TabPanel>
-                    <TabPanel header="Analise da Causa Raiz">
+                    <TabPanel header="Análise">
                         <div class="topBox">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-                                <div>
+                                <!-- <div>
                                     <FloatLabel>
                                         <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none; width: 100%;"/>
                                         <label>Resumo do Avaliador :</label>
@@ -949,8 +953,8 @@ export default{
                                     <div>
                                         <span></span>
                                     </div>
-                                </div>
-                                <div class="flex gap-5">
+                                </div> -->
+                                <!-- <div class="flex gap-5">
                                     <div class="groupInput w-full">
                                         <span>Descrição do Problema ou Oportunidade de Melhoria :</span>
                                         <Textarea 
@@ -1019,8 +1023,51 @@ export default{
                                             cols="30"
                                         ></Textarea>
                                     </div>
+                                </div> -->
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <strong>Ação Imediata:</strong>
+                                    <DataTable
+                                        :value="actionImmediate"
+                                    >
+                                        <template #empty>
+                                            <span>Nenhuma ação imediata cadastrada</span>
+                                        </template>
+                                        <template #header>
+                                            <Button @click="toggle">Nova Ação Imediata</Button>
+                                            <OverlayPanel ref="actionRegister">
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Ação Imediata :</span>
+                                                        <Textarea></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Email do Responsavel :</span>
+                                                        <InputText></InputText>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Prazo :</span>
+                                                        <Calendar
+                                                            dateFormat="dd/mm/yy"
+                                                            v-model="dateLimit"
+                                                        ></Calendar>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Button>Salvar</Button>
+                                                    <Button>Cancelar</Button>
+                                                </div>                                             
+                                            </OverlayPanel>
+                                        </template>
+                                        <Column field="name" header="Ação Imediata"></Column>
+                                        <Column field="resp" header="Responsavel"></Column>
+                                        <Column field="dateLimit" header="Prazo"></Column>
+                                        <Column field="implant" header="Implementada?"></Column>
+                                        <Column field="newDataLimit" header="Novo Prazo"></Column>
+                                    </Datatable>
                                 </div>
-                                <div class="boxUpload">
+                                
+                                
+                                <!-- <div class="boxUpload">
                                     <FileUpload 
                                         mode="basic" 
                                         name="files"
@@ -1042,60 +1089,76 @@ export default{
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </TabPanel>
-                    <TabPanel header="Pós-analise">
-                        <div class="topBox collum">
-                            <div style="display: flex; gap: 10px;">
-                                <div style="width: 100%;">
-                                    <FloatLabel>
-                                        <Textarea v-model="gestorArgument" rows="5" cols="40" style="resize: none; width: 100%;"/>
-                                        <label>Retratação do Gestor :</label>
-                                    </FloatLabel>
-                                </div>
+                    <TabPanel header="Verificação da Eficácia">
+                        
+                        <div style="width: 100%; display: flex; gap: 10px;">
+                            <div class="questionInput">
+                                <span>Prazo para verificação a eficácia :</span>
+                                <Calendar
+                                    dateFormat="dd/mm/yy"
+                                    v-model="timeToCheck"
+                                ></Calendar>
                             </div>
-                            <div style="width: 100%; display: flex; gap: 10px; justify-content: space-between">
-                                <FloatLabel>
-                                    <Textarea v-model="causeAfterAnalise" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Causa :</label>
-                                </FloatLabel>
-                                <FloatLabel>
-                                    <Textarea v-model="actionOfContention" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Ação de contenção :</label>
-                                </FloatLabel>
-                                <FloatLabel>
-                                    <Textarea v-model="contramedida" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Contramedida :</label>
-                                </FloatLabel>                                
+                            <div class="questionInput">
+                                <span>Observações :</span>
+                                <Textarea></Textarea>
                             </div>
-                            <div>
-                                <div class="boxUpload">
-                                    <FileUpload 
-                                        mode="basic" 
-                                        name="files"
-                                        :auto="true"
-                                        :multiple="true"
-                                        @upload="afterGestor($event)"
-                                        url="https://connectapi.3nf.com.br/upload"
-                                    />
-                                    <div v-for="(file, i) in archivesRetrated" :key="i" 
-                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
+                            <div class="questionInput" style="align-items: center;">
+                                <span>A ação corretiva foi eficaz ? :</span>
+                                <Checkbox 
+                                    v-model="test"
+                                    value="true"
+                                    :binary="true"
+                                    @update:modelValue="test = $event"
+                                    :pt="{icon: { style: 'color: var(--primary-color-gc);' }}"
+                                ></Checkbox> 
+                            </div>                                                         
+                        </div>
+                        <div style="width: 100%; display: flex; gap: 10px; margin: 10px 0px;">
+                            <div class="questionInput">
+                                <span>Data de Fechamento :</span>
+                                <Calendar
+                                    dateFormat="dd/mm/yy"
+                                    v-model="timeToCheck"
+                                ></Calendar>
+                            </div>  
+                            <div class="questionInput">
+                                <span>Responsavel :</span>
+                                <InputText
+                                    v-model="timeToCheck"
+                                ></InputText>
+                            </div>  
+                        </div>
+                        <div>
+                            <div class="boxUpload">
+                                <FileUpload 
+                                    mode="basic" 
+                                    name="files"
+                                    :auto="true"
+                                    :multiple="true"
+                                    @upload="afterGestor($event)"
+                                    url="https://connectapi.3nf.com.br/upload"
+                                />
+                                <div v-for="(file, i) in archivesRetrated" :key="i" 
+                                    style="display: flex; margin: 10px; flex-wrap: wrap;"
+                                >
+                                    <div 
+                                        class="uploadBox"
                                     >
-                                        <div 
-                                            class="uploadBox"
-                                        >
-                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
-                                            <div style="display: flex; gap: 15px; padding: 10px;">
-                                                <i class="pi pi-times" style="font-size: 1rem; cursor: pointer;" @click="deleteImageGestor(file.location, i)"></i>
-                                                <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadImage(file.location)"></i>
-                                            </div>
+                                        <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
+                                        <div style="display: flex; gap: 15px; padding: 10px;">
+                                            <i class="pi pi-times" style="font-size: 1rem; cursor: pointer;" @click="deleteImageGestor(file.location, i)"></i>
+                                            <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadImage(file.location)"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         
                         
                     </TabPanel>                    
@@ -1177,6 +1240,7 @@ Button{
 }
 .topBox{
     display: flex;
+    justify-content: center;
     gap: 20px;
 }
 .bottomBox{
@@ -1195,6 +1259,12 @@ Button{
     flex-direction: column;
     gap: 10px;
     margin: 10px;
+}
+.questionInput{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
 }
 .optionsSide{
     width: 100%;
