@@ -48,6 +48,11 @@ export default{
 
             test: false,
 
+            actionImmediate: [],
+            actionImmediateText: null,
+            respEmailAction: null,
+            dateLimit: null,
+
             sectorsEnvolveds: null,
             typeCallOptions:[
                 {name: "Anomalia"},
@@ -353,7 +358,8 @@ export default{
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
-                    criticalityAnomalie: this.criticalityAnomalie.name
+                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    actionImmediate: this.actionImmediate
                 }
 
             }
@@ -408,7 +414,8 @@ export default{
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
                     criticalityAnomalie: this.criticalityAnomalie.name,
-                    purgatory: this.typeCall
+                    purgatory: this.typeCall,
+                    actionImmediate: this.actionImmediate
                 }
 
             }
@@ -429,26 +436,6 @@ export default{
                 console.log(error)
             })
             
-        },
-        async getQntAnomalies(){
-            const options = {
-                method: 'POST',
-                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesStatusCounts`,
-                headers: {
-                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-                }
-            }
-
-            await axios.request(options).then((response)=>{
-                console.log(response)
-                this.qtdAnomaliesData = this.organizeQtdAnomalies(response.data.result.statusArray, response.data.result.countArray )
-                this.typeAnomaliesData = this.organizeQtdAnomalies(response.data.result.typeArray, response.data.result.countTypesArray)
-                this.baseAnomaliesData = this.organizeQtdAnomalies(response.data.result.baseArray, response.data.result.countBasesArray)
-                this.monthAnomaliesData = this.organizeQtdAnomalies(response.data.result.monthArray, response.data.result.countMonthArray)
-            }).catch((error)=>{
-                console.log(error)
-            })
         },
         getStatusLabel(status) {
             switch (status) {
@@ -497,8 +484,8 @@ export default{
             this.gestorArgument= null
             this.archivesRetrated = [];
             this.criticalityAnomalie = null;
-            this.typeCall = null
-
+            this.typeCall = null,
+            this.actionImmediate = null
         },
         closeModal(){
             this.visible = false
@@ -641,7 +628,8 @@ export default{
             this.actionOfContention= e.data.actionOfContention;
             this.gestorArgument = e.data.gestorArgument;
             this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
-            this.typeCall = e.data.purgatory
+            this.typeCall = e.data.purgatory;
+            this.actionImmediate = e.data.actionImmediate
             
 
             this.visible= true;
@@ -659,27 +647,6 @@ export default{
         printAnomalie(id){
             window.open(`/historic/${id}`, '_blank');
         },
-        // async getPendenciasBySector(){
-        //     const options = {
-        //         method: 'POST',
-        //         url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesForSector`,
-        //         params:{order: "-createdAt"},
-        //         headers: {
-        //             'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-        //             'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-        //         },
-        //         data:{
-        //             sector: this.userInfo.department
-        //         }
-        //     }
-
-        //     await axios.request(options).then((response)=>{
-        //         console.log(response)
-        //         this.pendencies = response.data.result
-        //     }).catch(error =>{
-        //         console.log(error)
-        //     })
-        // },
         searchPendencie(e){
             this.filters['global'].value = e.value.numericId
         },
@@ -690,6 +657,22 @@ export default{
         },
         toggle(event) {
             this.$refs.actionRegister.toggle(event);
+        },
+        closeOp(){
+            this.actionImmediateText = null;
+            this.respEmailAction = null;
+            this.dateLimit = null;
+        },
+        addAction(){
+            this.actionImmediate.push({
+                actionImmediateText: this.actionImmediateText,
+                respEmailAction: this.respEmailAction,
+                dateLimit: this.dateLimit,
+                implement: false,
+                newDateLimit: null
+            })
+            this.$refs.actionRegister.hide();
+            this.updateAnomalie()
         }
 
     },
@@ -699,10 +682,8 @@ export default{
         }
     },
     created(){
-        this.getRNC();        
-        // this.getQntAnomalies();
+        this.getRNC();
         document.title="Não Conformidades | Controle de Embarcação"
-        // this.getPendenciasBySector()
     }
 }
 </script>
@@ -945,85 +926,6 @@ export default{
                     <TabPanel header="Análise">
                         <div class="topBox">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-                                <!-- <div>
-                                    <FloatLabel>
-                                        <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none; width: 100%;"/>
-                                        <label>Resumo do Avaliador :</label>
-                                    </FloatLabel>
-                                    <div>
-                                        <span></span>
-                                    </div>
-                                </div> -->
-                                <!-- <div class="flex gap-5">
-                                    <div class="groupInput w-full">
-                                        <span>Descrição do Problema ou Oportunidade de Melhoria :</span>
-                                        <Textarea 
-                                            v-model="problemOrMelhoria" 
-                                            rows="5" 
-                                            cols="40"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>Abrangência da Não Conformidade :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="40"
-                                        ></Textarea>
-                                    </div>
-                                </div>
-                                <div class="flex gap-5">
-                                    <div class="groupInput w-full">
-                                        <span>1º Por que? :</span>
-                                        <Textarea 
-                                            v-model="why" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>2º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>3º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                </div>
-                                <div class="flex gap-5">
-                                    <div class="groupInput w-full">
-                                        <span>4º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>5º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>Resposta 5º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                </div> -->
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <strong>Ação Imediata:</strong>
                                     <DataTable
@@ -1034,15 +936,22 @@ export default{
                                         </template>
                                         <template #header>
                                             <Button @click="toggle">Nova Ação Imediata</Button>
-                                            <OverlayPanel ref="actionRegister">
+                                            <OverlayPanel ref="actionRegister" @hide="closeOp()">
                                                 <div style="display: flex; gap: 10px;">
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
                                                         <span>Ação Imediata :</span>
-                                                        <Textarea></Textarea>
+                                                        <Textarea
+                                                            v-model="actionImmediateText"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
                                                     </div>
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
                                                         <span>Email do Responsavel :</span>
-                                                        <InputText></InputText>
+                                                        <InputText
+                                                            v-model="respEmailAction"
+                                                        ></InputText>
                                                     </div>
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
                                                         <span>Prazo :</span>
@@ -1053,43 +962,24 @@ export default{
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <Button>Salvar</Button>
-                                                    <Button>Cancelar</Button>
+                                                    <Button
+                                                        label="Salvar"
+                                                        @click="addAction"
+                                                    ></Button>
+                                                    <Button
+                                                        label="Cancelar"
+                                                        @click="() => {this.$refs.actionRegister.hide()}"
+                                                    ></Button>
                                                 </div>                                             
                                             </OverlayPanel>
                                         </template>
-                                        <Column field="name" header="Ação Imediata"></Column>
-                                        <Column field="resp" header="Responsavel"></Column>
+                                        <Column field="actionImmediateText" header="Ação Imediata"></Column>
+                                        <Column field="respEmailAction" header="Responsavel"></Column>
                                         <Column field="dateLimit" header="Prazo"></Column>
                                         <Column field="implant" header="Implementada?"></Column>
                                         <Column field="newDataLimit" header="Novo Prazo"></Column>
                                     </Datatable>
                                 </div>
-                                
-                                
-                                <!-- <div class="boxUpload">
-                                    <FileUpload 
-                                        mode="basic" 
-                                        name="files"
-                                        :auto="true"
-                                        :multiple="true"
-                                        @upload="afterAnalise($event)"
-                                        url="https://connectapi.3nf.com.br/upload"
-                                    />
-                                    <div v-for="(file, i) in archives" :key="i" 
-                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
-                                    >
-                                        <div 
-                                            class="uploadBox"
-                                        >
-                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
-                                            <div style="display: flex; gap: 15px; padding: 10px;">
-                                                <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
-                                                <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
                     </TabPanel>
