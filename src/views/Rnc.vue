@@ -46,6 +46,8 @@ export default{
             monthAnomaliesData: null,
             typeCall: null,
 
+            timeToCheck: null,
+            observations: null,
             test: false,
 
             actionImmediate: [],
@@ -664,6 +666,10 @@ export default{
             this.dateLimit = null;
         },
         addAction(){
+            if(this.actionImmediate === undefined || this.actionImmediate === null){
+                this.actionImmediate = []
+            }
+
             this.actionImmediate.push({
                 actionImmediateText: this.actionImmediateText,
                 respEmailAction: this.respEmailAction,
@@ -995,7 +1001,9 @@ export default{
                             </div>
                             <div class="questionInput">
                                 <span>Observações :</span>
-                                <Textarea></Textarea>
+                                <Textarea
+                                    v-model="observations"
+                                ></Textarea>
                             </div>
                             <div class="questionInput" style="align-items: center;">
                                 <span>A ação corretiva foi eficaz ? :</span>
