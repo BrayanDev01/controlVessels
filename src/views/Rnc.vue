@@ -48,7 +48,9 @@ export default{
 
             timeToCheck: null,
             observations: null,
-            test: false,
+            isEffective: false,
+            dateToFinish: null,
+            respToCheck: null,
 
             actionImmediate: [],
             actionImmediateText: null,
@@ -361,7 +363,12 @@ export default{
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
                     criticalityAnomalie: this.criticalityAnomalie.name,
-                    actionImmediate: this.actionImmediate
+                    actionImmediate: this.actionImmediate,
+                    timeToCheck: this.timeToCheck,
+                    observations: this.observations,
+                    isEffective: this.isEffective,
+                    dateToFinish: this.dateToFinish,
+                    respToCheck: this.respToCheck
                 }
 
             }
@@ -417,7 +424,12 @@ export default{
                     archivesRetrated: this.archivesRetrated,
                     criticalityAnomalie: this.criticalityAnomalie.name,
                     purgatory: this.typeCall,
-                    actionImmediate: this.actionImmediate
+                    actionImmediate: this.actionImmediate,
+                    timeToCheck: this.timeToCheck,
+                    observations: this.observations,
+                    isEffective: this.isEffective,
+                    dateToFinish: this.dateToFinish,
+                    respToCheck: this.respToCheck
                 }
 
             }
@@ -486,8 +498,13 @@ export default{
             this.gestorArgument= null
             this.archivesRetrated = [];
             this.criticalityAnomalie = null;
-            this.typeCall = null,
-            this.actionImmediate = null
+            this.typeCall = null;
+            this.actionImmediate = null;
+            this.timeToCheck = null;
+            this.observations = null;
+            this.isEffective = null;
+            this.dateToFinish = null;
+            this.respToCheck = null;
         },
         closeModal(){
             this.visible = false
@@ -631,7 +648,12 @@ export default{
             this.gestorArgument = e.data.gestorArgument;
             this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
             this.typeCall = e.data.purgatory;
-            this.actionImmediate = e.data.actionImmediate
+            this.actionImmediate = e.data.actionImmediate;
+            this.timeToCheck = e.data.timeToCheck;
+            this.isEffective = e.data.isEffective;
+            this.dateToFinish = e.data.dateToFinish;
+            this.respToCheck = e.data.respToCheck;
+            this.observations = e.data.observations;
             
 
             this.visible= true;
@@ -990,7 +1012,6 @@ export default{
                         </div>
                     </TabPanel>
                     <TabPanel header="Verificação da Eficácia">
-                        
                         <div style="width: 100%; display: flex; gap: 10px;">
                             <div class="questionInput">
                                 <span>Prazo para verificação a eficácia :</span>
@@ -1008,10 +1029,9 @@ export default{
                             <div class="questionInput" style="align-items: center;">
                                 <span>A ação corretiva foi eficaz ? :</span>
                                 <Checkbox 
-                                    v-model="test"
+                                    v-model="isEffective"
                                     value="true"
                                     :binary="true"
-                                    @update:modelValue="test = $event"
                                     :pt="{icon: { style: 'color: var(--primary-color-gc);' }}"
                                 ></Checkbox> 
                             </div>                                                         
@@ -1021,13 +1041,13 @@ export default{
                                 <span>Data de Fechamento :</span>
                                 <Calendar
                                     dateFormat="dd/mm/yy"
-                                    v-model="timeToCheck"
+                                    v-model="dateToFinish"
                                 ></Calendar>
                             </div>  
                             <div class="questionInput">
                                 <span>Responsavel :</span>
                                 <InputText
-                                    v-model="timeToCheck"
+                                    v-model="respToCheck"
                                 ></InputText>
                             </div>  
                         </div>
