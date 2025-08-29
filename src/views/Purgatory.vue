@@ -666,10 +666,8 @@ export default{
 
     },
     created(){
-        this.getPurgatory();        
-        // this.getQntAnomalies();
+        this.getPurgatory();
         document.title="Não Conformidades | Controle de Embarcação"
-        // this.getPendenciasBySector()
     }
 }
 </script>

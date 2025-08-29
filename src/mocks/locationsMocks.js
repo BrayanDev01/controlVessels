@@ -78,7 +78,7 @@ export const MockLocations ={
             {name: 'Navegação'},
             {name: 'Inspeção'},
             {name: 'Manutenção'},
-            {name: 'SESMT'}
+            {name: 'SESMT'},
         ]
     },
     getLocations(){
