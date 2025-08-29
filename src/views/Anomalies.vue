@@ -78,6 +78,7 @@ export default{
                 {name:"Controle de pragas"},
                 {name:"Equipamento"},
                 {name:"Infraestrutura"},
+                {name:"Estrutural"},
                 {name:"Operacional"},
                 {name:"Processo"},
                 {name:"Programação"},
@@ -92,7 +93,10 @@ export default{
                 {name:"Peru"},
                 {name:"Porto Velho"},
                 {name:"Santarém"},
-                {name:"Viagem"}
+                {name:"Viagem"},
+                {name:"Macapá"},
+                {name:"Vila do Conde"},
+                {name:"Barcarena"}
             ],
             localOptions:[
                 {name:"Boia Porto 3NF"},
@@ -103,6 +107,7 @@ export default{
                 {name:"Porto Cidade"},
                 {name:"Refinaria (REAM)"},
                 {name:"Terminal ABI"},
+                {name:"Terminal Portuário"},
                 {name:"Viagem"},
                 {name:"Terminal TFB"}
             ],

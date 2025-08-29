@@ -11,7 +11,7 @@ export const MockTypeImpacts ={
             {name:"Impacto Financeiro"},
             {name:"Interrupção na Operação"},
             {name:"Notificação"},
-            {name: "Higiene e Saúde"},
+            {name:"Higiene e Saúde"},
             {name:"Passivo trabalhista"},
             {name:"Perda de licença"},
             {name:"Quebra de equipamento"},
