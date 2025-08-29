@@ -64,6 +64,7 @@ export default{
                 {name:"Inspeção", email:'gestornav@3nf.com.br'},
                 {name:"Manutenção", email:'sup.manutencao@3nf.com.br'},
                 {name:"Navegação", email:'planejamento@3nf.com.br'},
+                {name:"Navegrãos", email:'navegraos@3nf.com.br'},
                 {name:"Patrimonial", email:'patrimonio@3nf.com.br'},
                 {name:"RH", email:'suzana@3nf.com.br'},
                 {name:"Rodoviário", email:'supervisor.rod@3nf.com.br'},
