@@ -57,6 +57,15 @@ export default{
             respEmailAction: null,
             dateLimit: null,
 
+            actionCorrectives: [],
+            what: null,
+            why: null,
+            where: null,
+            when: null,
+            who: null,
+            how: null,
+            howMuch: null,
+
             sectorsEnvolveds: null,
             typeCallOptions:[
                 {name: "Anomalia"},
@@ -364,11 +373,12 @@ export default{
                     archivesRetrated: this.archivesRetrated,
                     criticalityAnomalie: this.criticalityAnomalie.name,
                     actionImmediate: this.actionImmediate,
+                    actionCorrectives: this.actionCorrectives,
                     timeToCheck: this.timeToCheck,
                     observations: this.observations,
                     isEffective: this.isEffective,
                     dateToFinish: this.dateToFinish,
-                    respToCheck: this.respToCheck
+                    respToCheck: this.respToCheck,
                 }
 
             }
@@ -425,6 +435,7 @@ export default{
                     criticalityAnomalie: this.criticalityAnomalie.name,
                     purgatory: this.typeCall,
                     actionImmediate: this.actionImmediate,
+                    actionCorrectives: this.actionCorrectives,
                     timeToCheck: this.timeToCheck,
                     observations: this.observations,
                     isEffective: this.isEffective,
@@ -505,6 +516,7 @@ export default{
             this.isEffective = null;
             this.dateToFinish = null;
             this.respToCheck = null;
+            this.actionCorrectives = null;
         },
         closeModal(){
             this.visible = false
@@ -654,7 +666,7 @@ export default{
             this.dateToFinish = e.data.dateToFinish;
             this.respToCheck = e.data.respToCheck;
             this.observations = e.data.observations;
-            
+            this.actionCorrectives = e.data.actionCorrectives;           
 
             this.visible= true;
         },
@@ -682,10 +694,20 @@ export default{
         toggle(event) {
             this.$refs.actionRegister.toggle(event);
         },
+        toggle5w2h(event) {
+            this.$refs.actionCorrective.toggle(event);
+        },
         closeOp(){
             this.actionImmediateText = null;
             this.respEmailAction = null;
             this.dateLimit = null;
+            this.what = null;
+            this.why = null;
+            this.where = null;
+            this.when = null;
+            this.who = null;
+            this.how = null;
+            this.howMuch = null;
         },
         addAction(){
             if(this.actionImmediate === undefined || this.actionImmediate === null){
@@ -701,11 +723,24 @@ export default{
             })
             this.$refs.actionRegister.hide();
             this.updateAnomalie()
-        }
+        },
+        add5w2h(){
+            this.actionCorrectives.push({
+                what: this.what,
+                why: this.why,
+                where: this.where,
+                when: this.when,
+                who: this.who,
+                how: this.how,
+                howMuch: this.howMuch
+            })
+            this.$refs.actionCorrective.hide();
+            this.updateAnomalie()            
+        },
 
     },
     watch:{
-        test(value){
+        isEffective(value){
             console.log(value)
         }
     },
@@ -802,7 +837,7 @@ export default{
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
         >
             <template #header>
-                <div class="titleDialog">Cadastrar Anomalia</div>
+                <div class="titleDialog">Cadastrar Não Conformidade</div>
             </template>
             <div class="formAnomalies">
                 <TabView style="width: 100%;" v-model:activeIndex="active">
@@ -830,10 +865,6 @@ export default{
                             </div>
                         </div>
                         <div class="topBox">
-                            <!-- <div class="groupQuestion">
-                                <span>Envolvidos:</span>
-                                <InputText id="username" style="width: 100%;" v-model="envolvedInAnomalie" />
-                            </div> -->
                             <div class="groupQuestion">
                                 <span>Departamentos Envolvidos:</span>
                                 <Dropdown 
@@ -856,7 +887,7 @@ export default{
                         </div>
                         <div class="topBox">
                             <div class="groupQuestion">
-                                <span>Tipo de Anomalia:</span>
+                                <span>Tipo de Não Conformidade :</span>
                                 <Dropdown 
                                     v-model="typeAnomalie" 
                                     :options="typesOptions"
@@ -1010,6 +1041,97 @@ export default{
                                 </div>
                             </div>
                         </div>
+                        <div class="topBox">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <strong>5W2H :</strong>
+                                    <DataTable
+                                        :value="actionCorrectives"
+                                    >
+                                        <template #empty>
+                                            <span>Nenhuma ação imediata cadastrada</span>
+                                        </template>
+                                        <template #header>
+                                            <Button @click="toggle5w2h">Adicionar 5W2H</Button>
+                                            <OverlayPanel ref="actionCorrective" @hide="closeOp()">
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>What ?</span>
+                                                        <Textarea
+                                                            v-model="what"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Why ?</span>
+                                                        <Textarea
+                                                            v-model="why"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Where ?</span>
+                                                        <Textarea
+                                                            v-model="where"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>When ?</span>
+                                                        <Calendar
+                                                            dateFormat="dd/mm/yy"
+                                                            v-model="when"
+                                                        ></Calendar>
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Who ?</span>
+                                                        <Textarea
+                                                            v-model="who"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>How ?</span>
+                                                        <Textarea
+                                                            v-model="how"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>How Much ?</span>
+                                                        <InputNumber
+                                                            v-model="howMuch"
+                                                            mode="currency"
+                                                            currency="BRL"
+                                                            locale="pt-BR"
+                                                        ></InputNumber>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        label="Salvar"
+                                                        @click="add5w2h"
+                                                    ></Button>
+                                                    <Button
+                                                        label="Cancelar"
+                                                        @click="() => {this.$refs.actionCorrective.hide()}"
+                                                    ></Button>
+                                                </div>                                             
+                                            </OverlayPanel>
+                                        </template>
+                                        <Column field="what" header="What?"></Column>
+                                        <Column field="why" header="Why?"></Column>
+                                        <Column field="where" header="Where?"></Column>
+                                        <Column field="when" header="When?"></Column>
+                                        <Column field="who" header="Who?"></Column>
+                                        <Column field="how" header="How?"></Column>
+                                        <Column field="howMuch" header="How Much?"></Column>
+                                    </Datatable>
+                                </div>
+                            </div>
+                        </div>
                     </TabPanel>
                     <TabPanel header="Verificação da Eficácia">
                         <div style="width: 100%; display: flex; gap: 10px;">
@@ -1028,12 +1150,44 @@ export default{
                             </div>
                             <div class="questionInput" style="align-items: center;">
                                 <span>A ação corretiva foi eficaz ? :</span>
-                                <Checkbox 
+                                <!-- <Checkbox 
                                     v-model="isEffective"
                                     value="true"
                                     :binary="true"
                                     :pt="{icon: { style: 'color: var(--primary-color-gc);' }}"
-                                ></Checkbox> 
+                                ></Checkbox>  -->
+                                <div style="display: flex; gap: 10px;">
+                                    <div style="display: flex; flex-direction: column; text-align: center; align-items: center; justify-content: center;">
+                                        <label for="ingredient1">Sim</label>
+                                        <RadioButton 
+                                            v-model="isEffective" 
+                                            inputId="ingredient1" 
+                                            name="pizza" 
+                                            value="true"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }" 
+                                        />                                        
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; text-align: center; align-items: center; justify-content: center;">
+                                        <label for="ingredient1">Não</label>
+                                        <RadioButton 
+                                            v-model="isEffective" 
+                                            inputId="ingredient1" 
+                                            name="pizza" 
+                                            value="false"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }"  
+                                        />                                        
+                                    </div>
+                                </div>
                             </div>                                                         
                         </div>
                         <div style="width: 100%; display: flex; gap: 10px; margin: 10px 0px;">

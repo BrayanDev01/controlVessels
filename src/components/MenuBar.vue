@@ -105,7 +105,7 @@ export default{
                 <div>Home</div>
             </router-link>
             <router-link to="/controlchanges" class="buttonLink" v-if="userInfo?.accessLevel < 1">
-                <div>Controle de Mudanças</div>
+                <div>Gestão de Mudanças</div>
             </router-link>
             <router-link to="/noncompliance" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>RNC</div>

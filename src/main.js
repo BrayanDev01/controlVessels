@@ -37,6 +37,7 @@ import ProgressBar from 'primevue/progressbar';
 import InputSwitch from 'primevue/inputswitch';
 import ToggleButton from 'primevue/togglebutton';
 import Checkbox from 'primevue/checkbox';
+import RadioButton from 'primevue/radiobutton';
 import '../src/style.scss'
 import App from './App.vue'
 
@@ -86,6 +87,7 @@ app.component('ProgressBar', ProgressBar);
 app.component('InputSwitch', InputSwitch);
 app.component('ToggleButton', ToggleButton);
 app.component('Checkbox', Checkbox);
+app.component('RadioButton', RadioButton);
 app.use(ToastService);
 app.use(pinia)
 app.use(router);
