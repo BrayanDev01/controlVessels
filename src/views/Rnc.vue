@@ -1118,28 +1118,28 @@ export default{
                                             <OverlayPanel ref="actionCorrective" @hide="closeOp()">
                                                 <div style="display: flex; gap: 10px;">
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>What ?</span>
+                                                        <span>O Que ?</span>
                                                         <Textarea
                                                             v-model="what"
                                                             :autoResize="false"
                                                         ></Textarea>
                                                     </div>
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>Why ?</span>
+                                                        <span>Por que ?</span>
                                                         <Textarea
                                                             v-model="why"
                                                             :autoResize="false"
                                                         ></Textarea>
                                                     </div>
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>Where ?</span>
+                                                        <span>Onde ?</span>
                                                         <Textarea
                                                             v-model="where"
                                                             :autoResize="false"
                                                         ></Textarea>
                                                     </div>
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>When ?</span>
+                                                        <span>Quando ?</span>
                                                         <Calendar
                                                             dateFormat="dd/mm/yy"
                                                             v-model="when"
@@ -1148,21 +1148,21 @@ export default{
                                                 </div>
                                                 <div style="display: flex; gap: 10px;">
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>Who ?</span>
+                                                        <span>Quem ?</span>
                                                         <Textarea
                                                             v-model="who"
                                                             :autoResize="false"
                                                         ></Textarea>
                                                     </div>
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>How ?</span>
+                                                        <span>Como ?</span>
                                                         <Textarea
                                                             v-model="how"
                                                             :autoResize="false"
                                                         ></Textarea>
                                                     </div>
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>How Much ?</span>
+                                                        <span>Quanto custa ?</span>
                                                         <InputNumber
                                                             v-model="howMuch"
                                                             mode="currency"
@@ -1183,13 +1183,13 @@ export default{
                                                 </div>                                             
                                             </OverlayPanel>
                                         </template>
-                                        <Column field="what" header="What?"></Column>
-                                        <Column field="why" header="Why?"></Column>
-                                        <Column field="where" header="Where?"></Column>
-                                        <Column field="when" header="When?"></Column>
-                                        <Column field="who" header="Who?"></Column>
-                                        <Column field="how" header="How?"></Column>
-                                        <Column field="howMuch" header="How Much?"></Column>
+                                        <Column field="what" header="O que?"></Column>
+                                        <Column field="why" header="Por que?"></Column>
+                                        <Column field="where" header="Onde?"></Column>
+                                        <Column field="when" header="Quando?"></Column>
+                                        <Column field="who" header="Quem?"></Column>
+                                        <Column field="how" header="Como?"></Column>
+                                        <Column field="howMuch" header="Quanto Custa?"></Column>
                                     </Datatable>
                                 </div>
                             </div>
