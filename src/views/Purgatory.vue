@@ -62,7 +62,7 @@ export default{
                 {name:"Manutenção", email:'sup.manutencao@3nf.com.br'},
                 {name:"Navegação", email:'planejamento@3nf.com.br'},
                 {name:"Patrimonial", email:'patrimonio@3nf.com.br'},
-                {name:"RH", email:'suzana@3nf.com.br'},
+                {name:"RH", email:'comunicacao@3nf.com.br'},
                 {name:"Rodoviário", email:'supervisor.rod@3nf.com.br'},
                 {name:"SESMT", email:'sesmt@3nf.com.br'},
                 {name:"Suprimentos", email:'compras2@3nf.com.br'},

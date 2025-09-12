@@ -84,7 +84,7 @@ export default{
                 {name:"Manutenção", email:'sup.manutencao@3nf.com.br'},
                 {name:"Navegação", email:'planejamento@3nf.com.br'},
                 {name:"Patrimonial", email:'patrimonio@3nf.com.br'},
-                {name:"RH", email:'suzana@3nf.com.br'},
+                {name:"RH", email:'comunicacao@3nf.com.br'},
                 {name:"Rodoviário", email:'supervisor.rod@3nf.com.br'},
                 {name:"SESMT", email:'sesmt@3nf.com.br'},
                 {name:"Suprimentos", email:'compras2@3nf.com.br'},
@@ -1150,12 +1150,6 @@ export default{
                             </div>
                             <div class="questionInput" style="align-items: center;">
                                 <span>A ação corretiva foi eficaz ? :</span>
-                                <!-- <Checkbox 
-                                    v-model="isEffective"
-                                    value="true"
-                                    :binary="true"
-                                    :pt="{icon: { style: 'color: var(--primary-color-gc);' }}"
-                                ></Checkbox>  -->
                                 <div style="display: flex; gap: 10px;">
                                     <div style="display: flex; flex-direction: column; text-align: center; align-items: center; justify-content: center;">
                                         <label for="ingredient1">Sim</label>

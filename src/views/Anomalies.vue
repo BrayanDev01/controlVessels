@@ -37,6 +37,14 @@ export default{
             causeAfterAnalise: '',
             actionOfContention: '',
             contramedida: '',
+            why1: null,
+            why2: null,
+            why3: null,
+            why4: null,
+            why5: null,
+            resultWhy: null,
+            abrangenceOfNonConformity: null,
+            problemOrMelhoria: null,
             criticalityAnomalie: null,
             pendencies: [],
             selectedPendencie: null,
@@ -66,7 +74,7 @@ export default{
                 {name:"Navegação", email:'planejamento@3nf.com.br'},
                 {name:"Navegrãos", email:'navegraos@3nf.com.br'},
                 {name:"Patrimonial", email:'patrimonio@3nf.com.br'},
-                {name:"RH", email:'suzana@3nf.com.br'},
+                {name:"RH", email:'comunicacao@3nf.com.br'},
                 {name:"Rodoviário", email:'supervisor.rod@3nf.com.br'},
                 {name:"SESMT", email:'sesmt@3nf.com.br'},
                 {name:"Suprimentos", email:'compras2@3nf.com.br'},
@@ -197,7 +205,15 @@ export default{
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
-                    criticalityAnomalie: this.criticalityAnomalie.name
+                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    why1: this.why1,
+                    why2: this.why2,
+                    why3: this.why3,
+                    why4: this.why4,
+                    why5: this.why5,
+                    resultWhy: this.resultWhy,
+                    problemOrMelhoria: this.problemOrMelhoria,
+                    abrangenceOfNonConformity: this.abrangenceOfNonConformity
                 }
 
             }
@@ -252,7 +268,15 @@ export default{
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
                     criticalityAnomalie: this.criticalityAnomalie.name,
-                    purgatory: this.typeCall
+                    purgatory: this.typeCall,
+                    why1: this.why1,
+                    why2: this.why2,
+                    why3: this.why3,
+                    why4: this.why4,
+                    why5: this.why5,
+                    resultWhy: this.resultWhy,
+                    problemOrMelhoria: this.problemOrMelhoria,
+                    abrangenceOfNonConformity: this.abrangenceOfNonConformity
                 }
 
             }
@@ -274,26 +298,26 @@ export default{
             })
             
         },
-        async getQntAnomalies(){
-            const options = {
-                method: 'POST',
-                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesStatusCounts`,
-                headers: {
-                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
-                }
-            }
+        // async getQntAnomalies(){
+        //     const options = {
+        //         method: 'POST',
+        //         url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesStatusCounts`,
+        //         headers: {
+        //             'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+        //             'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+        //         }
+        //     }
 
-            await axios.request(options).then((response)=>{
-                console.log(response)
-                this.qtdAnomaliesData = this.organizeQtdAnomalies(response.data.result.statusArray, response.data.result.countArray )
-                this.typeAnomaliesData = this.organizeQtdAnomalies(response.data.result.typeArray, response.data.result.countTypesArray)
-                this.baseAnomaliesData = this.organizeQtdAnomalies(response.data.result.baseArray, response.data.result.countBasesArray)
-                this.monthAnomaliesData = this.organizeQtdAnomalies(response.data.result.monthArray, response.data.result.countMonthArray)
-            }).catch((error)=>{
-                console.log(error)
-            })
-        },
+        //     await axios.request(options).then((response)=>{
+        //         console.log(response)
+        //         this.qtdAnomaliesData = this.organizeQtdAnomalies(response.data.result.statusArray, response.data.result.countArray )
+        //         this.typeAnomaliesData = this.organizeQtdAnomalies(response.data.result.typeArray, response.data.result.countTypesArray)
+        //         this.baseAnomaliesData = this.organizeQtdAnomalies(response.data.result.baseArray, response.data.result.countBasesArray)
+        //         this.monthAnomaliesData = this.organizeQtdAnomalies(response.data.result.monthArray, response.data.result.countMonthArray)
+        //     }).catch((error)=>{
+        //         console.log(error)
+        //     })
+        // },
         getStatusLabel(status) {
             switch (status) {
                 case 'Fechado':
@@ -341,7 +365,15 @@ export default{
             this.gestorArgument= null
             this.archivesRetrated = [];
             this.criticalityAnomalie = null;
-            this.typeCall = null
+            this.typeCall = null,
+            this.why1 = null,
+            this.why2 = null,
+            this.why3 = null,
+            this.why4 = null,
+            this.why5 = null,
+            this.resultWhy = null,
+            this.problemOrMelhoria = null,
+            this.abrangenceOfNonConformity = null
 
         },
         closeModal(){
@@ -485,7 +517,15 @@ export default{
             this.actionOfContention= e.data.actionOfContention;
             this.gestorArgument = e.data.gestorArgument;
             this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
-            this.typeCall = e.data.purgatory
+            this.typeCall = e.data.purgatory;
+            this.why1 = e.data.why1;
+            this.why2 = e.data.why2;
+            this.why3 = e.data.why3;
+            this.why4 = e.data.why4;
+            this.why5 = e.data.why5;
+            this.resultWhy = e.data.resultWhy;
+            this.problemOrMelhoria = e.data.problemOrMelhoria;
+            this.abrangenceOfNonConformity = e.data.abrangenceOfNonConformity;
             
 
             this.visible= true;
@@ -822,7 +862,7 @@ export default{
                                     <div class="groupInput w-full">
                                         <span>1º Por que? :</span>
                                         <Textarea 
-                                            v-model="why" 
+                                            v-model="why1" 
                                             rows="5" 
                                             cols="30"
                                         ></Textarea>
@@ -830,7 +870,7 @@ export default{
                                     <div class="groupInput w-full">
                                         <span>2º Por que? :</span>
                                         <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
+                                            v-model="why2" 
                                             rows="5" 
                                             cols="30"
                                         ></Textarea>
@@ -838,7 +878,7 @@ export default{
                                     <div class="groupInput w-full">
                                         <span>3º Por que? :</span>
                                         <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
+                                            v-model="why3" 
                                             rows="5" 
                                             cols="30"
                                         ></Textarea>
@@ -848,7 +888,7 @@ export default{
                                     <div class="groupInput w-full">
                                         <span>4º Por que? :</span>
                                         <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
+                                            v-model="why4" 
                                             rows="5" 
                                             cols="30"
                                         ></Textarea>
@@ -856,7 +896,7 @@ export default{
                                     <div class="groupInput w-full">
                                         <span>5º Por que? :</span>
                                         <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
+                                            v-model="why5" 
                                             rows="5" 
                                             cols="30"
                                         ></Textarea>
@@ -864,7 +904,7 @@ export default{
                                     <div class="groupInput w-full">
                                         <span>Resposta 5º Por que? :</span>
                                         <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
+                                            v-model="resultWhy"
                                             rows="5" 
                                             cols="30"
                                         ></Textarea>
