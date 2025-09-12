@@ -462,6 +462,64 @@ export default{
             })
             
         },
+        async fasterUpdateAnomalie(){
+            
+            this.loadingCreate = true;
+
+            const options = {
+                method: 'PUT',
+                url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${this.objectId}`,
+                headers: {
+                    'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    resumeAnomalie: this.resumeAnomalie,
+                    date: new Date(this.dateAnomalie).toISOString(),
+                    departmentResp: this.departmentResp?.name,
+                    typeAnomalie: this.typeAnomalie?.name,
+                    base: this.baseAnomalie?.name,
+                    place: this.placeAnomalie?.name,
+                    equipament: this.equipamentAnomalie?.name,
+                    nameEquipament: this.nameEquipament?.name,
+                    impact: this.impactAnomalie?.name,
+                    status: this.statusAnomalie?.name,
+                    archives: this.archives,
+                    imageFacts: this.imageFacts,
+                    reasonAnomalie: this.reasonAnomalie,
+                    envolvedInAnomalie: this.envolvedInAnomalie,
+                    resumeQuality: this.resumeQuality,
+                    emailResp: this.departmentResp?.email,
+                    causeAfterAnalise: this.causeAfterAnalise,
+                    actionOfContention: this.actionOfContention,
+                    contramedida: this.contramedida,
+                    gestorArgument: this.gestorArgument,
+                    archivesRetrated: this.archivesRetrated,
+                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    purgatory: this.typeCall,
+                    actionImmediate: this.actionImmediate,
+                    actionCorrectives: this.actionCorrectives,
+                    timeToCheck: this.timeToCheck,
+                    observations: this.observations,
+                    isEffective: this.isEffective,
+                    dateToFinish: this.dateToFinish,
+                    respToCheck: this.respToCheck
+                }
+
+            }
+
+            await axios.request(options).then((response) =>{
+                
+                this.tostAdvice('success', 'Anomalia Atualizada');
+                this.loadingCreate = false;           
+                // console.log(response)
+            }).catch(error =>{
+                this.tostAdvice('error', 'Tivemos um erro')
+                this.loadingCreate = false;
+                console.log(error)
+            })
+            
+        },
         getStatusLabel(status) {
             switch (status) {
                 case 'Fechado':
@@ -722,9 +780,13 @@ export default{
                 newDateLimit: null
             })
             this.$refs.actionRegister.hide();
-            this.updateAnomalie()
+            this.fasterUpdateAnomalie()
         },
         add5w2h(){
+            if(this.actionCorrectives === undefined || this.actionCorrectives === null){
+                this.actionCorrectives = []
+            }
+
             this.actionCorrectives.push({
                 what: this.what,
                 why: this.why,
@@ -735,7 +797,7 @@ export default{
                 howMuch: this.howMuch
             })
             this.$refs.actionCorrective.hide();
-            this.updateAnomalie()            
+            this.fasterUpdateAnomalie()            
         },
 
     },
