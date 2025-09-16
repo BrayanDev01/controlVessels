@@ -66,6 +66,13 @@ export default{
             how: null,
             howMuch: null,
 
+            fiveWhys: [],
+            firstWhy: null,
+            secondWhy: null,
+            thirdWhy: null,
+            fourthWhy: null,
+            fifthWhy: null,
+
             sectorsEnvolveds: null,
             typeCallOptions:[
                 {name: "Anomalia"},
@@ -379,6 +386,7 @@ export default{
                     isEffective: this.isEffective,
                     dateToFinish: this.dateToFinish,
                     respToCheck: this.respToCheck,
+                    fiveWhys: this.fiveWhys
                 }
 
             }
@@ -440,7 +448,8 @@ export default{
                     observations: this.observations,
                     isEffective: this.isEffective,
                     dateToFinish: this.dateToFinish,
-                    respToCheck: this.respToCheck
+                    respToCheck: this.respToCheck,
+                    fiveWhys: this.fiveWhys
                 }
 
             }
@@ -503,7 +512,8 @@ export default{
                     observations: this.observations,
                     isEffective: this.isEffective,
                     dateToFinish: this.dateToFinish,
-                    respToCheck: this.respToCheck
+                    respToCheck: this.respToCheck,
+                    fiveWhys: this.fiveWhys
                 }
 
             }
@@ -575,6 +585,7 @@ export default{
             this.dateToFinish = null;
             this.respToCheck = null;
             this.actionCorrectives = null;
+            this.fiveWhys = [];
         },
         closeModal(){
             this.visible = false
@@ -724,7 +735,8 @@ export default{
             this.dateToFinish = e.data.dateToFinish;
             this.respToCheck = e.data.respToCheck;
             this.observations = e.data.observations;
-            this.actionCorrectives = e.data.actionCorrectives;           
+            this.actionCorrectives = e.data.actionCorrectives;   
+            this.fiveWhys = e.data.fiveWhys;        
 
             this.visible= true;
         },
@@ -755,6 +767,9 @@ export default{
         toggle5w2h(event) {
             this.$refs.actionCorrective.toggle(event);
         },
+        toggle5w(event) {
+            this.$refs.fivewhys.toggle(event);
+        },
         closeOp(){
             this.actionImmediateText = null;
             this.respEmailAction = null;
@@ -766,6 +781,14 @@ export default{
             this.who = null;
             this.how = null;
             this.howMuch = null;
+            this.firstWhy = null;
+            this.secondWhy = null;
+            this.thirdWhy = null;
+            this.fourthWhy = null;
+            this.fifthWhy = null;
+        },
+        closeOp5w(){
+
         },
         addAction(){
             if(this.actionImmediate === undefined || this.actionImmediate === null){
@@ -799,6 +822,20 @@ export default{
             this.$refs.actionCorrective.hide();
             this.fasterUpdateAnomalie()            
         },
+        addFiveWhys(){
+            if(this.fiveWhys === undefined || this.fiveWhys === null){
+                this.fiveWhys = []
+            }
+            this.fiveWhys.push({
+                    firstWhy: this.firstWhy,
+                    secondWhy: this.secondWhy,
+                    thirdWhy: this.thirdWhy,
+                    fourthWhy: this.fourthWhy,
+                    fifthWhy: this.fifthWhy
+                })
+                this.$refs.fivewhys.hide();
+                this.fasterUpdateAnomalie() 
+            }
 
     },
     watch:{
@@ -1045,6 +1082,87 @@ export default{
                         </div>
                     </TabPanel>
                     <TabPanel header="Análise">
+                        <div class="topBox">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <strong>Os 5 Porquês :</strong>
+                                    <DataTable
+                                        :value="fiveWhys"
+                                    >
+                                        <template #empty>
+                                            <span>Nenhum Porquê cadastrado</span>
+                                        </template>
+                                        <template #header>
+                                            <Button @click="toggle5w">Adicionar 5 Porquês</Button>
+                                            <OverlayPanel ref="fivewhys" @hide="closeOp()">
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>1º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="firstWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>2º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="secondWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>3º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="thirdWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>4º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="fourthWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>5º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="fifthWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        label="Salvar"
+                                                        @click="addFiveWhys"
+                                                    ></Button>
+                                                    <Button
+                                                        label="Cancelar"
+                                                        @click="() => {this.$refs.fivewhys.hide()}"
+                                                    ></Button>
+                                                </div>                                             
+                                            </OverlayPanel>
+                                        </template>
+                                        <Column field="firstWhy" header="1º Porquê"></Column>
+                                        <Column field="secondWhy" header="2º Porquê"></Column>
+                                        <Column field="thirdWhy" header="3º Porquê"></Column>
+                                        <Column field="fourthWhy" header="4º Porquê"></Column>
+                                        <Column field="fifthWhy" header="5º Porquê"></Column>
+                                    </Datatable>
+                                </div>
+                            </div>
+                        </div>                         
                         <div class="topBox">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
