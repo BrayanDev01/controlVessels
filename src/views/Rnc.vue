@@ -45,6 +45,7 @@ export default{
             baseAnomaliesData: null,
             monthAnomaliesData: null,
             typeCall: null,
+            classification: null,
 
             timeToCheck: null,
             observations: null,
@@ -73,7 +74,18 @@ export default{
             fourthWhy: null,
             fifthWhy: null,
 
+            evidencesAnalises: [],
+
             sectorsEnvolveds: null,
+            classificationOptions: [
+                {name: "Processo"},
+                {name: "Auditoria Externa"},
+                {name: "Auditoria Interna"},
+                {name: "Outros"},
+                {name: "Indicadores"},
+                {name: "Cliente"},
+                {name: "Provedor Externo"},                
+            ],
             typeCallOptions:[
                 {name: "Anomalia"},
                 {name: "Não Conformidade"}
@@ -386,7 +398,8 @@ export default{
                     isEffective: this.isEffective,
                     dateToFinish: this.dateToFinish,
                     respToCheck: this.respToCheck,
-                    fiveWhys: this.fiveWhys
+                    fiveWhys: this.fiveWhys,
+                    classifications: this.classification
                 }
 
             }
@@ -449,7 +462,8 @@ export default{
                     isEffective: this.isEffective,
                     dateToFinish: this.dateToFinish,
                     respToCheck: this.respToCheck,
-                    fiveWhys: this.fiveWhys
+                    fiveWhys: this.fiveWhys,
+                    classification: this.classification
                 }
 
             }
@@ -513,7 +527,8 @@ export default{
                     isEffective: this.isEffective,
                     dateToFinish: this.dateToFinish,
                     respToCheck: this.respToCheck,
-                    fiveWhys: this.fiveWhys
+                    fiveWhys: this.fiveWhys,
+                    classification: this.classification
                 }
 
             }
@@ -586,12 +601,18 @@ export default{
             this.respToCheck = null;
             this.actionCorrectives = null;
             this.fiveWhys = [];
+            this.classification = null
         },
         closeModal(){
             this.visible = false
         },
         tostAdvice(cor, msg){
             this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
+        },
+        addEvidence(e){
+            const response = JSON.parse(e.xhr.responseText);
+            // console.log(response);
+            this.evidencesAnalises = [...this.evidencesAnalises, ...response.files];
         },
         beforeAnalise(e){
             const response = JSON.parse(e.xhr.responseText);
@@ -683,6 +704,24 @@ export default{
                 this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
             })
         },
+        async deleteEvidenceAnalyse(url, index){
+            const options = {
+                method: 'DELETE',
+                url: `https://connectapi.3nf.com.br/uploadAnomalias`,
+                data:{
+                    fileUrl: url
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+                this.$toast.add({severity:'successs', summary:'Arquivo Deletado', life:3000})
+                this.removeEvidence(index)
+            }).catch((error)=>{
+                console.log(error)
+                this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
+            })
+        },
         downloadImage(url){
             window.open(url, '_blank')
         },
@@ -699,6 +738,11 @@ export default{
         retirarArchivesGestor(index){
             if (index > -1 && index < this.archivesRetrated.length) {
                 this.archivesRetrated.splice(index, 1);   
+            }
+        },
+        removeEvidence(index){
+            if (index > -1 && index < this.evidencesAnalises.length) {
+                this.evidencesAnalises.splice(index, 1);   
             }
         },
         editAnomalie(e){
@@ -736,7 +780,8 @@ export default{
             this.respToCheck = e.data.respToCheck;
             this.observations = e.data.observations;
             this.actionCorrectives = e.data.actionCorrectives;   
-            this.fiveWhys = e.data.fiveWhys;        
+            this.fiveWhys = e.data.fiveWhys; 
+            this.classification = e.data.classification;       
 
             this.visible= true;
         },
@@ -827,16 +872,65 @@ export default{
                 this.fiveWhys = []
             }
             this.fiveWhys.push({
-                    firstWhy: this.firstWhy,
-                    secondWhy: this.secondWhy,
-                    thirdWhy: this.thirdWhy,
-                    fourthWhy: this.fourthWhy,
-                    fifthWhy: this.fifthWhy
-                })
-                this.$refs.fivewhys.hide();
-                this.fasterUpdateAnomalie() 
+                firstWhy: this.firstWhy,
+                secondWhy: this.secondWhy,
+                thirdWhy: this.thirdWhy,
+                fourthWhy: this.fourthWhy,
+                fifthWhy: this.fifthWhy
+            })
+            this.$refs.fivewhys.hide();
+            this.fasterUpdateAnomalie() 
+        },
+        onCellEditCompleteFiveWhys(e) {
+            console.log(e)
+            const { data, newValue, field } = e; // data = objeto da linha
+
+            // validação simples para marketValue e marginPct
+            const numericFields = ['marketValue', 'marginPct'];
+            if (numericFields.includes(field) && (newValue === '' || newValue === null || isNaN(newValue))) {
+                e.preventDefault(); // cancela o commit
+                return;
             }
 
+            // atualiza a propriedade (suporta "a.b.c" se usar campos aninhados)
+            this.setByPath(data, field, numericFields.includes(field) ? Number(newValue) : newValue);
+
+            // opcional: força re-render clonando a linha dentro do array
+            const i = this.fiveWhys.findIndex(it => it === data);
+            if (i !== -1) this.fiveWhys.splice(i, 1, { ...this.fiveWhys[i] });
+
+            this.fasterUpdateAnomalie()
+        },
+        onCellEditCompleteActionImmediate(e) {
+            console.log(e)
+            const { data, newValue, field } = e; // data = objeto da linha
+
+            // validação simples para marketValue e marginPct
+            const numericFields = ['marketValue', 'marginPct'];
+            if (numericFields.includes(field) && (newValue === '' || newValue === null || isNaN(newValue))) {
+                e.preventDefault(); // cancela o commit
+                return;
+            }
+
+            // atualiza a propriedade (suporta "a.b.c" se usar campos aninhados)
+            this.setByPath(data, field, numericFields.includes(field) ? Number(newValue) : newValue);
+
+            // opcional: força re-render clonando a linha dentro do array
+            const i = this.actionImmediate.findIndex(it => it === data);
+            if (i !== -1) this.actionImmediate.splice(i, 1, { ...this.actionImmediate[i] });
+
+            this.fasterUpdateAnomalie()
+        },
+        setByPath(obj, path, value) {
+            const keys = path.split('.');
+            const last = keys.pop();
+            let cur = obj;
+            for (const k of keys) {
+            if (cur[k] == null || typeof cur[k] !== 'object') cur[k] = {};
+            cur = cur[k];
+            }
+            cur[last] = value;
+        }
     },
     watch:{
         isEffective(value){
@@ -1045,10 +1139,19 @@ export default{
                                 </Dropdown>
                             </div>
                             <div class="groupQuestion" style="width: 30%;">
-                                <span>Selecione a criticidade</span>
+                                <span>Selecione a criticidade :</span>
                                 <Dropdown 
                                     v-model="criticalityAnomalie" 
                                     :options="criticalityOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione a criticidade">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion" style="width: 30%;">
+                                <span>Selecione a classificação :</span>
+                                <Dropdown 
+                                    v-model="classification" 
+                                    :options="classificationOptions"
                                     optionLabel="name" 
                                     placeholder="Selecione a criticidade">
                                 </Dropdown>
@@ -1088,6 +1191,16 @@ export default{
                                     <strong>Os 5 Porquês :</strong>
                                     <DataTable
                                         :value="fiveWhys"
+                                        editMode="cell"
+                                        @cell-edit-complete="onCellEditCompleteFiveWhys"
+                                        :pt="{
+                                            table: { style: 'min-width: 50rem' },
+                                            column: {
+                                                bodycell: ({ state }) => ({
+                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
+                                                })
+                                            }
+                                        }"
                                     >
                                         <template #empty>
                                             <span>Nenhum Porquê cadastrado</span>
@@ -1154,11 +1267,46 @@ export default{
                                                 </div>                                             
                                             </OverlayPanel>
                                         </template>
-                                        <Column field="firstWhy" header="1º Porquê"></Column>
-                                        <Column field="secondWhy" header="2º Porquê"></Column>
-                                        <Column field="thirdWhy" header="3º Porquê"></Column>
-                                        <Column field="fourthWhy" header="4º Porquê"></Column>
-                                        <Column field="fifthWhy" header="5º Porquê"></Column>
+                                        <Column field="firstWhy" header="1º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.firstWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="secondWhy" header="2º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.secondWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="thirdWhy" header="3º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.thirdWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="fourthWhy" header="4º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.fourthWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="fifthWhy" header="5º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.fifthWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
                                     </Datatable>
                                 </div>
                             </div>
@@ -1169,6 +1317,16 @@ export default{
                                     <strong>Ação Imediata:</strong>
                                     <DataTable
                                         :value="actionImmediate"
+                                        editMode="cell"
+                                        @cell-edit-complete="onCellEditCompleteActionImmediate"
+                                        :pt="{
+                                            table: { style: 'min-width: 50rem' },
+                                            column: {
+                                                bodycell: ({ state }) => ({
+                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
+                                                })
+                                            }
+                                        }"
                                     >
                                         <template #empty>
                                             <span>Nenhuma ação imediata cadastrada</span>
@@ -1212,11 +1370,55 @@ export default{
                                                 </div>                                             
                                             </OverlayPanel>
                                         </template>
-                                        <Column field="actionImmediateText" header="Ação Imediata"></Column>
-                                        <Column field="respEmailAction" header="Responsavel"></Column>
-                                        <Column field="dateLimit" header="Prazo"></Column>
-                                        <Column field="implant" header="Implementada?"></Column>
-                                        <Column field="newDataLimit" header="Novo Prazo"></Column>
+                                        <Column field="actionImmediateText" header="Ação Imediata">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.actionImmediateText"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="respEmailAction" header="Responsavel">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.actionImmediateText"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="dateLimit" header="Prazo">
+                                            <template #body="{data}">
+                                                {{ new Date(data.dateLimit).toLocaleDateString() }}    
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.dateLimit"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                        </Column>
+                                        <Column field="implant" header="Implementada?">
+                                            <template #body="{data}">
+                                                {{ data.implant ? "Sim" : "Nao" }}   
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Checkbox
+                                                    v-model="data.implant"
+                                                    :binary="true"
+                                                ></Checkbox>
+                                            </template>
+                                        </Column>
+                                        <Column field="newDataLimit" header="Novo Prazo">
+                                            <template #body="{data}">
+                                                {{ new Date(data.newDataLimit).toLocaleDateString() }}    
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.newDataLimit"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                        </Column>
                                     </Datatable>
                                 </div>
                             </div>
@@ -1309,6 +1511,32 @@ export default{
                                         <Column field="how" header="Como?"></Column>
                                         <Column field="howMuch" header="Quanto Custa?"></Column>
                                     </Datatable>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-top: 10px;">
+                            <FileUpload
+                                mode="basic" 
+                                name="files"
+                                :multiple="true"
+                                :auto="true"
+                                @upload="addEvidence($event)"
+                                url="https://connectapi.3nf.com.br/uploadAnomalias"
+                            >
+                            </FileUpload>
+                            <div class="boxImages">
+                                <div 
+                                    v-for="(image, index) in evidencesAnalises" 
+                                    :key="index"
+                                >
+                                    <div 
+                                        style="width: 120px; display: flex; flex-direction: column; align-items: center;">
+                                        <Image :src="image.location" alt="Teste" width="100" height="100" preview ></Image>
+                                        <div style="display: flex;">
+                                            <Button  icon="pi pi-times" rounded  @click="deleteEvidenceAnalyse(image.location, index)" v-show="userInfo?.accessLevel === 0"></Button>
+                                            <Button  icon="pi pi-download" rounded @click="downloadImage(image.location)"></Button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
