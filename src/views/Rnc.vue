@@ -921,6 +921,26 @@ export default{
 
             this.fasterUpdateAnomalie()
         },
+        onCellEditCompleteFiveWTwoHows(e) {
+            console.log(e)
+            const { data, newValue, field } = e; // data = objeto da linha
+
+            // validação simples para marketValue e marginPct
+            const numericFields = ['marketValue', 'marginPct'];
+            if (numericFields.includes(field) && (newValue === '' || newValue === null || isNaN(newValue))) {
+                e.preventDefault(); // cancela o commit
+                return;
+            }
+
+            // atualiza a propriedade (suporta "a.b.c" se usar campos aninhados)
+            this.setByPath(data, field, numericFields.includes(field) ? Number(newValue) : newValue);
+
+            // opcional: força re-render clonando a linha dentro do array
+            const i = this.actionCorrectives.findIndex(it => it === data);
+            if (i !== -1) this.actionCorrectives.splice(i, 1, { ...this.actionCorrectives[i] });
+
+            this.fasterUpdateAnomalie()
+        },
         setByPath(obj, path, value) {
             const keys = path.split('.');
             const last = keys.pop();
@@ -1429,6 +1449,16 @@ export default{
                                     <strong>5W2H :</strong>
                                     <DataTable
                                         :value="actionCorrectives"
+                                        editMode="cell"
+                                        @cell-edit-complete="onCellEditCompleteFiveWTwoHows"
+                                        :pt="{
+                                            table: { style: 'min-width: 50rem' },
+                                            column: {
+                                                bodycell: ({ state }) => ({
+                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
+                                                })
+                                            }
+                                        }"
                                     >
                                         <template #empty>
                                             <span>Nenhuma ação imediata cadastrada</span>
@@ -1503,13 +1533,64 @@ export default{
                                                 </div>                                             
                                             </OverlayPanel>
                                         </template>
-                                        <Column field="what" header="O que?"></Column>
-                                        <Column field="why" header="Por que?"></Column>
-                                        <Column field="where" header="Onde?"></Column>
-                                        <Column field="when" header="Quando?"></Column>
-                                        <Column field="who" header="Quem?"></Column>
-                                        <Column field="how" header="Como?"></Column>
-                                        <Column field="howMuch" header="Quanto Custa?"></Column>
+                                        <Column field="what" header="O que?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.what"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="why" header="Por que?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.why"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="where" header="Onde?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.where"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="when" header="Quando?">
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.when"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                        </Column>
+                                        <Column field="who" header="Quem?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.who"                                                    
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="how" header="Como?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.how"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="howMuch" header="Quanto Custa?">
+                                            <template #editor="{data}">
+                                                <InputNumber
+                                                    v-model="data.howMuch"
+                                                    mode="currency"
+                                                    currency="BRL"
+                                                    locale="pt-BR"                                                
+                                                ></InputNumber>
+                                            </template>
+                                        </Column>
                                     </Datatable>
                                 </div>
                             </div>
