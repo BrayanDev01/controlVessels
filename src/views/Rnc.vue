@@ -399,7 +399,8 @@ export default{
                     dateToFinish: this.dateToFinish,
                     respToCheck: this.respToCheck,
                     fiveWhys: this.fiveWhys,
-                    classifications: this.classification
+                    classifications: this.classification,
+                    evidencesAnalises: this.evidencesAnalises
                 }
 
             }
@@ -463,7 +464,8 @@ export default{
                     dateToFinish: this.dateToFinish,
                     respToCheck: this.respToCheck,
                     fiveWhys: this.fiveWhys,
-                    classification: this.classification
+                    classification: this.classification,
+                    evidencesAnalises: this.evidencesAnalises
                 }
 
             }
@@ -528,7 +530,8 @@ export default{
                     dateToFinish: this.dateToFinish,
                     respToCheck: this.respToCheck,
                     fiveWhys: this.fiveWhys,
-                    classification: this.classification
+                    classification: this.classification,
+                    evidencesAnalises: this.evidencesAnalises
                 }
 
             }
@@ -601,7 +604,8 @@ export default{
             this.respToCheck = null;
             this.actionCorrectives = null;
             this.fiveWhys = [];
-            this.classification = null
+            this.classification = null;
+            this.evidencesAnalises = [];
         },
         closeModal(){
             this.visible = false
@@ -613,6 +617,7 @@ export default{
             const response = JSON.parse(e.xhr.responseText);
             // console.log(response);
             this.evidencesAnalises = [...this.evidencesAnalises, ...response.files];
+            this.fasterUpdateAnomalie()
         },
         beforeAnalise(e){
             const response = JSON.parse(e.xhr.responseText);
@@ -781,7 +786,8 @@ export default{
             this.observations = e.data.observations;
             this.actionCorrectives = e.data.actionCorrectives;   
             this.fiveWhys = e.data.fiveWhys; 
-            this.classification = e.data.classification;       
+            this.classification = e.data.classification; 
+            this.evidencesAnalises = e.data.evidencesAnalises||[];      
 
             this.visible= true;
         },
