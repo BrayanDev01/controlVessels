@@ -67,6 +67,11 @@ export default{
             how: null,
             howMuch: null,
 
+            needRevision: null,
+            revisionDate: null,
+            revisionNumber: null,
+            reasonRevision: null,
+
             fiveWhys: [],
             firstWhy: null,
             secondWhy: null,
@@ -401,7 +406,11 @@ export default{
                     respToCheck: this.respToCheck,
                     fiveWhys: this.fiveWhys,
                     classifications: this.classification,
-                    evidencesAnalises: this.evidencesAnalises
+                    evidencesAnalises: this.evidencesAnalises,
+                    needRevision: this.needRevision,
+                    revisionDate: this.revisionDate,
+                    revisionNumber: this.revisionNumber,
+                    reasonRevision: this.reasonRevision,
                 }
 
             }
@@ -466,7 +475,11 @@ export default{
                     respToCheck: this.respToCheck,
                     fiveWhys: this.fiveWhys,
                     classification: this.classification,
-                    evidencesAnalises: this.evidencesAnalises
+                    evidencesAnalises: this.evidencesAnalises,
+                    needRevision: this.needRevision,
+                    revisionDate: this.revisionDate,
+                    revisionNumber: this.revisionNumber,
+                    reasonRevision: this.reasonRevision
                 }
 
             }
@@ -532,7 +545,11 @@ export default{
                     respToCheck: this.respToCheck,
                     fiveWhys: this.fiveWhys,
                     classification: this.classification,
-                    evidencesAnalises: this.evidencesAnalises
+                    evidencesAnalises: this.evidencesAnalises,
+                    needRevision: this.needRevision,
+                    revisionDate: this.revisionDate,
+                    revisionNumber: this.revisionNumber,
+                    reasonRevision: this.reasonRevision,
                 }
 
             }
@@ -607,6 +624,10 @@ export default{
             this.fiveWhys = [];
             this.classification = null;
             this.evidencesAnalises = [];
+            this.needRevision = null,
+            this.revisionDate = null,
+            this.revisionNumber = null,
+            this.reasonRevision = null
         },
         closeModal(){
             this.visible = false
@@ -788,13 +809,17 @@ export default{
             this.actionCorrectives = e.data.actionCorrectives;   
             this.fiveWhys = e.data.fiveWhys; 
             this.classification = e.data.classification; 
-            this.evidencesAnalises = e.data.evidencesAnalises||[];      
+            this.evidencesAnalises = e.data.evidencesAnalises||[];   
+            this.needRevision = e.data.needRevision,
+            this.revisionDate = new Date(e.data.revisionDate).toLocaleDateString() || null,
+            this.revisionNumber = e.data.revisionNumber,
+            this.reasonRevision = e.data.reasonRevision,
 
             this.visible= true;
         },
         resetData(){
             this.anomalies = [];
-            this.getAnomalies()
+            this.getRNC()
         },
         formatData(x){
             return new Date(x).toLocaleDateString()
@@ -1462,6 +1487,66 @@ export default{
                                 </div>
                             </div>
                         </div>
+                        <div class="topBox" style="margin: 10px;">
+                            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;" >
+                                <strong>Precisa de Revisão ?</strong>
+                                <div style="display: flex; gap: 10px;">
+                                    <div>
+                                        <RadioButton 
+                                            v-model="needRevision"
+                                            inputId="revision"
+                                            name="revisionSim"
+                                            value="true"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }" 
+                                        ></RadioButton>
+                                        <label for="revision">Sim</label>
+                                    </div>
+                                    <div>
+                                        <RadioButton 
+                                            v-model="needRevision"
+                                            inputId="revision"
+                                            name="revisionSim"
+                                            value="false"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }" 
+                                        ></RadioButton>
+                                        <label for="revision">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="needRevision == 'true'" style="display: flex; gap: 10px;">
+                                <div class="inputGroup">
+                                    <span>Revisão Nº :</span>
+                                    <InputText
+                                        v-model="revisionNumber"
+                                    ></InputText>
+                                </div>
+                                <div class="inputGroup">
+                                    <span>Data :</span>
+                                    <Calendar
+                                        v-model="revisionDate"
+                                        format="dd/mm/yy"
+                                    ></Calendar>
+                                </div>
+                            </div>
+                            <div v-else-if="needRevision == 'false'" style="display: flex; gap: 10px;">
+                                <div class="inputGroup" style="">
+                                    <span>Motivo :</span>
+                                    <Textarea
+                                        v-model="reasonRevision"
+                                    ></Textarea>
+                                </div>
+                            </div>                           
+                        </div>
                         <div class="topBox">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1868,6 +1953,12 @@ Button{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 10px;
+}
+
+.inputGroup{
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
