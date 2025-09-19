@@ -1,7 +1,7 @@
 <script>
 import MenuBar from '../components/MenuBar.vue';
 import axios from 'axios'
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode, FilterOperator  } from 'primevue/api';
 
 export default{
     components:{
@@ -333,7 +333,8 @@ export default{
                 place: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 resumeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 status: { value: null, matchMode: FilterMatchMode.CONTAINS},
-                typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS}
+                typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                'classification.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] }
             }
         }
     },
@@ -981,6 +982,7 @@ export default{
                     :value="anomalies"
                     selectionMode="single"
                     @rowSelect="editAnomalie"
+                    filterDisplay="menu"
                     ref="anomalies"
                     dataKey="id"
                     :style="{width:'90dvw'}"
@@ -989,7 +991,7 @@ export default{
                     removableSort
                     :loading="isLoading"
                     v-model:filters="filters"
-                    :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
+                    :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie', 'classification.name']"
                 >
                     <template #header>
                         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -1040,7 +1042,18 @@ export default{
                         </template>
                     </Column>
                     <Column field="equipament" header="Tipo Equip." sortable></Column>
-                    <Column field="classification.name" header="Class."></Column>
+                    <Column field="classification.name" header="Class.">
+                        <template #filter="{filterModel}">
+                            <Dropdown
+                                v-model="filterModel.value"
+                                :options="classificationOptions"
+                                optionLabel="name"
+                                optionValue="name"
+                                placeholder="Selecione..."
+                                class="p-column-filter"
+                            />
+                        </template>
+                    </Column>
                     <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
