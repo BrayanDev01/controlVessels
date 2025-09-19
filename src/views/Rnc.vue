@@ -1040,7 +1040,7 @@ export default{
                         </template>
                     </Column>
                     <Column field="equipament" header="Tipo Equip." sortable></Column>
-                    <Column field="reportFor.username" header="Criado por"></Column>
+                    <Column field="classification.name" header="Class."></Column>
                     <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
