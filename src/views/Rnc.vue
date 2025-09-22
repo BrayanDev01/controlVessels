@@ -982,6 +982,21 @@ export default{
             cur = cur[k];
             }
             cur[last] = value;
+        },
+        delete5Whys(data){
+            const i = this.fiveWhys.findIndex(it => it === data);
+            if (i !== -1) this.fiveWhys.splice(i, 1);
+            this.fasterUpdateAnomalie()
+        },
+        deleteImmediateAction(data){
+            const i = this.actionImmediate.findIndex(it => it === data);
+            if (i !== -1) this.actionImmediate.splice(i, 1);
+            this.fasterUpdateAnomalie()
+        },
+        delete5w2h(data){
+            const i = this.actionCorrectives.findIndex(it => it === data);
+            if (i !== -1) this.actionCorrectives.splice(i, 1);
+            this.fasterUpdateAnomalie()
         }
     },
     watch:{
@@ -1249,7 +1264,7 @@ export default{
                         </div>
                     </TabPanel>
                     <TabPanel header="Análise">
-                        <div class="topBox">
+                        <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <strong>Os 5 Porquês :</strong>
@@ -1371,11 +1386,20 @@ export default{
                                                 ></Textarea>
                                             </template>
                                         </Column>
+                                        <Column header="Ações">
+                                            <template #body="{ data }">
+                                                <i 
+                                                    class="pi pi-trash" 
+                                                    style="font-size: 1rem; cursor: pointer;" 
+                                                    @click="delete5Whys(data)"
+                                                ></i>
+                                            </template>
+                                        </Column>
                                     </Datatable>
                                 </div>
                             </div>
                         </div>                         
-                        <div class="topBox">
+                        <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <strong>Ação Imediata:</strong>
@@ -1483,13 +1507,22 @@ export default{
                                                 ></Calendar>
                                             </template>
                                         </Column>
+                                        <Column header="Ações">
+                                            <template #body="{data}">
+                                                <i 
+                                                    class="pi pi-trash"
+                                                    style="font-size: 1rem; cursor: pointer;"
+                                                    @click="deleteImmediateAction(data)"    
+                                                ></i>
+                                            </template>
+                                        </Column>
                                     </Datatable>
                                 </div>
                             </div>
                         </div>
                         <div class="topBox" style="margin: 10px;">
                             <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;" >
-                                <strong>Precisa de Revisão ?</strong>
+                                <strong>A gestão de riscos e oportunidades do setor precisa ser revisada?</strong>
                                 <div style="display: flex; gap: 10px;">
                                     <div>
                                         <RadioButton 
@@ -1547,7 +1580,7 @@ export default{
                                 </div>
                             </div>                           
                         </div>
-                        <div class="topBox">
+                        <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <strong>5W2H :</strong>
@@ -1668,6 +1701,9 @@ export default{
                                                     dateFormat="dd/mm/yy"
                                                 ></Calendar>
                                             </template>
+                                            <template #body="{data}">
+                                                {{ new Date(data.when).toLocaleDateString() }}
+                                            </template>
                                         </Column>
                                         <Column field="who" header="Quem?">
                                             <template #editor="{data}">
@@ -1693,6 +1729,15 @@ export default{
                                                     currency="BRL"
                                                     locale="pt-BR"                                                
                                                 ></InputNumber>
+                                            </template>
+                                        </Column>
+                                        <Column header="Ações">
+                                            <template #body="{data}">
+                                                <i 
+                                                    class="pi pi-trash"
+                                                    style="font-size: 1rem; cursor: pointer;"
+                                                    @click="delete5w2h(data)"    
+                                                ></i>
                                             </template>
                                         </Column>
                                     </Datatable>

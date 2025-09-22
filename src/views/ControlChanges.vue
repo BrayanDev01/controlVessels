@@ -11,6 +11,7 @@ export default{
     },
     data(){
         return{
+            userInfos: JSON.parse(localStorage.getItem("loggedUser")),
             addChangesVisible: false,
             editChangesVisible: false,
             id: null,
@@ -38,6 +39,22 @@ export default{
             }).catch((error) => {
                 console.log(error)
                 this.loadData = false    
+            })
+        },
+        async deleteDoc(id){
+            const options = {
+                url: `${import.meta.env.VITE_URL_API}classes/controlChanges/${id}`,
+                method: 'DELETE',
+                headers: {
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            }
+            await axios.request(options).then((response) => {
+                console.log(response)
+                this.getChanges()
+            }).catch((error) => {
+                console.log(error)
             })
         },
         formatData(data){
@@ -104,6 +121,15 @@ export default{
                 <Column field="priority" header="Prioridade"></Column>
                 <Column field="typeOfChange.name" header="Tipo"></Column>
                 <Column field="status.name" header="Status"></Column>
+                <Column header="Ações" v-if="userInfos.department == 'Qualidade' || userInfos.department == 'ADMINISTRACAO'">
+                    <template #body="{data}">
+                        <Button
+                            rounded
+                            icon="pi pi-trash"
+                            @click="deleteDoc(data.objectId)"                            
+                        ></Button>
+                    </template>
+                </Column>
             </DataTable>
         </div>
     </div>
