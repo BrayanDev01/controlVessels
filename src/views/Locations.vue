@@ -13,6 +13,7 @@ export default{
     },
     data(){
         return{
+            userInfos: JSON.parse(localStorage.getItem("loggedUser")),
             vessels: null,
             showAddEquipament: false,
             showSeeOrEditEquipament: false,
@@ -75,6 +76,25 @@ export default{
             }).catch((error) => {
                 console.log(error)
             })
+        },
+        deleteDoc(id){
+            const options = {
+                url: `${import.meta.env.VITE_URL_API}classes/instrumentMed/${id}`,
+                method: 'DELETE',
+                headers: {
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            }
+            axios.request(options).then((response) => {
+                console.log(response)
+            this.$toast.add({severity:'success', summary: 'Sucesso!', detail:'Equipamento deletado', life: 3000});
+                this.getEquipaments()
+            }).catch((error) => {
+                console.log(error)
+                this.$toast.add({severity:'error', summary: 'Erro', detail:'Erro ao deletar equipamento', life: 3000});
+            })
+                
         },
         downloadFile(file){
             console.log(file)
@@ -162,6 +182,7 @@ export default{
                         <Column header="Resultados da Calibração" :colspan="2"></Column>
                         <Column header="Avaliação da Calibração" :colspan="3" ></Column>
                         <Column header="Obs" :rowspan="3"></Column>
+                        <Column header="Ações" :rowspan="3" v-if="userInfos.department == 'Qualidade' || userInfos.department == 'ADMINISTRACAO'"></Column>
                     </Row>
                     <Row>
                         <Column header="Setor" :rowspan="2"></Column>
@@ -241,6 +262,15 @@ export default{
                 </Column>
                 <Column field="avaliationCalibration.acoesTomadas"></Column>
                 <Column field="obs"></Column>
+                <Column header="Ações" v-if="userInfos.department == 'Qualidade' || userInfos.department == 'ADMINISTRACAO'">
+                    <template #body="{data}">
+                        <Button
+                            rounded
+                            icon="pi pi-trash"
+                            @click="deleteDoc(data.objectId)"
+                        ></Button>
+                    </template>
+                </Column>
             </DataTable>
         </div>
         <addEquipament
