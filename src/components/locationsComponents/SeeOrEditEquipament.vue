@@ -45,6 +45,9 @@ export default {
             quaisAcoes: null,
             observacao: null,
 
+            additionalDocuments:[],
+            entreguePara: null,
+
 
             statusOptions:[
                 {name: 'Conforme'},
@@ -135,7 +138,9 @@ export default {
                         acoesTomadas: this.acoesTomadas,
                         quaisAcoes: this.quaisAcoes,
                     },
-                    obs: this.observacao
+                    obs: this.observacao,                    
+                    additionalDocuments: this.additionalDocuments,
+                    entreguePara: this.entreguePara
                 }
             }
 
@@ -180,14 +185,26 @@ export default {
             this.quaisAcoes = null
             this.verde = null
             this.responsaveis = []
+            this.additionalDocuments = []
+            this.entreguePara = null
             this.loading = false
         },
         afterSend(e){
             const response = JSON.parse(e.xhr.responseText);
             this.document = response.files[0]
         },
+        sendSomeDocuments(e){
+            if(this.additionalDocuments == null || this.additionalDocuments == undefined){
+                this.additionalDocuments = []
+            }
+            const response = JSON.parse(e.xhr.responseText);
+            this.additionalDocuments = [...this.additionalDocuments, ...response.files];
+        },
         cleanDownload(){
             this.document = null
+        },
+        cleanDocument(data){
+            this.additionalDocuments = this.additionalDocuments.filter(item => item.location !== data)
         },
         downloadDocument(location){
             window.open(location, '_blank');
@@ -226,7 +243,9 @@ export default {
             this.document = this.idEquipament.avaliationCalibration.document
             this.acoesTomadas = this.idEquipament.avaliationCalibration.acoesTomadas
             this.quaisAcoes = this.idEquipament.avaliationCalibration.quaisAcoes
-            this.observacao = this.idEquipament.obs
+            this.observacao = this.idEquipament.obs,
+            this.additionalDocuments = this.idEquipament.additionalDocuments
+            this.entreguePara = this.idEquipament.entreguePara
 
             this.calculateDate()
         },
@@ -642,15 +661,45 @@ export default {
                                         ></Textarea>
                                     </div>
                                 </div>
+                                <div class="organizerInputs">
+                                    <div class="groupInput" style="display: flex; flex-direction: column; align-items: center;">
+                                        <span>Documentos auxiliares :</span>
+                                        <FileUpload
+                                            mode="basic"
+                                            name="files"
+                                            :auto="true"
+                                            chooseLabel="Documentos Auxiliares"
+                                            @upload="sendSomeDocuments($event)"
+                                            url="https://connectapi.3nf.com.br/upload"
+                                        ></FileUpload>
+                                        <div class="uploadBox">
+                                            <div v-for="(item, index) in additionalDocuments" :key="index" style="display: flex; flex-direction: column; align-items: center;">
+                                                <i class="pi pi-file" style="font-size: 2.5rem"></i>
+                                                <div class="flex gap-2">
+                                                    <Button icon="pi pi-download" rounded @click="downloadDocument(item.location)"/>
+                                                    <Button icon="pi pi-times" rounded @click="cleanDocument(item.location)"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
                             </div>
                             <div class="rightSide">
-                                <strong>Observação</strong>
-                                <Textarea
-                                    v-model="observacao"
-                                    rows="8"
-                                    cols="50"
-                                    class="mt-3"
-                                ></Textarea>
+                                <div class="groupInput">
+                                    <strong>Observação</strong>
+                                    <Textarea
+                                        v-model="observacao"
+                                        rows="8"
+                                        cols="50"
+                                        class="mt-3"
+                                    ></Textarea>
+                                </div>
+                                <div class="groupInput">
+                                    <span>Entregue para:</span>
+                                    <InputText
+                                        v-model="entreguePara"
+                                    ></InputText>
+                                </div>
                             </div>
                         </div>
                         <div class="flex justify-content-between m-5">
@@ -681,17 +730,29 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    align-items: center;
 }
+
 .organizerInputs{
     display: flex;
     gap: 20px;
     margin: 10px 0;
 }
+
 .rightSide, .leftSide{
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.uploadBox{
+    display: flex; 
+    gap: 20px; 
+    width: 100%; 
+    flex-wrap: wrap; 
+    max-height: 150px; 
+    overflow-y: scroll;
 }
 
 </style>
