@@ -834,7 +834,18 @@ export default{
             this.filters['global'].value = e.value.numericId
         },
         enableButton(){
-            if( this.nameEquipament && this.resumeAnomalie && this.dateAnomalie && this.departmentResp && this.typeAnomalie && this.baseAnomalie && this.placeAnomalie && this.equipamentAnomalie && this.impactAnomalie){
+            if( 
+                this.nameEquipament && 
+                this.resumeAnomalie && 
+                this.dateAnomalie && 
+                this.departmentResp && 
+                this.typeAnomalie && 
+                this.baseAnomalie && 
+                this.placeAnomalie && 
+                this.equipamentAnomalie && 
+                this.impactAnomalie &&
+                this.needRevision
+            ){
                 return false
             }return true
         },
