@@ -1127,7 +1127,7 @@ export default{
                     </Column>
                     <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
-                    <Column header="Ações">
+                    <Column header="Ações" v-if="userInfo.department == 'Qualidade' || userInfo.department == 'ADMINISTRACAO'">
                         <template #body="{data}">
                             <Button
                                 rounded
