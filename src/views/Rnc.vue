@@ -397,6 +397,7 @@ export default{
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
                     criticalityAnomalie: this.criticalityAnomalie.name,
+                    purgatory: this.typeCall,
                     actionImmediate: this.actionImmediate,
                     actionCorrectives: this.actionCorrectives,
                     timeToCheck: this.timeToCheck,
@@ -502,6 +503,9 @@ export default{
             
         },
         async fasterUpdateAnomalie(){
+            if(!this.objectId) {
+                return
+            }
             
             this.loadingCreate = true;
 
@@ -1008,6 +1012,22 @@ export default{
             const i = this.actionCorrectives.findIndex(it => it === data);
             if (i !== -1) this.actionCorrectives.splice(i, 1);
             this.fasterUpdateAnomalie()
+        },
+        deleteDoc(id){
+            const options = {
+                method: 'DELETE',
+                url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${id}`,
+                headers: {
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            }
+            axios.request(options).then((response) => {
+                this.$toast.add({severity: 'success', summary: 'Sucesso', detail: 'Anomalia excluida com sucesso', life: 3000});                
+                this.getRNC()
+            }).catch((error) => {
+                console.log(error)
+            })
         }
     },
     watch:{
@@ -1107,6 +1127,15 @@ export default{
                     </Column>
                     <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
+                    <Column header="Ações">
+                        <template #body="{data}">
+                            <Button
+                                rounded
+                                icon="pi pi-trash"
+                                @click="deleteDoc(data.objectId)"
+                            ></Button>
+                        </template>
+                    </Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
                 </DataTable>
             </div>
@@ -1243,7 +1272,7 @@ export default{
                                     v-model="classification" 
                                     :options="classificationOptions"
                                     optionLabel="name" 
-                                    placeholder="Selecione a criticidade">
+                                    placeholder="Selecione a classificação">
                                 </Dropdown>
                             </div>
                         </div>
@@ -1806,7 +1835,7 @@ export default{
                                             v-model="isEffective" 
                                             inputId="ingredient1" 
                                             name="pizza" 
-                                            value="true"
+                                            :value="true"
                                             :pt="{
                                                 box: ({ props, context }) => ({
                                                     ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
@@ -1821,7 +1850,7 @@ export default{
                                             v-model="isEffective" 
                                             inputId="ingredient1" 
                                             name="pizza" 
-                                            value="false"
+                                            :value="false"
                                             :pt="{
                                                 box: ({ props, context }) => ({
                                                     ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
