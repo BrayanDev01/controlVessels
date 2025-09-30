@@ -1533,6 +1533,12 @@ export default{
                                                 <Checkbox
                                                     v-model="data.implant"
                                                     :binary="true"
+                                                    :pt="{
+                                                        box: data.implant 
+                                                        ? { style: 'background:#3B82F6; border-color:#3B82F6' } 
+                                                        : { style: 'background:#fff; border-color:#CBD5E1' },
+                                                        icon: { style: 'color:white' }
+                                                    }"
                                                 ></Checkbox>
                                             </template>
                                         </Column>
