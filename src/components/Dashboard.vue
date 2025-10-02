@@ -18,14 +18,22 @@ export default{
             baseAnomaliesData: null,
             typeAnomaliesData: null,
             qtdAnomaliesData: null,
-            visible: true
+            visible: true,
+
+            qtdAnomalias: null,
+            qtdRnc: null,
+            qtdNaoAnalisada: null,
+
+            chartRncData: null,
+            chartAnomaliesData: null,
+            chartOptions: null
         }
     },
     methods:{
         async getQntAnomalies(){
             const options = {
                 method: 'POST',
-                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesStatusCounts`,
+                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesCharts`,
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
@@ -33,15 +41,24 @@ export default{
             }
 
             await axios.request(options).then((response)=>{
-                console.log(response)
+                const data = response.data
+                this.organizeHome(data.result)   
                 this.visible = false
-                this.qtdAnomaliesData = this.organizeQtdAnomalies(response.data.result.statusArray, response.data.result.countArray )
-                this.typeAnomaliesData = this.organizeQtdAnomalies(response.data.result.typeArray, response.data.result.countTypesArray)
-                this.baseAnomaliesData = this.organizeQtdAnomalies(response.data.result.baseArray, response.data.result.countBasesArray)
-                this.monthAnomaliesData = this.organizeQtdAnomalies(response.data.result.monthArray, response.data.result.countMonthArray)
             }).catch((error)=>{
                 console.log(error)
             })
+        },
+        organizeHome(data){
+            console.log(data)
+            this.chartRncData = this.setChartData(data.rncByStatus.labels, data.rncByStatus.data, 'RNCs')
+            this.chartAnomaliesData = this.setChartData(data.anomaliesByStatus.labels, data.anomaliesByStatus.data, 'Anomalias')
+            this.chartOptions = this.setChartOptions()
+
+            this.qtdAnomalias = data.totals.data[1]
+            this.qtdRnc = data.totals.data[0]
+            this.qtdNaoAnalisada = data.totals.data[2]  
+            
+            
         },
         organizeQtdAnomalies(x, y){
             return{
@@ -114,6 +131,47 @@ export default{
                     }
                 }
             };
+        },
+
+        setChartData(x, y, w) {
+            return {
+                labels: x,
+                datasets: [
+                    {
+                        label: w,
+                        data: y,
+                        backgroundColor: ['#222C56', '#FF7400', '#BFFDB8', '#836055'],
+                    }
+                ]
+            };
+        },
+        setChartOptions() {
+            const documentStyle = getComputedStyle(document.documentElement);
+            const textColor = documentStyle.getPropertyValue('--primary-color-gc');
+            const textColorSecondary = documentStyle.getPropertyValue('--primary-color-gc');
+
+            return {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: textColor
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: textColorSecondary
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: textColorSecondary
+                        }
+                    }
+                }
+            };
         }
     },
     created(){
@@ -124,7 +182,7 @@ export default{
 <template>
     <div class="main">
         <MenuBar></MenuBar>
-        <div class="dashboard">
+        <!-- <div class="dashboard">
             <div class="cardGraph">
                 <strong>Quantidade de Anomalias</strong>
                 <Chart type="bar" :data="qtdAnomaliesData" style="width: 100%; height: 100%;"/>
@@ -141,6 +199,33 @@ export default{
                 <strong>Anomalias por Mês</strong>
                 <Chart type="bar" :data="monthAnomaliesData" style="width: 100%; height: 100%;"/>
             </div>
+        </div> -->
+        <div class="dashboard">
+            <div class="div1 card wNumbers">
+                <strong class="title">Quantidade de Anomalias</strong>
+                <strong class="number">{{ qtdAnomalias }}</strong>
+            </div>
+            <div class="div2 card wNumbers">
+                <strong class="title">Quantidade de RNC's</strong>
+                <strong class="number">{{ qtdRnc }}</strong>
+            </div>
+            <div class="div3 card wNumbers">
+                <strong class="title">Quantidade Não Analisada</strong>
+                <strong class="number">{{ qtdNaoAnalisada }}</strong>
+            </div>
+            <div class="div4 card wGraphs">
+                <strong>Rnc's por Status</strong>
+                <Chart type="bar" :data="chartRncData" :options="chartOptions" style="width: 100%; height: 300px;"/>
+            </div>
+            <div class="div5 card wGraphs">
+                <strong>Anomalias por Status</strong>
+                <Chart type="bar" :data="chartAnomaliesData" :options="chartOptions" style="width: 100%; height: 300px;"/>
+            </div>
+            <div class="div6 card wGraphs">
+                <strong>Rnc por Setor</strong>
+            </div>
+            <div class="div7 card">7</div>
+            <div class="div8 card">8</div>            
         </div>
     </div>
     <Dialog
@@ -185,24 +270,72 @@ export default{
 }
 
 .dashboard{
-    max-width: 100dvw;
+    /* max-width: 100dvw;
     flex-wrap: wrap;
     display: flex;
     justify-content: center;
     margin: 30px 0px ;
     gap: 20px;
-    flex-wrap: wrap;
-    
+    flex-wrap: wrap; */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 8px;
+    padding: 40px;
 }
-.vesselSide, .reportSide{
-    width: 45%;
-    height: 40rem;
+
+.div4 {
+    grid-row: span 2 / span 2;
+}
+
+.div5 {
+    grid-row: span 2 / span 2;
+}
+
+.div6 {
+    grid-row: span 2 / span 2;
+}
+
+.div7 {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-row-start: 4;
+}
+
+.div8 {
+    grid-row: span 2 / span 2;
+    grid-column-start: 3;
+    grid-row-start: 4;
+}
+
+.card{
+    width: 100%;
     border-radius: 20px;
     background-color: var(--white-gc);
+    padding: 20px;
 }
-.rigthSide, leftSide{
-    width: 50%;
 
+.wGraphs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wNumbers{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.number{
+    font-weight: bolder;
+    font-size: 4rem;
+    color: var(--primary-color-gc); 
+}
+
+.title{
+    font-weight: bolder;
+    font-size: 1.5rem;
 }
 
 .my-custom-class{
