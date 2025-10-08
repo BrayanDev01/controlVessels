@@ -221,15 +221,15 @@ export default{
             </div>
             <div class="div4 card wGraphs">
                 <strong>Rnc's por Status</strong>
-                <Chart type="bar" :data="chartRncData" :options="chartOptions" style="width: 100%; height: 300px;"/>
+                <Chart type="bar" :data="chartRncData" :options="chartOptions" class="chartGraph"/>
             </div>
             <div class="div5 card wGraphs">
                 <strong>Anomalias por Status</strong>
-                <Chart type="bar" :data="chartAnomaliesData" :options="chartOptions" style="width: 100%; height: 300px;"/>
+                <Chart type="bar" :data="chartAnomaliesData" :options="chartOptions" class="chartGraph"/>
             </div>
             <div class="div6 card wGraphs">
                 <strong>Anomalias por Setor</strong>
-                <Chart type="bar" :data="chartAnomalieByDepartments" :options="chartOptions" style="width: 100%; height: 300px;"/>
+                <Chart type="bar" :data="chartAnomalieByDepartments" :options="chartOptions" class="chartGraph"/>
             </div>
             <div class="div7 card wGraphs">
                 <strong>Rnc por Setor</strong>
@@ -237,7 +237,7 @@ export default{
             </div>
             <div class="div8 card">
                 <strong>Instrumentos de Medição</strong>
-                <Chart type="pie" :data="chartInstruments" :options="chartOptions" style="width: 100%; height: 300px; display: flex; justify-content: center;"/>                
+                <Chart type="pie" :data="chartInstruments" :options="chartOptions" class="chartGraph"/>                
             </div>            
         </div>
     </div>
