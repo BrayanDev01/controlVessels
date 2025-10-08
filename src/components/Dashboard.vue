@@ -26,7 +26,10 @@ export default{
 
             chartRncData: null,
             chartAnomaliesData: null,
-            chartOptions: null
+            chartOptions: null,
+            chartRncByDepartments: null,
+            chartAnomalieByDepartments: null,
+            chartInstruments: null
         }
     },
     methods:{
@@ -50,13 +53,16 @@ export default{
         },
         organizeHome(data){
             console.log(data)
+            this.chartAnomalieByDepartments = this.setChartData(data.anomaliesByDepartment.labels, data.anomaliesByDepartment.data, 'Anomalias')
+            this.chartRncByDepartments = this.setChartData(data.rncByDepartment.labels, data.rncByDepartment.data, 'RNCs')
             this.chartRncData = this.setChartData(data.rncByStatus.labels, data.rncByStatus.data, 'RNCs')
             this.chartAnomaliesData = this.setChartData(data.anomaliesByStatus.labels, data.anomaliesByStatus.data, 'Anomalias')
+            this.chartInstruments = this.setChartData(data.instrumentMed.byValidity.labels, data.instrumentMed.byValidity.data, 'Instrumentos')
             this.chartOptions = this.setChartOptions()
 
             this.qtdAnomalias = data.totals.data[1]
             this.qtdRnc = data.totals.data[0]
-            this.qtdNaoAnalisada = data.totals.data[2]  
+            this.qtdNaoAnalisada = data.instrumentMed.total
             
             
         },
@@ -210,7 +216,7 @@ export default{
                 <strong class="number">{{ qtdRnc }}</strong>
             </div>
             <div class="div3 card wNumbers">
-                <strong class="title">Quantidade Não Analisada</strong>
+                <strong class="title">Quantidade de Instrumentos de Medição</strong>
                 <strong class="number">{{ qtdNaoAnalisada }}</strong>
             </div>
             <div class="div4 card wGraphs">
@@ -222,17 +228,23 @@ export default{
                 <Chart type="bar" :data="chartAnomaliesData" :options="chartOptions" style="width: 100%; height: 300px;"/>
             </div>
             <div class="div6 card wGraphs">
-                <strong>Rnc por Setor</strong>
+                <strong>Anomalias por Setor</strong>
+                <Chart type="bar" :data="chartAnomalieByDepartments" :options="chartOptions" style="width: 100%; height: 300px;"/>
             </div>
-            <div class="div7 card">7</div>
-            <div class="div8 card">8</div>            
+            <div class="div7 card wGraphs">
+                <strong>Rnc por Setor</strong>
+                <Chart type="bar" :data="chartRncByDepartments" :options="chartOptions" style="width: 100%; height: 300px; display: flex; justify-content: center;"/>
+            </div>
+            <div class="div8 card">
+                <strong>Instrumentos de Medição</strong>
+                <Chart type="pie" :data="chartInstruments" :options="chartOptions" style="width: 100%; height: 300px; display: flex; justify-content: center;"/>                
+            </div>            
         </div>
     </div>
     <Dialog
         v-model:visible="visible" 
         modal
         :draggable="false"
-        @hide="clearForm()"
         :closable="false"
         :pt="{
             root: {
@@ -319,6 +331,7 @@ export default{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 .wNumbers{
