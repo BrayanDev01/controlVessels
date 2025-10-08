@@ -93,7 +93,8 @@ export default{
             ],
             typeCallOptions:[
                 {name: "Anomalia"},
-                {name: "Não Conformidade"}
+                {name: "Não Conformidade"},
+                {name: "Oportunidade de Melhoria"}
             ],
             criticalityOptions:[
                 {name: "Prioridade Alta"},
@@ -846,8 +847,7 @@ export default{
                 this.typeAnomalie && 
                 this.baseAnomalie && 
                 this.placeAnomalie && 
-                this.equipamentAnomalie && 
-                this.impactAnomalie &&
+                this.equipamentAnomalie &&
                 this.needRevision
             ){
                 return false
@@ -1237,7 +1237,7 @@ export default{
                                     placeholder="Selecione o tipo de equipamento">
                                 </Dropdown>
                             </div>
-                            <div class="groupQuestion">
+                            <!-- <div class="groupQuestion">
                                 <span>Selecione o impacto:</span>
                                 <Dropdown 
                                     v-model="impactAnomalie" 
@@ -1245,7 +1245,7 @@ export default{
                                     optionLabel="name" 
                                     placeholder="Selecione o impacto">
                                 </Dropdown>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="topBox">
                             <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">

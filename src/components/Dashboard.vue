@@ -233,7 +233,7 @@ export default{
             </div>
             <div class="div7 card wGraphs">
                 <strong>Rnc por Setor</strong>
-                <Chart type="bar" :data="chartRncByDepartments" :options="chartOptions" style="width: 100%; height: 300px; display: flex; justify-content: center;"/>
+                <Chart type="bar" :data="chartRncByDepartments" :options="chartOptions" class="chartGraph"/>
             </div>
             <div class="div8 card">
                 <strong>Instrumentos de Medição</strong>
@@ -344,6 +344,14 @@ export default{
     font-weight: bolder;
     font-size: 4rem;
     color: var(--primary-color-gc); 
+}
+
+.chartGraph{
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .title{
