@@ -47,7 +47,8 @@ export default{
             typeCall: null,
             typeCallOptions:[
                 {name: "Anomalia"},
-                {name: "Não Conformidade"}
+                {name: "Não Conformidade"},
+                {name: "Oportunidade de Melhoria"}
             ],
             criticalityOptions:[
                 {name: "Prioridade Alta"},
