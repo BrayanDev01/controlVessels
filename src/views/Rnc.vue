@@ -104,7 +104,7 @@ export default{
             departments:[
                 {name:"Comercial", email:''},
                 {name:"Controladoria", email:'controller@3nf.com.br'},
-                {name:"SGI", email:'qualidade@3nf.com.br'},
+                {name:"Qualidade", email:'qualidade@3nf.com.br'},
                 {name:"Inspeção", email:'gestornav@3nf.com.br'},
                 {name:"Manutenção", email:'sup.manutencao@3nf.com.br'},
                 {name:"Navegação", email:'planejamento@3nf.com.br'},
