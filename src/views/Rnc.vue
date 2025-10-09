@@ -1307,6 +1307,133 @@ export default{
                         <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <strong>Ação Imediata:</strong>
+                                    <DataTable
+                                        :value="actionImmediate"
+                                        editMode="cell"
+                                        @cell-edit-complete="onCellEditCompleteActionImmediate"
+                                        :pt="{
+                                            table: { style: 'min-width: 50rem' },
+                                            column: {
+                                                bodycell: ({ state }) => ({
+                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
+                                                })
+                                            }
+                                        }"
+                                    >
+                                        <template #empty>
+                                            <span>Nenhuma ação imediata cadastrada</span>
+                                        </template>
+                                        <template #header>
+                                            <Button @click="toggle">Nova Ação Imediata</Button>
+                                            <OverlayPanel ref="actionRegister" @hide="closeOp()">
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Ação Imediata :</span>
+                                                        <Textarea
+                                                            v-model="actionImmediateText"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Email do Responsavel :</span>
+                                                        <InputText
+                                                            v-model="respEmailAction"
+                                                        ></InputText>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Prazo :</span>
+                                                        <Calendar
+                                                            dateFormat="dd/mm/yy"
+                                                            v-model="dateLimit"
+                                                        ></Calendar>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        label="Salvar"
+                                                        @click="addAction"
+                                                    ></Button>
+                                                    <Button
+                                                        label="Cancelar"
+                                                        @click="() => {this.$refs.actionRegister.hide()}"
+                                                    ></Button>
+                                                </div>                                             
+                                            </OverlayPanel>
+                                        </template>
+                                        <Column field="actionImmediateText" header="Ação Imediata">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.actionImmediateText"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="respEmailAction" header="Responsavel">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.actionImmediateText"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="dateLimit" header="Prazo">
+                                            <template #body="{data}">
+                                                {{ new Date(data.dateLimit).toLocaleDateString() }}    
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.dateLimit"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                        </Column>
+                                        <Column field="implant" header="Implementada?">
+                                            <template #body="{data}">
+                                                {{ data.implant ? "Sim" : "Nao" }}   
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Checkbox
+                                                    v-model="data.implant"
+                                                    :binary="true"
+                                                    :pt="{
+                                                        box: data.implant 
+                                                        ? { style: 'background:#3B82F6; border-color:#3B82F6' } 
+                                                        : { style: 'background:#fff; border-color:#CBD5E1' },
+                                                        icon: { style: 'color:white' }
+                                                    }"
+                                                ></Checkbox>
+                                            </template>
+                                        </Column>
+                                        <Column field="newDataLimit" header="Novo Prazo">
+                                            <template #body="{data}">
+                                                {{ new Date(data.newDataLimit).toLocaleDateString() }}    
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.newDataLimit"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                        </Column>
+                                        <Column header="Ações">
+                                            <template #body="{data}">
+                                                <i 
+                                                    class="pi pi-trash"
+                                                    style="font-size: 1rem; cursor: pointer;"
+                                                    @click="deleteImmediateAction(data)"    
+                                                ></i>
+                                            </template>
+                                        </Column>
+                                    </Datatable>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topBox" style="margin: 10px;">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <strong>Os 5 Porquês :</strong>
                                     <DataTable
                                         :value="fiveWhys"
@@ -1432,133 +1559,6 @@ export default{
                                                     class="pi pi-trash" 
                                                     style="font-size: 1rem; cursor: pointer;" 
                                                     @click="delete5Whys(data)"
-                                                ></i>
-                                            </template>
-                                        </Column>
-                                    </Datatable>
-                                </div>
-                            </div>
-                        </div>                         
-                        <div class="topBox" style="margin: 10px;">
-                            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-                                <div style="display: flex; flex-direction: column; gap: 10px;">
-                                    <strong>Ação Imediata:</strong>
-                                    <DataTable
-                                        :value="actionImmediate"
-                                        editMode="cell"
-                                        @cell-edit-complete="onCellEditCompleteActionImmediate"
-                                        :pt="{
-                                            table: { style: 'min-width: 50rem' },
-                                            column: {
-                                                bodycell: ({ state }) => ({
-                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
-                                                })
-                                            }
-                                        }"
-                                    >
-                                        <template #empty>
-                                            <span>Nenhuma ação imediata cadastrada</span>
-                                        </template>
-                                        <template #header>
-                                            <Button @click="toggle">Nova Ação Imediata</Button>
-                                            <OverlayPanel ref="actionRegister" @hide="closeOp()">
-                                                <div style="display: flex; gap: 10px;">
-                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>Ação Imediata :</span>
-                                                        <Textarea
-                                                            v-model="actionImmediateText"
-                                                            :autoResize="false"
-                                                            rows="5"
-                                                            cols="30"
-                                                        ></Textarea>
-                                                    </div>
-                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>Email do Responsavel :</span>
-                                                        <InputText
-                                                            v-model="respEmailAction"
-                                                        ></InputText>
-                                                    </div>
-                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                                                        <span>Prazo :</span>
-                                                        <Calendar
-                                                            dateFormat="dd/mm/yy"
-                                                            v-model="dateLimit"
-                                                        ></Calendar>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <Button
-                                                        label="Salvar"
-                                                        @click="addAction"
-                                                    ></Button>
-                                                    <Button
-                                                        label="Cancelar"
-                                                        @click="() => {this.$refs.actionRegister.hide()}"
-                                                    ></Button>
-                                                </div>                                             
-                                            </OverlayPanel>
-                                        </template>
-                                        <Column field="actionImmediateText" header="Ação Imediata">
-                                            <template #editor="{data}">
-                                                <Textarea
-                                                    v-model="data.actionImmediateText"
-                                                    :autoResize="false"
-                                                ></Textarea>
-                                            </template>
-                                        </Column>
-                                        <Column field="respEmailAction" header="Responsavel">
-                                            <template #editor="{data}">
-                                                <Textarea
-                                                    v-model="data.actionImmediateText"
-                                                    :autoResize="false"
-                                                ></Textarea>
-                                            </template>
-                                        </Column>
-                                        <Column field="dateLimit" header="Prazo">
-                                            <template #body="{data}">
-                                                {{ new Date(data.dateLimit).toLocaleDateString() }}    
-                                            </template>
-                                            <template #editor="{data}">
-                                                <Calendar
-                                                    v-model="data.dateLimit"
-                                                    dateFormat="dd/mm/yy"
-                                                ></Calendar>
-                                            </template>
-                                        </Column>
-                                        <Column field="implant" header="Implementada?">
-                                            <template #body="{data}">
-                                                {{ data.implant ? "Sim" : "Nao" }}   
-                                            </template>
-                                            <template #editor="{data}">
-                                                <Checkbox
-                                                    v-model="data.implant"
-                                                    :binary="true"
-                                                    :pt="{
-                                                        box: data.implant 
-                                                        ? { style: 'background:#3B82F6; border-color:#3B82F6' } 
-                                                        : { style: 'background:#fff; border-color:#CBD5E1' },
-                                                        icon: { style: 'color:white' }
-                                                    }"
-                                                ></Checkbox>
-                                            </template>
-                                        </Column>
-                                        <Column field="newDataLimit" header="Novo Prazo">
-                                            <template #body="{data}">
-                                                {{ new Date(data.newDataLimit).toLocaleDateString() }}    
-                                            </template>
-                                            <template #editor="{data}">
-                                                <Calendar
-                                                    v-model="data.newDataLimit"
-                                                    dateFormat="dd/mm/yy"
-                                                ></Calendar>
-                                            </template>
-                                        </Column>
-                                        <Column header="Ações">
-                                            <template #body="{data}">
-                                                <i 
-                                                    class="pi pi-trash"
-                                                    style="font-size: 1rem; cursor: pointer;"
-                                                    @click="deleteImmediateAction(data)"    
                                                 ></i>
                                             </template>
                                         </Column>
