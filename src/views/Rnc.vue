@@ -686,7 +686,9 @@ export default{
             this.getRNC()
         },
         formatData(x){
-            return new Date(x).toLocaleDateString()
+            if(!x){return ''}
+
+            return new Date(x).toLocaleDateString() 
         },
         exportCSV(){
             this.$refs.anomalies.exportCSV()
@@ -953,7 +955,11 @@ export default{
                         </div>                        
                     </template>
                     <Column field="numericId" header="Código"></Column>
-                    <Column field="typeAnomalie" header="Tipo" sortable></Column>
+                    <Column field="timeToCheck" header="Análise" sortable>
+                        <template #body="{data}">
+                            <div>{{ formatData(data.timeToCheck) }}</div>                            
+                        </template>
+                    </Column>
                     <Column field="base" header="Base" sortable></Column>
                     <Column field="place" header="Local" sortable></Column>
                     <Column field="date" header="Data do ocorrido" sortable>
@@ -1098,15 +1104,6 @@ export default{
                                     placeholder="Selecione o tipo de equipamento">
                                 </Dropdown>
                             </div>
-                            <!-- <div class="groupQuestion">
-                                <span>Selecione o impacto:</span>
-                                <Dropdown 
-                                    v-model="impactAnomalie" 
-                                    :options="impactOptions"
-                                    optionLabel="name" 
-                                    placeholder="Selecione o impacto">
-                                </Dropdown>
-                            </div> -->
                         </div>
                         <div class="topBox">
                             <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">

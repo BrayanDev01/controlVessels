@@ -1,7 +1,7 @@
 <script>
 import MenuBar from '../components/MenuBar.vue';
 import axios from 'axios'
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode, FilterOperator  } from 'primevue/api';
 import { MockLocations } from '../mocks/locationsMocks.js';
 
 export default{
@@ -46,6 +46,52 @@ export default{
             baseAnomaliesData: null,
             monthAnomaliesData: null,
             typeCall: null,
+            classification: null,
+
+            timeToCheck: null,
+            observations: null,
+            isEffective: false,
+            dateToFinish: null,
+            respToCheck: null,
+
+            actionImmediate: [],
+            actionImmediateText: null,
+            respEmailAction: null,
+            dateLimit: null,
+
+            actionCorrectives: [],
+            what: null,
+            why: null,
+            where: null,
+            when: null,
+            who: null,
+            how: null,
+            howMuch: null,
+
+            needRevision: null,
+            revisionDate: null,
+            revisionNumber: null,
+            reasonRevision: null,
+
+            fiveWhys: [],
+            firstWhy: null,
+            secondWhy: null,
+            thirdWhy: null,
+            fourthWhy: null,
+            fifthWhy: null,
+
+            evidencesAnalises: [],
+
+            sectorsEnvolveds: null,
+            classificationOptions: [
+                {name: "Processo"},
+                {name: "Auditoria Externa"},
+                {name: "Auditoria Interna"},
+                {name: "Outros"},
+                {name: "Indicadores"},
+                {name: "Cliente"},
+                {name: "Provedor Externo"},                
+            ],
             typeCallOptions:[
                 {name: "Anomalia"},
                 {name: "Não Conformidade"},
@@ -152,15 +198,16 @@ export default{
                 place: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 resumeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 status: { value: null, matchMode: FilterMatchMode.CONTAINS},
-                typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS}
+                typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
+                'classification.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] }
             }
         }
     },
     methods:{
-        async getPurgatory(){
+        async getRNC(){
             const options = {
                 method: 'POST',
-                url: `${import.meta.env.VITE_URL_API}functions/getOtherAnomalies`,
+                url: `${import.meta.env.VITE_URL_API}functions/getNonConformityAnomalies`,
                 params: {include: 'reportFor', order: '-createdAt', limit: 300},
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
@@ -209,7 +256,22 @@ export default{
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
-                    criticalityAnomalie: this.criticalityAnomalie.name
+                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    purgatory: this.typeCall,
+                    actionImmediate: this.actionImmediate,
+                    actionCorrectives: this.actionCorrectives,
+                    timeToCheck: this.timeToCheck,
+                    observations: this.observations,
+                    isEffective: this.isEffective,
+                    dateToFinish: this.dateToFinish,
+                    respToCheck: this.respToCheck,
+                    fiveWhys: this.fiveWhys,
+                    classifications: this.classification,
+                    evidencesAnalises: this.evidencesAnalises,
+                    needRevision: this.needRevision,
+                    revisionDate: this.revisionDate,
+                    revisionNumber: this.revisionNumber,
+                    reasonRevision: this.reasonRevision,
                 }
 
             }
@@ -264,7 +326,21 @@ export default{
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
                     criticalityAnomalie: this.criticalityAnomalie.name,
-                    purgatory: this.typeCall
+                    purgatory: this.typeCall,
+                    actionImmediate: this.actionImmediate,
+                    actionCorrectives: this.actionCorrectives,
+                    timeToCheck: this.timeToCheck,
+                    observations: this.observations,
+                    isEffective: this.isEffective,
+                    dateToFinish: this.dateToFinish,
+                    respToCheck: this.respToCheck,
+                    fiveWhys: this.fiveWhys,
+                    classification: this.classification,
+                    evidencesAnalises: this.evidencesAnalises,
+                    needRevision: this.needRevision,
+                    revisionDate: this.revisionDate,
+                    revisionNumber: this.revisionNumber,
+                    reasonRevision: this.reasonRevision
                 }
 
             }
@@ -286,25 +362,73 @@ export default{
             })
             
         },
-        async getQntAnomalies(){
+        async fasterUpdateAnomalie(){
+            if(!this.objectId) {
+                return
+            }
+            
+            this.loadingCreate = true;
+
             const options = {
-                method: 'POST',
-                url: `${import.meta.env.VITE_URL_API}functions/getAnomaliesStatusCounts`,
+                method: 'PUT',
+                url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${this.objectId}`,
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    resumeAnomalie: this.resumeAnomalie,
+                    date: new Date(this.dateAnomalie).toISOString(),
+                    departmentResp: this.departmentResp?.name,
+                    typeAnomalie: this.typeAnomalie?.name,
+                    base: this.baseAnomalie?.name,
+                    place: this.placeAnomalie?.name,
+                    equipament: this.equipamentAnomalie?.name,
+                    nameEquipament: this.nameEquipament?.name,
+                    impact: this.impactAnomalie?.name,
+                    status: this.statusAnomalie?.name,
+                    archives: this.archives,
+                    imageFacts: this.imageFacts,
+                    reasonAnomalie: this.reasonAnomalie,
+                    envolvedInAnomalie: this.envolvedInAnomalie,
+                    resumeQuality: this.resumeQuality,
+                    emailResp: this.departmentResp?.email,
+                    causeAfterAnalise: this.causeAfterAnalise,
+                    actionOfContention: this.actionOfContention,
+                    contramedida: this.contramedida,
+                    gestorArgument: this.gestorArgument,
+                    archivesRetrated: this.archivesRetrated,
+                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    purgatory: this.typeCall,
+                    actionImmediate: this.actionImmediate,
+                    actionCorrectives: this.actionCorrectives,
+                    timeToCheck: this.timeToCheck,
+                    observations: this.observations,
+                    isEffective: this.isEffective,
+                    dateToFinish: this.dateToFinish,
+                    respToCheck: this.respToCheck,
+                    fiveWhys: this.fiveWhys,
+                    classification: this.classification,
+                    evidencesAnalises: this.evidencesAnalises,
+                    needRevision: this.needRevision,
+                    revisionDate: this.revisionDate,
+                    revisionNumber: this.revisionNumber,
+                    reasonRevision: this.reasonRevision,
                 }
+
             }
 
-            await axios.request(options).then((response)=>{
-                console.log(response)
-                this.qtdAnomaliesData = this.organizeQtdAnomalies(response.data.result.statusArray, response.data.result.countArray )
-                this.typeAnomaliesData = this.organizeQtdAnomalies(response.data.result.typeArray, response.data.result.countTypesArray)
-                this.baseAnomaliesData = this.organizeQtdAnomalies(response.data.result.baseArray, response.data.result.countBasesArray)
-                this.monthAnomaliesData = this.organizeQtdAnomalies(response.data.result.monthArray, response.data.result.countMonthArray)
-            }).catch((error)=>{
+            await axios.request(options).then((response) =>{
+                
+                this.tostAdvice('success', 'Anomalia Atualizada');
+                this.loadingCreate = false;           
+                // console.log(response)
+            }).catch(error =>{
+                this.tostAdvice('error', 'Tivemos um erro')
+                this.loadingCreate = false;
                 console.log(error)
             })
+            
         },
         getStatusLabel(status) {
             switch (status) {
@@ -353,14 +477,33 @@ export default{
             this.gestorArgument= null
             this.archivesRetrated = [];
             this.criticalityAnomalie = null;
-            this.typeCall = null
-
+            this.typeCall = null;
+            this.actionImmediate = null;
+            this.timeToCheck = null;
+            this.observations = null;
+            this.isEffective = null;
+            this.dateToFinish = null;
+            this.respToCheck = null;
+            this.actionCorrectives = null;
+            this.fiveWhys = [];
+            this.classification = null;
+            this.evidencesAnalises = [];
+            this.needRevision = null,
+            this.revisionDate = null,
+            this.revisionNumber = null,
+            this.reasonRevision = null
         },
         closeModal(){
             this.visible = false
         },
         tostAdvice(cor, msg){
             this.$toast.add({ severity: `${cor}`, summary: `${msg}`, life: 5000 });
+        },
+        addEvidence(e){
+            const response = JSON.parse(e.xhr.responseText);
+            // console.log(response);
+            this.evidencesAnalises = [...this.evidencesAnalises, ...response.files];
+            this.fasterUpdateAnomalie()
         },
         beforeAnalise(e){
             const response = JSON.parse(e.xhr.responseText);
@@ -452,6 +595,24 @@ export default{
                 this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
             })
         },
+        async deleteEvidenceAnalyse(url, index){
+            const options = {
+                method: 'DELETE',
+                url: `https://connectapi.3nf.com.br/uploadAnomalias`,
+                data:{
+                    fileUrl: url
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+                this.$toast.add({severity:'successs', summary:'Arquivo Deletado', life:3000})
+                this.removeEvidence(index)
+            }).catch((error)=>{
+                console.log(error)
+                this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
+            })
+        },
         downloadImage(url){
             window.open(url, '_blank')
         },
@@ -468,6 +629,11 @@ export default{
         retirarArchivesGestor(index){
             if (index > -1 && index < this.archivesRetrated.length) {
                 this.archivesRetrated.splice(index, 1);   
+            }
+        },
+        removeEvidence(index){
+            if (index > -1 && index < this.evidencesAnalises.length) {
+                this.evidencesAnalises.splice(index, 1);   
             }
         },
         editAnomalie(e){
@@ -497,16 +663,30 @@ export default{
             this.actionOfContention= e.data.actionOfContention;
             this.gestorArgument = e.data.gestorArgument;
             this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
-            this.typeCall = e.data.purgatory
-            
+            this.typeCall = e.data.purgatory;
+            this.actionImmediate = e.data.actionImmediate;
+            this.timeToCheck = e.data.timeToCheck;
+            this.isEffective = e.data.isEffective;
+            this.dateToFinish = e.data.dateToFinish;
+            this.respToCheck = e.data.respToCheck;
+            this.observations = e.data.observations;
+            this.actionCorrectives = e.data.actionCorrectives;   
+            this.fiveWhys = e.data.fiveWhys; 
+            this.classification = e.data.classification; 
+            this.evidencesAnalises = e.data.evidencesAnalises||[];   
+            this.needRevision = e.data.needRevision,
+            this.revisionDate = new Date(e.data.revisionDate).toLocaleDateString() || null,
+            this.revisionNumber = e.data.revisionNumber,
+            this.reasonRevision = e.data.reasonRevision,
 
             this.visible= true;
         },
         resetData(){
             this.anomalies = [];
-            this.getAnomalies()
+            this.getRNC()
         },
         formatData(x){
+            if(!x){return ''}
             return new Date(x).toLocaleDateString()
         },
         exportCSV(){
@@ -519,15 +699,205 @@ export default{
             this.filters['global'].value = e.value.numericId
         },
         enableButton(){
-            if( this.nameEquipament && this.resumeAnomalie && this.dateAnomalie && this.departmentResp && this.typeAnomalie && this.baseAnomalie && this.placeAnomalie && this.equipamentAnomalie && this.impactAnomalie){
+            if( 
+                this.nameEquipament && 
+                this.resumeAnomalie && 
+                this.dateAnomalie && 
+                this.departmentResp && 
+                this.typeAnomalie && 
+                this.baseAnomalie && 
+                this.placeAnomalie && 
+                this.equipamentAnomalie &&
+                this.needRevision
+            ){
                 return false
             }return true
-        }
+        },
+        toggle(event) {
+            this.$refs.actionRegister.toggle(event);
+        },
+        toggle5w2h(event) {
+            this.$refs.actionCorrective.toggle(event);
+        },
+        toggle5w(event) {
+            this.$refs.fivewhys.toggle(event);
+        },
+        closeOp(){
+            this.actionImmediateText = null;
+            this.respEmailAction = null;
+            this.dateLimit = null;
+            this.what = null;
+            this.why = null;
+            this.where = null;
+            this.when = null;
+            this.who = null;
+            this.how = null;
+            this.howMuch = null;
+            this.firstWhy = null;
+            this.secondWhy = null;
+            this.thirdWhy = null;
+            this.fourthWhy = null;
+            this.fifthWhy = null;
+        },
+        closeOp5w(){
 
+        },
+        addAction(){
+            if(this.actionImmediate === undefined || this.actionImmediate === null){
+                this.actionImmediate = []
+            }
+
+            this.actionImmediate.push({
+                actionImmediateText: this.actionImmediateText,
+                respEmailAction: this.respEmailAction,
+                dateLimit: this.dateLimit,
+                implement: false,
+                newDateLimit: null
+            })
+            this.$refs.actionRegister.hide();
+            this.fasterUpdateAnomalie()
+        },
+        add5w2h(){
+            if(this.actionCorrectives === undefined || this.actionCorrectives === null){
+                this.actionCorrectives = []
+            }
+
+            this.actionCorrectives.push({
+                what: this.what,
+                why: this.why,
+                where: this.where,
+                when: this.when,
+                who: this.who,
+                how: this.how,
+                howMuch: this.howMuch
+            })
+            this.$refs.actionCorrective.hide();
+            this.fasterUpdateAnomalie()            
+        },
+        addFiveWhys(){
+            if(this.fiveWhys === undefined || this.fiveWhys === null){
+                this.fiveWhys = []
+            }
+            this.fiveWhys.push({
+                firstWhy: this.firstWhy,
+                secondWhy: this.secondWhy,
+                thirdWhy: this.thirdWhy,
+                fourthWhy: this.fourthWhy,
+                fifthWhy: this.fifthWhy
+            })
+            this.$refs.fivewhys.hide();
+            this.fasterUpdateAnomalie() 
+        },
+        onCellEditCompleteFiveWhys(e) {
+            console.log(e)
+            const { data, newValue, field } = e; // data = objeto da linha
+
+            // validação simples para marketValue e marginPct
+            const numericFields = ['marketValue', 'marginPct'];
+            if (numericFields.includes(field) && (newValue === '' || newValue === null || isNaN(newValue))) {
+                e.preventDefault(); // cancela o commit
+                return;
+            }
+
+            // atualiza a propriedade (suporta "a.b.c" se usar campos aninhados)
+            this.setByPath(data, field, numericFields.includes(field) ? Number(newValue) : newValue);
+
+            // opcional: força re-render clonando a linha dentro do array
+            const i = this.fiveWhys.findIndex(it => it === data);
+            if (i !== -1) this.fiveWhys.splice(i, 1, { ...this.fiveWhys[i] });
+
+            this.fasterUpdateAnomalie()
+        },
+        onCellEditCompleteActionImmediate(e) {
+            console.log(e)
+            const { data, newValue, field } = e; // data = objeto da linha
+
+            // validação simples para marketValue e marginPct
+            const numericFields = ['marketValue', 'marginPct'];
+            if (numericFields.includes(field) && (newValue === '' || newValue === null || isNaN(newValue))) {
+                e.preventDefault(); // cancela o commit
+                return;
+            }
+
+            // atualiza a propriedade (suporta "a.b.c" se usar campos aninhados)
+            this.setByPath(data, field, numericFields.includes(field) ? Number(newValue) : newValue);
+
+            // opcional: força re-render clonando a linha dentro do array
+            const i = this.actionImmediate.findIndex(it => it === data);
+            if (i !== -1) this.actionImmediate.splice(i, 1, { ...this.actionImmediate[i] });
+
+            this.fasterUpdateAnomalie()
+        },
+        onCellEditCompleteFiveWTwoHows(e) {
+            console.log(e)
+            const { data, newValue, field } = e; // data = objeto da linha
+
+            // validação simples para marketValue e marginPct
+            const numericFields = ['marketValue', 'marginPct'];
+            if (numericFields.includes(field) && (newValue === '' || newValue === null || isNaN(newValue))) {
+                e.preventDefault(); // cancela o commit
+                return;
+            }
+
+            // atualiza a propriedade (suporta "a.b.c" se usar campos aninhados)
+            this.setByPath(data, field, numericFields.includes(field) ? Number(newValue) : newValue);
+
+            // opcional: força re-render clonando a linha dentro do array
+            const i = this.actionCorrectives.findIndex(it => it === data);
+            if (i !== -1) this.actionCorrectives.splice(i, 1, { ...this.actionCorrectives[i] });
+
+            this.fasterUpdateAnomalie()
+        },
+        setByPath(obj, path, value) {
+            const keys = path.split('.');
+            const last = keys.pop();
+            let cur = obj;
+            for (const k of keys) {
+            if (cur[k] == null || typeof cur[k] !== 'object') cur[k] = {};
+            cur = cur[k];
+            }
+            cur[last] = value;
+        },
+        delete5Whys(data){
+            const i = this.fiveWhys.findIndex(it => it === data);
+            if (i !== -1) this.fiveWhys.splice(i, 1);
+            this.fasterUpdateAnomalie()
+        },
+        deleteImmediateAction(data){
+            const i = this.actionImmediate.findIndex(it => it === data);
+            if (i !== -1) this.actionImmediate.splice(i, 1);
+            this.fasterUpdateAnomalie()
+        },
+        delete5w2h(data){
+            const i = this.actionCorrectives.findIndex(it => it === data);
+            if (i !== -1) this.actionCorrectives.splice(i, 1);
+            this.fasterUpdateAnomalie()
+        },
+        deleteDoc(id){
+            const options = {
+                method: 'DELETE',
+                url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${id}`,
+                headers: {
+                    'X-Parse-REST-API-Key': `${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                }
+            }
+            axios.request(options).then((response) => {
+                this.$toast.add({severity: 'success', summary: 'Sucesso', detail: 'Anomalia excluida com sucesso', life: 3000});                
+                this.getRNC()
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+    },
+    watch:{
+        isEffective(value){
+            console.log(value)
+        }
     },
     created(){
-        this.getPurgatory();
-        document.title="Não Conformidades | Controle de Embarcação"
+        this.getRNC();
+        document.title="Purgatório | Controle de Embarcação"
         
         MockLocations.getLocations().then((data) =>{ this.equipamentOptions = data })
     }
@@ -537,14 +907,12 @@ export default{
     <div class="main">
         <MenuBar></MenuBar>
         <div class="dataCentral">
-            <!-- <div class="header">
-                <Button @click="visible=true">Nova Não Conformidade</Button>
-            </div> -->
             <div>
                 <DataTable
                     :value="anomalies"
                     selectionMode="single"
                     @rowSelect="editAnomalie"
+                    filterDisplay="menu"
                     ref="anomalies"
                     dataKey="id"
                     :style="{width:'90dvw'}"
@@ -553,7 +921,7 @@ export default{
                     removableSort
                     :loading="isLoading"
                     v-model:filters="filters"
-                    :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie']"
+                    :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie', 'classification.name']"
                 >
                     <template #header>
                         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -583,7 +951,11 @@ export default{
                         </div>                        
                     </template>
                     <Column field="numericId" header="Código"></Column>
-                    <Column field="typeAnomalie" header="Tipo" sortable></Column>
+                    <Column field="timeToCheck" header="Análise" sortable>
+                        <template #body="{data}">
+                            <div>{{ formatData(data.timeToCheck) }}</div>                            
+                        </template>
+                    </Column>
                     <Column field="base" header="Base" sortable></Column>
                     <Column field="place" header="Local" sortable></Column>
                     <Column field="date" header="Data do ocorrido" sortable>
@@ -604,9 +976,29 @@ export default{
                         </template>
                     </Column>
                     <Column field="equipament" header="Tipo Equip." sortable></Column>
-                    <Column field="reportFor.username" header="Criado por"></Column>
+                    <Column field="classification.name" header="Class.">
+                        <template #filter="{filterModel}">
+                            <Dropdown
+                                v-model="filterModel.value"
+                                :options="classificationOptions"
+                                optionLabel="name"
+                                optionValue="name"
+                                placeholder="Selecione..."
+                                class="p-column-filter"
+                            />
+                        </template>
+                    </Column>
                     <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
                     <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
+                    <Column header="Ações" v-if="userInfo.department == 'Qualidade' || userInfo.department == 'ADMINISTRACAO'">
+                        <template #body="{data}">
+                            <Button
+                                rounded
+                                icon="pi pi-trash"
+                                @click="deleteDoc(data.objectId)"
+                            ></Button>
+                        </template>
+                    </Column>
                     <template #footer> Total de Anomalias:  {{ anomalies ? anomalies.length : 0 }} </template>           
                 </DataTable>
             </div>
@@ -620,7 +1012,7 @@ export default{
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
         >
             <template #header>
-                <div class="titleDialog">Cadastrar Anomalia</div>
+                <div class="titleDialog">Visualizar Anomalia / RNC</div>
             </template>
             <div class="formAnomalies">
                 <TabView style="width: 100%;" v-model:activeIndex="active">
@@ -629,7 +1021,7 @@ export default{
                             <div>
                                 <FloatLabel>
                                     <Textarea v-model="resumeAnomalie" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Resumo da Anomalia :</label>
+                                    <label>Descrição da Ocorrência:</label>
                                 </FloatLabel>
                             </div>
                             <div class="groupQuestion">
@@ -649,12 +1041,13 @@ export default{
                         </div>
                         <div class="topBox">
                             <div class="groupQuestion">
-                                <span>Causa da ocorrência:</span>
-                                <InputText id="username" style="width: 100%;" v-model="reasonAnomalie" />
-                            </div>
-                            <div class="groupQuestion">
-                                <span>Envolvidos:</span>
-                                <InputText id="username" style="width: 100%;" v-model="envolvedInAnomalie" />
+                                <span>Departamentos Envolvidos:</span>
+                                <Dropdown 
+                                    v-model="departmentResp" 
+                                    :options="departments"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o Departamento">
+                                </Dropdown>
                             </div>
                             <div class="groupQuestion">
                                 <span>Tipo do chamado :</span>
@@ -666,6 +1059,76 @@ export default{
                                     v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'"
                                 ></Dropdown>
                             </div>                         
+                        </div>
+                        <div class="topBox">
+                            <div class="groupQuestion">
+                                <span>Tipo de Não Conformidade :</span>
+                                <Dropdown 
+                                    v-model="typeAnomalie" 
+                                    :options="typesOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o tipo">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Base:</span>
+                                <Dropdown 
+                                    v-model="baseAnomalie" 
+                                    :options="baseOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione a base">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion">
+                                <span>Nome do Equipamento:</span>
+                                <Dropdown 
+                                    v-model="nameEquipament" 
+                                    :options="equipamentOptions"
+                                    filter
+                                    optionLabel="name" 
+                                    placeholder="Selecione o equipamento">
+                                </Dropdown>
+                            </div>
+                        </div>
+                        <div class="topBox">
+                            <div class="groupQuestion">
+                                <span>Tipo de equipamento:</span>
+                                <Dropdown 
+                                    v-model="equipamentAnomalie" 
+                                    :options="equipamentTypeOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o tipo de equipamento">
+                                </Dropdown>
+                            </div>
+                        </div>
+                        <div class="topBox">
+                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">
+                                <span>Selecione o status</span>
+                                <Dropdown 
+                                    v-model="statusAnomalie" 
+                                    :options="statusOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione o status">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion" style="width: 30%;">
+                                <span>Selecione a criticidade :</span>
+                                <Dropdown 
+                                    v-model="criticalityAnomalie" 
+                                    :options="criticalityOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione a criticidade">
+                                </Dropdown>
+                            </div>
+                            <div class="groupQuestion" style="width: 30%;">
+                                <span>Selecione a classificação :</span>
+                                <Dropdown 
+                                    v-model="classification" 
+                                    :options="classificationOptions"
+                                    optionLabel="name" 
+                                    placeholder="Selecione a classificação">
+                                </Dropdown>
+                            </div>
                         </div>
                         <div style="display: flex; align-items: center;">
                             <FileUpload
@@ -694,247 +1157,612 @@ export default{
                             </div>
                         </div>
                     </TabPanel>
-                    <TabPanel header="Informações">
-                        <div style="display: flex; gap: 20px;width: 100%;">
-                            <div style="width: 100%;">
-                                <div class="groupQuestion">
-                                    <span>Departamento Responsável:</span>
-                                    <Dropdown 
-                                        v-model="departmentResp" 
-                                        :options="departments"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o Departamento">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Tipo de Anomalia:</span>
-                                    <Dropdown 
-                                        v-model="typeAnomalie" 
-                                        :options="typesOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o tipo">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Base:</span>
-                                    <Dropdown 
-                                        v-model="baseAnomalie" 
-                                        :options="baseOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione a base">
-                                    </Dropdown>
-                                </div>
-                            </div>
-                            <div style="width: 100%;">
-                                <div class="groupQuestion">
-                                    <span>Nome do Equipamento:</span>
-                                    <Dropdown 
-                                        v-model="nameEquipament" 
-                                        :options="equipamentOptions"
-                                        filter
-                                        optionLabel="name" 
-                                        placeholder="Selecione o equipamento">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Tipo de equipamento:</span>
-                                    <Dropdown 
-                                        v-model="equipamentAnomalie" 
-                                        :options="equipamentTypeOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o tipo de equipamento">
-                                    </Dropdown>
-                                </div>
-                                <div class="groupQuestion">
-                                    <span>Selecione o impacto:</span>
-                                    <Dropdown 
-                                        v-model="impactAnomalie" 
-                                        :options="impactOptions"
-                                        optionLabel="name" 
-                                        placeholder="Selecione o impacto">
-                                    </Dropdown>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
-                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">
-                                <span>Selecione o status</span>
-                                <Dropdown 
-                                    v-model="statusAnomalie" 
-                                    :options="statusOptions"
-                                    optionLabel="name" 
-                                    placeholder="Selecione o status">
-                                </Dropdown>
-                            </div>
-                            <div class="groupQuestion" style="width: 30%;">
-                                <span>Selecione a criticidade</span>
-                                <Dropdown 
-                                    v-model="criticalityAnomalie" 
-                                    :options="criticalityOptions"
-                                    optionLabel="name" 
-                                    placeholder="Selecione a criticidade">
-                                </Dropdown>
-                            </div>
-                        </div>
-                    </TabPanel>
-                    <TabPanel header="Analise da Causa Raiz">
-                        <div class="topBox">
+                    <TabPanel header="Análise">
+                        <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-                                <div>
-                                    <FloatLabel>
-                                        <Textarea v-model="resumeQuality" rows="5" cols="40" style="resize: none; width: 100%;"/>
-                                        <label>Resumo do Avaliador :</label>
-                                    </FloatLabel>
-                                    <div>
-                                        <span></span>
-                                    </div>
-                                </div>
-                                <div class="flex gap-5">
-                                    <div class="groupInput w-full">
-                                        <span>Descrição do Problema ou Oportunidade de Melhoria :</span>
-                                        <Textarea 
-                                            v-model="problemOrMelhoria" 
-                                            rows="5" 
-                                            cols="40"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>Abrangência da Não Conformidade :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="40"
-                                        ></Textarea>
-                                    </div>
-                                </div>
-                                <div class="flex gap-5">
-                                    <div class="groupInput w-full">
-                                        <span>1º Por que? :</span>
-                                        <Textarea 
-                                            v-model="why" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>2º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>3º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                </div>
-                                <div class="flex gap-5">
-                                    <div class="groupInput w-full">
-                                        <span>4º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>5º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                    <div class="groupInput w-full">
-                                        <span>Resposta 5º Por que? :</span>
-                                        <Textarea 
-                                            v-model="abrangenceOfNonConformity" 
-                                            rows="5" 
-                                            cols="30"
-                                        ></Textarea>
-                                    </div>
-                                </div>
-                                <div class="boxUpload">
-                                    <FileUpload 
-                                        mode="basic" 
-                                        name="files"
-                                        :auto="true"
-                                        :multiple="true"
-                                        @upload="afterAnalise($event)"
-                                        url="https://connectapi.3nf.com.br/upload"
-                                    />
-                                    <div v-for="(file, i) in archives" :key="i" 
-                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <strong>Ação Imediata:</strong>
+                                    <DataTable
+                                        :value="actionImmediate"
+                                        editMode="cell"
+                                        @cell-edit-complete="onCellEditCompleteActionImmediate"
+                                        :pt="{
+                                            table: { style: 'min-width: 50rem' },
+                                            column: {
+                                                bodycell: ({ state }) => ({
+                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
+                                                })
+                                            }
+                                        }"
                                     >
-                                        <div 
-                                            class="uploadBox"
-                                        >
-                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
-                                            <div style="display: flex; gap: 15px; padding: 10px;">
-                                                <i class="pi pi-times" style="font-size: 1rem;" @click="deleteImageAfter(file.location, i)"></i>
-                                                <i class="pi pi-download" style="font-size: 1rem;" @click="downloadImage(file.location)"></i>
-                                            </div>
+                                        <template #empty>
+                                            <span>Nenhuma ação imediata cadastrada</span>
+                                        </template>
+                                        <template #header>
+                                            <Button @click="toggle">Nova Ação Imediata</Button>
+                                            <OverlayPanel ref="actionRegister" @hide="closeOp()">
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Ação Imediata :</span>
+                                                        <Textarea
+                                                            v-model="actionImmediateText"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Email do Responsavel :</span>
+                                                        <InputText
+                                                            v-model="respEmailAction"
+                                                        ></InputText>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Prazo :</span>
+                                                        <Calendar
+                                                            dateFormat="dd/mm/yy"
+                                                            v-model="dateLimit"
+                                                        ></Calendar>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        label="Salvar"
+                                                        @click="addAction"
+                                                    ></Button>
+                                                    <Button
+                                                        label="Cancelar"
+                                                        @click="() => {this.$refs.actionRegister.hide()}"
+                                                    ></Button>
+                                                </div>                                             
+                                            </OverlayPanel>
+                                        </template>
+                                        <Column field="actionImmediateText" header="Ação Imediata">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.actionImmediateText"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="respEmailAction" header="Responsavel">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.actionImmediateText"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="dateLimit" header="Prazo">
+                                            <template #body="{data}">
+                                                {{ new Date(data.dateLimit).toLocaleDateString() }}    
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.dateLimit"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                        </Column>
+                                        <Column field="implant" header="Implementada?">
+                                            <template #body="{data}">
+                                                {{ data.implant ? "Sim" : "Nao" }}   
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Checkbox
+                                                    v-model="data.implant"
+                                                    :binary="true"
+                                                    :pt="{
+                                                        box: data.implant 
+                                                        ? { style: 'background:#3B82F6; border-color:#3B82F6' } 
+                                                        : { style: 'background:#fff; border-color:#CBD5E1' },
+                                                        icon: { style: 'color:white' }
+                                                    }"
+                                                ></Checkbox>
+                                            </template>
+                                        </Column>
+                                        <Column field="newDataLimit" header="Novo Prazo">
+                                            <template #body="{data}">
+                                                {{ new Date(data.newDataLimit).toLocaleDateString() }}    
+                                            </template>
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.newDataLimit"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                        </Column>
+                                        <Column header="Ações">
+                                            <template #body="{data}">
+                                                <i 
+                                                    class="pi pi-trash"
+                                                    style="font-size: 1rem; cursor: pointer;"
+                                                    @click="deleteImmediateAction(data)"    
+                                                ></i>
+                                            </template>
+                                        </Column>
+                                    </Datatable>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topBox" style="margin: 10px;">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <strong>Os 5 Porquês :</strong>
+                                    <DataTable
+                                        :value="fiveWhys"
+                                        editMode="cell"
+                                        @cell-edit-complete="onCellEditCompleteFiveWhys"
+                                        :pt="{
+                                            table: { style: 'min-width: 50rem' },
+                                            column: {
+                                                bodycell: ({ state }) => ({
+                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
+                                                })
+                                            }
+                                        }"
+                                    >
+                                        <template #empty>
+                                            <span>Nenhum Porquê cadastrado</span>
+                                        </template>
+                                        <template #header>
+                                            <Button @click="toggle5w">Adicionar 5 Porquês</Button>
+                                            <OverlayPanel ref="fivewhys" @hide="closeOp()">
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>1º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="firstWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>2º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="secondWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>3º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="thirdWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>4º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="fourthWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>5º Por quê? :</span>
+                                                        <Textarea
+                                                            v-model="fifthWhy"
+                                                            :autoResize="false"
+                                                            rows="5"
+                                                            cols="30"
+                                                        ></Textarea>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        label="Salvar"
+                                                        @click="addFiveWhys"
+                                                    ></Button>
+                                                    <Button
+                                                        label="Cancelar"
+                                                        @click="() => {this.$refs.fivewhys.hide()}"
+                                                    ></Button>
+                                                </div>                                             
+                                            </OverlayPanel>
+                                        </template>
+                                        <Column field="firstWhy" header="1º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.firstWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="secondWhy" header="2º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.secondWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="thirdWhy" header="3º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.thirdWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="fourthWhy" header="4º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.fourthWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="fifthWhy" header="5º Porquê">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.fifthWhy"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column header="Ações">
+                                            <template #body="{ data }">
+                                                <i 
+                                                    class="pi pi-trash" 
+                                                    style="font-size: 1rem; cursor: pointer;" 
+                                                    @click="delete5Whys(data)"
+                                                ></i>
+                                            </template>
+                                        </Column>
+                                    </Datatable>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topBox" style="margin: 10px;">
+                            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;" >
+                                <strong>A gestão de riscos e oportunidades do setor precisa ser revisada?</strong>
+                                <div style="display: flex; gap: 10px;">
+                                    <div>
+                                        <RadioButton 
+                                            v-model="needRevision"
+                                            inputId="revision"
+                                            name="revisionSim"
+                                            value="true"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }" 
+                                        ></RadioButton>
+                                        <label for="revision">Sim</label>
+                                    </div>
+                                    <div>
+                                        <RadioButton 
+                                            v-model="needRevision"
+                                            inputId="revision"
+                                            name="revisionSim"
+                                            value="false"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }" 
+                                        ></RadioButton>
+                                        <label for="revision">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="needRevision == 'true'" style="display: flex; gap: 10px;">
+                                <div class="inputGroup">
+                                    <span>Revisão Nº :</span>
+                                    <InputText
+                                        v-model="revisionNumber"
+                                    ></InputText>
+                                </div>
+                                <div class="inputGroup">
+                                    <span>Data :</span>
+                                    <Calendar
+                                        v-model="revisionDate"
+                                        format="dd/mm/yy"
+                                    ></Calendar>
+                                </div>
+                            </div>
+                            <div v-else-if="needRevision == 'false'" style="display: flex; gap: 10px;">
+                                <div class="inputGroup" style="">
+                                    <span>Motivo :</span>
+                                    <Textarea
+                                        v-model="reasonRevision"
+                                    ></Textarea>
+                                </div>
+                            </div>                           
+                        </div>
+                        <div class="topBox" style="margin: 10px;">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <strong>5W2H :</strong>
+                                    <DataTable
+                                        :value="actionCorrectives"
+                                        editMode="cell"
+                                        @cell-edit-complete="onCellEditCompleteFiveWTwoHows"
+                                        :pt="{
+                                            table: { style: 'min-width: 50rem' },
+                                            column: {
+                                                bodycell: ({ state }) => ({
+                                                    class: [{ 'pt-0 pb-0': state['d_editing'] }]
+                                                })
+                                            }
+                                        }"
+                                    >
+                                        <template #empty>
+                                            <span>Nenhuma ação imediata cadastrada</span>
+                                        </template>
+                                        <template #header>
+                                            <Button @click="toggle5w2h">Adicionar 5W2H</Button>
+                                            <OverlayPanel ref="actionCorrective" @hide="closeOp()">
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>O Que ?</span>
+                                                        <Textarea
+                                                            v-model="what"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Por que ?</span>
+                                                        <Textarea
+                                                            v-model="why"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Onde ?</span>
+                                                        <Textarea
+                                                            v-model="where"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Quando ?</span>
+                                                        <Calendar
+                                                            dateFormat="dd/mm/yy"
+                                                            v-model="when"
+                                                        ></Calendar>
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; gap: 10px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Quem ?</span>
+                                                        <Textarea
+                                                            v-model="who"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Como ?</span>
+                                                        <Textarea
+                                                            v-model="how"
+                                                            :autoResize="false"
+                                                        ></Textarea>
+                                                    </div>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <span>Quanto custa ?</span>
+                                                        <InputNumber
+                                                            v-model="howMuch"
+                                                            mode="currency"
+                                                            currency="BRL"
+                                                            locale="pt-BR"
+                                                        ></InputNumber>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        label="Salvar"
+                                                        @click="add5w2h"
+                                                    ></Button>
+                                                    <Button
+                                                        label="Cancelar"
+                                                        @click="() => {this.$refs.actionCorrective.hide()}"
+                                                    ></Button>
+                                                </div>                                             
+                                            </OverlayPanel>
+                                        </template>
+                                        <Column field="what" header="O que?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.what"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="why" header="Por que?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.why"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="where" header="Onde?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.where"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="when" header="Quando?">
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.when"
+                                                    dateFormat="dd/mm/yy"
+                                                ></Calendar>
+                                            </template>
+                                            <template #body="{data}">
+                                                {{ new Date(data.when).toLocaleDateString() }}
+                                            </template>
+                                        </Column>
+                                        <Column field="who" header="Quem?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.who"                                                    
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="how" header="Como?">
+                                            <template #editor="{data}">
+                                                <Textarea
+                                                    v-model="data.how"
+                                                    :autoResize="false"
+                                                ></Textarea>
+                                            </template>
+                                        </Column>
+                                        <Column field="howMuch" header="Quanto Custa?">
+                                            <template #editor="{data}">
+                                                <InputNumber
+                                                    v-model="data.howMuch"
+                                                    mode="currency"
+                                                    currency="BRL"
+                                                    locale="pt-BR"                                                
+                                                ></InputNumber>
+                                            </template>
+                                        </Column>
+                                        <Column header="Ações">
+                                            <template #body="{data}">
+                                                <i 
+                                                    class="pi pi-trash"
+                                                    style="font-size: 1rem; cursor: pointer;"
+                                                    @click="delete5w2h(data)"    
+                                                ></i>
+                                            </template>
+                                        </Column>
+                                    </Datatable>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin-top: 10px;">
+                            <FileUpload
+                                mode="basic" 
+                                name="files"
+                                :multiple="true"
+                                :auto="true"
+                                @upload="addEvidence($event)"
+                                url="https://connectapi.3nf.com.br/uploadAnomalias"
+                            >
+                            </FileUpload>
+                            <div class="boxImages">
+                                <div 
+                                    v-for="(image, index) in evidencesAnalises" 
+                                    :key="index"
+                                >
+                                    <div 
+                                        style="width: 120px; display: flex; flex-direction: column; align-items: center;">
+                                        <Image :src="image.location" alt="Teste" width="100" height="100" preview ></Image>
+                                        <div style="display: flex;">
+                                            <Button  icon="pi pi-times" rounded  @click="deleteEvidenceAnalyse(image.location, index)" v-show="userInfo?.accessLevel === 0"></Button>
+                                            <Button  icon="pi pi-download" rounded @click="downloadImage(image.location)"></Button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </TabPanel>
-                    <TabPanel header="Pós-analise">
-                        <div class="topBox collum">
-                            <div style="display: flex; gap: 10px;">
-                                <div style="width: 100%;">
-                                    <FloatLabel>
-                                        <Textarea v-model="gestorArgument" rows="5" cols="40" style="resize: none; width: 100%;"/>
-                                        <label>Retratação do Gestor :</label>
-                                    </FloatLabel>
+                    <TabPanel header="Verificação da Eficácia">
+                        <div style="width: 100%; display: flex; gap: 10px;">
+                            <div class="questionInput">
+                                <span>Prazo para verificação a eficácia :</span>
+                                <Calendar
+                                    dateFormat="dd/mm/yy"
+                                    v-model="timeToCheck"
+                                ></Calendar>
+                            </div>
+                            <div class="questionInput">
+                                <span>Observações :</span>
+                                <Textarea
+                                    v-model="observations"
+                                ></Textarea>
+                            </div>
+                            <div class="questionInput" style="align-items: center;">
+                                <span>A ação corretiva foi eficaz ? :</span>
+                                <div style="display: flex; gap: 10px;">
+                                    <div style="display: flex; flex-direction: column; text-align: center; align-items: center; justify-content: center;">
+                                        <label for="ingredient1">Sim</label>
+                                        <RadioButton 
+                                            v-model="isEffective" 
+                                            inputId="ingredient1" 
+                                            name="pizza" 
+                                            :value="true"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }" 
+                                        />                                        
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; text-align: center; align-items: center; justify-content: center;">
+                                        <label for="ingredient1">Não</label>
+                                        <RadioButton 
+                                            v-model="isEffective" 
+                                            inputId="ingredient1" 
+                                            name="pizza" 
+                                            :value="false"
+                                            :pt="{
+                                                box: ({ props, context }) => ({
+                                                    ...props, style: context.checked ? 'color: var(--primary-color-gc); background-color: var(--primary-color-gc); border-color: var(--primary-color-gc);' : ''
+                                                }),
+                                                icon: 'bg-white'
+                                            }"  
+                                        />                                        
+                                    </div>
                                 </div>
-                            </div>
-                            <div style="width: 100%; display: flex; gap: 10px; justify-content: space-between">
-                                <FloatLabel>
-                                    <Textarea v-model="causeAfterAnalise" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Causa :</label>
-                                </FloatLabel>
-                                <FloatLabel>
-                                    <Textarea v-model="actionOfContention" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Ação de contenção :</label>
-                                </FloatLabel>
-                                <FloatLabel>
-                                    <Textarea v-model="contramedida" rows="5" cols="40" style="resize: none;"/>
-                                    <label>Contramedida :</label>
-                                </FloatLabel>                                
-                            </div>
-                            <div>
-                                <div class="boxUpload">
-                                    <FileUpload 
-                                        mode="basic" 
-                                        name="files"
-                                        :auto="true"
-                                        :multiple="true"
-                                        @upload="afterGestor($event)"
-                                        url="https://connectapi.3nf.com.br/upload"
-                                    />
-                                    <div v-for="(file, i) in archivesRetrated" :key="i" 
-                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
+                            </div>                                                         
+                        </div>
+                        <div style="width: 100%; display: flex; gap: 10px; margin: 10px 0px;">
+                            <div class="questionInput">
+                                <span>Data de Fechamento :</span>
+                                <Calendar
+                                    dateFormat="dd/mm/yy"
+                                    v-model="dateToFinish"
+                                ></Calendar>
+                            </div>  
+                            <div class="questionInput">
+                                <span>Responsavel :</span>
+                                <InputText
+                                    v-model="respToCheck"
+                                ></InputText>
+                            </div>  
+                        </div>
+                        <div>
+                            <div class="boxUpload">
+                                <FileUpload 
+                                    mode="basic" 
+                                    name="files"
+                                    :auto="true"
+                                    :multiple="true"
+                                    @upload="afterGestor($event)"
+                                    url="https://connectapi.3nf.com.br/upload"
+                                />
+                                <div v-for="(file, i) in archivesRetrated" :key="i" 
+                                    style="display: flex; margin: 10px; flex-wrap: wrap;"
+                                >
+                                    <div 
+                                        class="uploadBox"
                                     >
-                                        <div 
-                                            class="uploadBox"
-                                        >
-                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
-                                            <div style="display: flex; gap: 15px; padding: 10px;">
-                                                <i class="pi pi-times" style="font-size: 1rem; cursor: pointer;" @click="deleteImageGestor(file.location, i)"></i>
-                                                <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadImage(file.location)"></i>
-                                            </div>
+                                        <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
+                                        <div style="display: flex; gap: 15px; padding: 10px;">
+                                            <i class="pi pi-times" style="font-size: 1rem; cursor: pointer;" @click="deleteImageGestor(file.location, i)"></i>
+                                            <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadImage(file.location)"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         
                         
                     </TabPanel>                    
@@ -953,7 +1781,7 @@ export default{
                         v-if="!objectId"
 
                     >
-                        Enviar Anomalia
+                        Enviar Item
                     </Button>
                     <Button 
                         @click="updateAnomalie()" 
@@ -961,7 +1789,7 @@ export default{
                         :disabled="loadingCreate"
                         v-else
                     >
-                        Atualizar Anomalia
+                        Atualizar Item
                     </Button>
                     <Button 
                         @click="clearForm() & closeModal()"
@@ -1016,6 +1844,7 @@ Button{
 }
 .topBox{
     display: flex;
+    justify-content: center;
     gap: 20px;
 }
 .bottomBox{
@@ -1034,6 +1863,12 @@ Button{
     flex-direction: column;
     gap: 10px;
     margin: 10px;
+}
+.questionInput{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
 }
 .optionsSide{
     width: 100%;
@@ -1063,6 +1898,12 @@ Button{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 10px;
+}
+
+.inputGroup{
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
@@ -1129,5 +1970,6 @@ canvas{
         display: flex;
 
     }
+
 }
 </style>
