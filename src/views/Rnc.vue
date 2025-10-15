@@ -637,7 +637,11 @@ export default{
             }
         },
         editAnomalie(e){
-            console.log(e)
+            if(this.userInfo.department !== "Qualidade" && this.userInfo.department !== "ADMINISTRACAO"){
+                return alert("Não Autorizado a editar")
+            }
+
+
             if(!e.data.archivesRetrated){
                 this.archivesRetrated = [];
             }else{this.archivesRetrated = e.data.archivesRetrated;}

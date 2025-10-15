@@ -23,6 +23,7 @@ export default{
             qtdAnomalias: null,
             qtdRnc: null,
             qtdNaoAnalisada: null,
+            qtdOM: null,
 
             chartRncData: null,
             chartAnomaliesData: null,
@@ -63,6 +64,7 @@ export default{
             this.qtdAnomalias = data.totals.data[1]
             this.qtdRnc = data.totals.data[0]
             this.qtdNaoAnalisada = data.instrumentMed.total
+            this.qtdOM = data.totals.data[3]
             
             
         },
@@ -219,23 +221,27 @@ export default{
                 <strong class="title">Quantidade de Instrumentos de Medição</strong>
                 <strong class="number">{{ qtdNaoAnalisada }}</strong>
             </div>
-            <div class="div4 card wGraphs">
+            <div class="div4 card wNumbers">
+                <strong class="title">Quantidade de Oportunidade de Melhoria</strong>
+                <strong class="number">{{ qtdOM }}</strong>
+            </div>
+            <div class="div5 card wGraphs">
                 <strong>Rnc's por Status</strong>
                 <Chart type="bar" :data="chartRncData" :options="chartOptions" class="chartGraph"/>
             </div>
-            <div class="div5 card wGraphs">
+            <div class="div6 card wGraphs">
                 <strong>Anomalias por Status</strong>
                 <Chart type="bar" :data="chartAnomaliesData" :options="chartOptions" class="chartGraph"/>
             </div>
-            <div class="div6 card wGraphs">
+            <div class="div7 card wGraphs">
                 <strong>Anomalias por Setor</strong>
                 <Chart type="bar" :data="chartAnomalieByDepartments" :options="chartOptions" class="chartGraph"/>
             </div>
-            <div class="div7 card wGraphs">
+            <div class="div8 card wGraphs">
                 <strong>Rnc por Setor</strong>
                 <Chart type="bar" :data="chartRncByDepartments" :options="chartOptions" class="chartGraph"/>
             </div>
-            <div class="div8 card">
+            <div class="div9 card">
                 <strong>Instrumentos de Medição</strong>
                 <Chart type="pie" :data="chartInstruments" :options="chartOptions" class="chartGraph"/>                
             </div>            
@@ -282,42 +288,26 @@ export default{
 }
 
 .dashboard{
-    /* max-width: 100dvw;
-    flex-wrap: wrap;
-    display: flex;
-    justify-content: center;
-    margin: 30px 0px ;
-    gap: 20px;
-    flex-wrap: wrap; */
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     gap: 8px;
     padding: 40px;
 }
 
-.div4 {
-    grid-row: span 2 / span 2;
-}
-
-.div5 {
-    grid-row: span 2 / span 2;
-}
-
-.div6 {
-    grid-row: span 2 / span 2;
-}
-
 .div7 {
     grid-column: span 2 / span 2;
-    grid-row: span 2 / span 2;
-    grid-row-start: 4;
 }
 
 .div8 {
-    grid-row: span 2 / span 2;
+    grid-column: span 2 / span 2;
+    grid-row-start: 3;
+}
+
+.div9 {
+    grid-column: span 2 / span 2;
     grid-column-start: 3;
-    grid-row-start: 4;
+    grid-row-start: 3;
 }
 
 .card{
