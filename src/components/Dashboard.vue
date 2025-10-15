@@ -200,11 +200,11 @@ export default{
                 <strong class="number">{{ qtdRnc }}</strong>
             </div>
             <div class="div3 card wNumbers">
-                <strong class="title">Quantidade de IM</strong>
+                <strong class="title">Quantidade de Instrumentos de Medição</strong>
                 <strong class="number">{{ qtdNaoAnalisada }}</strong>
             </div>
             <div class="div4 card wNumbers">
-                <strong class="title">Quantidade de OM</strong>
+                <strong class="title">Quantidade de Oportunidades de Melhoria</strong>
                 <strong class="number">{{ qtdOM }}</strong>
             </div>
             <div class="div5 card wGraphs">

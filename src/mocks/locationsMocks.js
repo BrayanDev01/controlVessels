@@ -16,6 +16,7 @@ export const MockLocations ={
             { name: 'CT 18'},
             { name: 'CT 20'},
             { name: 'CT 21'},
+            { name: 'CT 28'},
             { name: 'CITY XXII'},
             { name: 'CT 23'},
             { name: 'CITY XXV'},
@@ -173,6 +174,15 @@ export const MockLocations ={
             {name: "SC 87"},
             {name: "SC 93"},
             {name: "SC 94"},
+            {name: "EMP CT 27"},
+            {name: "EMP ITL 7"},
+            {name: "EMP ITL 14"},
+            {name: "EMP CT 12"},
+            {name: "BT CT 44"},
+            {name: "BT CT 20"},
+            {name: "Outros"},
+            {name: "Não aplicável"},
+            
         ]
     },
     getLocations(){
