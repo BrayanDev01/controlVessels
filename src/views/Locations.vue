@@ -143,7 +143,6 @@ export default{
                 :loading="loading"
                 dataKey="id"
                 tableStyle="min-width: 50rem"
-                :expandedRows="rowsExpanded"
                 scrollable 
                 removableSort
                 scrollHeight="600px"
@@ -175,13 +174,12 @@ export default{
                     </template>
                 <ColumnGroup type="header">
                     <Row>
-                        <!-- <Column header="Item" :rowspan="3" field="id"></Column> -->
-                        <Column header="Equipamento" :rowspan="3"></Column>
+                        <Column header="Equipamento" :rowspan="3" ></Column>
                         <Column header="Informações sobre o instrumento de medição" :colspan="13"></Column>
                         <Column header="Intervalo da Calibração" :colspan="4"></Column>
                         <Column header="Resultados da Calibração" :colspan="2"></Column>
                         <Column header="Avaliação da Calibração" :colspan="3" ></Column>
-                        <Column header="Obs" :rowspan="3"></Column>
+                        <Column header="Obs" :rowspan="3" ></Column>
                         <Column header="Ações" :rowspan="3" v-if="userInfos.department == 'Qualidade' || userInfos.department == 'ADMINISTRACAO'"></Column>
                     </Row>
                     <Row>
@@ -198,8 +196,8 @@ export default{
 
                         <Column header="Data da Calibração" :rowspan="2"></Column>
                         <Column header="Validade" :rowspan="2"></Column>
-                        <Column header="Dias a Vencer" :rowspan="2"></Column>
-                        <Column header="Periodo (meses)" :rowspan="2"></Column>
+                        <Column header="Dias a Vencer" :rowspan="2" ></Column>
+                        <Column header="Periodo (meses)" :rowspan="2" ></Column>
 
                         <Column header="Laboratório / Engenheiro" :rowspan="2"></Column>
                         <Column header="Nº Certificado / ART" :rowspan="2"></Column>

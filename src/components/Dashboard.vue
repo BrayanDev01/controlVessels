@@ -190,24 +190,6 @@ export default{
 <template>
     <div class="main">
         <MenuBar></MenuBar>
-        <!-- <div class="dashboard">
-            <div class="cardGraph">
-                <strong>Quantidade de Anomalias</strong>
-                <Chart type="bar" :data="qtdAnomaliesData" style="width: 100%; height: 100%;"/>
-            </div>
-            <div class="cardGraph">
-                <strong>Tipos de Anomalias</strong>
-                <Chart type="bar" :data="typeAnomaliesData" :options="optionsChartData" style="width: 100%; height: 100%;"/>
-            </div>
-            <div class="cardGraph">
-                <strong>Anomalias por Bases</strong>
-                <Chart type="pie" :data="baseAnomaliesData" style="width: 100%; height: 100%; display: flex; justify-content: center;"/>
-            </div>
-            <div class="cardGraph">
-                <strong>Anomalias por Mês</strong>
-                <Chart type="bar" :data="monthAnomaliesData" style="width: 100%; height: 100%;"/>
-            </div>
-        </div> -->
         <div class="dashboard">
             <div class="div1 card wNumbers">
                 <strong class="title">Quantidade de Anomalias</strong>
@@ -218,11 +200,11 @@ export default{
                 <strong class="number">{{ qtdRnc }}</strong>
             </div>
             <div class="div3 card wNumbers">
-                <strong class="title">Quantidade de Instrumentos de Medição</strong>
+                <strong class="title">Quantidade de IM</strong>
                 <strong class="number">{{ qtdNaoAnalisada }}</strong>
             </div>
             <div class="div4 card wNumbers">
-                <strong class="title">Quantidade de Oportunidade de Melhoria</strong>
+                <strong class="title">Quantidade de OM</strong>
                 <strong class="number">{{ qtdOM }}</strong>
             </div>
             <div class="div5 card wGraphs">
@@ -238,10 +220,10 @@ export default{
                 <Chart type="bar" :data="chartAnomalieByDepartments" :options="chartOptions" class="chartGraph"/>
             </div>
             <div class="div8 card wGraphs">
-                <strong>Rnc por Setor</strong>
+                <strong>RNC\ por Setor</strong>
                 <Chart type="bar" :data="chartRncByDepartments" :options="chartOptions" class="chartGraph"/>
             </div>
-            <div class="div9 card">
+            <div class="div9 card wGraphs">
                 <strong>Instrumentos de Medição</strong>
                 <Chart type="pie" :data="chartInstruments" :options="chartOptions" class="chartGraph"/>                
             </div>            
@@ -311,7 +293,6 @@ export default{
 }
 
 .card{
-    width: 100%;
     border-radius: 20px;
     background-color: var(--white-gc);
     padding: 20px;
