@@ -712,8 +712,7 @@ export default{
                 this.typeAnomalie && 
                 this.baseAnomalie && 
                 this.placeAnomalie && 
-                this.equipamentAnomalie &&
-                this.needRevision
+                this.equipamentAnomalie
             ){
                 return false
             }return true
@@ -1789,7 +1788,7 @@ export default{
                         v-if="!objectId"
 
                     >
-                        Enviar Anomalia
+                        Enviar RNC
                     </Button>
                     <Button 
                         @click="updateAnomalie()" 

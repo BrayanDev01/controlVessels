@@ -710,8 +710,7 @@ export default{
                 this.typeAnomalie && 
                 this.baseAnomalie && 
                 this.placeAnomalie && 
-                this.equipamentAnomalie &&
-                this.needRevision
+                this.equipamentAnomalie
             ){
                 return false
             }return true
