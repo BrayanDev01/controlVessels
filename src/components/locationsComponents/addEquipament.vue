@@ -44,7 +44,8 @@ export default {
 
             statusOptions:[
                 {name: 'Conforme'},
-                {name: 'Não Conforme'}
+                {name: 'Não Conforme'},
+                {name: 'Inativo'}
             ],
             unMedOptions:[
                 {name:  'Âmperes'},
