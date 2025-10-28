@@ -56,6 +56,7 @@ export default {
                 {name: 'μmol/mol'},
                 {name: 'g/cm³'},
                 {name: 'g/ml'},
+                {name: 'ml'},
                 {name: 'Cº'},
                 {name: 'M'},                
             ],
@@ -67,7 +68,8 @@ export default {
                 {name: 'Explosímetro'},
                 {name: 'Manômetro Analógico'},
                 {name: 'Manômetro Digital'},
-                {name: 'Alicate Amperímetro'}        
+                {name: 'Alicate Amperímetro'},
+                {name: 'Proveta de Vidro'},      
             ],
             setores:[
                 {name: 'Navegação'},
