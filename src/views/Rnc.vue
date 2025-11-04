@@ -199,7 +199,9 @@ export default{
                 resumeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 status: { value: null, matchMode: FilterMatchMode.CONTAINS},
                 typeAnomalie: { value: null, matchMode: FilterMatchMode.CONTAINS},
-                'classification.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] }
+                'classification.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
+                'purgatory.name':{ operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] }
+
             }
         }
     },
@@ -928,7 +930,7 @@ export default{
                     removableSort
                     :loading="isLoading"
                     v-model:filters="filters"
-                    :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie', 'classification.name']"
+                    :globalFilterFields="['global', 'numericId', 'base', 'departmentResp', 'equipament', 'impact', 'nameEquipament', 'place', 'resumeAnomalie', 'status', 'typeAnomalie', 'classification.name', 'purgatory.name']"
                 >
                     <template #header>
                         <div style="display: flex; align-items: center; justify-content: space-between;">
