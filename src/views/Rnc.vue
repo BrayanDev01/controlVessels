@@ -1112,7 +1112,7 @@ export default{
                             </div>
                         </div>
                         <div class="topBox">
-                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.accessLevel === 0">
+                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.department === 'Qualidade' || userInfo?.department === 'ADMINISTRACAO'">
                                 <span>Selecione o status</span>
                                 <Dropdown 
                                     v-model="statusAnomalie" 
@@ -1121,7 +1121,7 @@ export default{
                                     placeholder="Selecione o status">
                                 </Dropdown>
                             </div>
-                            <div class="groupQuestion" style="width: 30%;">
+                            <div class="groupQuestion" style="width: 30%;" v-show="userInfo?.department === 'Qualidade' || userInfo?.department === 'ADMINISTRACAO'">
                                 <span>Selecione a criticidade :</span>
                                 <Dropdown 
                                     v-model="criticalityAnomalie" 
