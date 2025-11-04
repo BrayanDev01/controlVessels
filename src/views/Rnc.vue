@@ -1681,7 +1681,7 @@ export default{
                             </div>
                         </div>
                     </TabPanel>
-                    <TabPanel header="Verificação da Eficácia">
+                    <TabPanel header="Verificação da Eficácia" v-if="userInfo?.department === 'Qualidade' || userInfo?.department === 'ADMINISTRACAO'">
                         <div style="width: 100%; display: flex; gap: 10px;">
                             <div class="questionInput">
                                 <span>Prazo para verificação a eficácia :</span>
