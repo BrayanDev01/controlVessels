@@ -964,6 +964,7 @@ export default{
                         </template>
                     </Column>
                     <Column field="base" header="Base" sortable></Column>
+                    <Column field="purgatory.name" header="Tipo"></Column>
                     <Column field="place" header="Local" sortable></Column>
                     <Column field="date" header="Data do ocorrido" sortable>
                         <template #body="{data}">
