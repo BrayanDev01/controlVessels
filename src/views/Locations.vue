@@ -62,7 +62,7 @@ export default{
             const options ={
                 method: 'GET',
                 url: `${import.meta.env.VITE_URL_API}classes/instrumentMed`,
-                params: {order: '-createdAt', limit: 300},
+                params: {order: '-createdAt', limit: 900},
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
                     'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
