@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { MockLocations } from '../../mocks/locationsMocks'
 import explosimeterComponent from './explosimeterComponent.vue';
+import { info } from 'sass';
 
 export default {
     components: {
@@ -121,7 +122,8 @@ export default {
                         tolerancia: {
                             valor: this.valorTolerancia,
                             un: this.unTolerancia?.name
-                        }         
+                        },
+                        infoTolerancia: this.infoTolerancia 
                     },
                     calibrationInterval: {
                         date: this.dataCalibracao,
@@ -188,6 +190,7 @@ export default {
             this.additionalDocuments = []
             this.entreguePara = null
             this.loading = false
+            this.infoTolerancia = null
         },
         afterSend(e){
             const response = JSON.parse(e.xhr.responseText);
@@ -275,6 +278,10 @@ export default {
             const allFieldsAreFilled = fields.every(field => field !== null && field !== '');
 
             return allFieldsAreFilled;
+        },
+        addTolerancia(e){
+            console.log("Componente Pai:",e)
+            this.infoTolerancia.push(e)
         }
     },
     watch: {
@@ -500,11 +507,12 @@ export default {
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
                                     <explosimeterComponent
-                                        :infoTolerancia="infoTolerancia"
+
+                                        @attTolerancia="addTolerancia($event)"
                                     ></explosimeterComponent>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                         <div style="display: flex; justify-content: flex-end; margin: 10px;">

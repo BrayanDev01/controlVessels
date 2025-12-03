@@ -1,9 +1,13 @@
 <script>
 import axios from 'axios'
 import { MockLocations } from '../../mocks/locationsMocks'
+import explosimeterComponent from './explosimeterComponent.vue';
 
 
 export default {
+    components: {
+        explosimeterComponent
+    },
     props: {
         idEquipament: {
             type: Object,
@@ -28,6 +32,8 @@ export default {
             responsavel: null,
             valorTolerancia: null,
             unTolerancia: null,
+
+            infoTolerancia: [],
 
             dataCalibracao: null,
             validadeCalibracao: null,
@@ -121,7 +127,8 @@ export default {
                         tolerancia: {
                             valor: this.valorTolerancia,
                             un: this.unTolerancia?.name
-                        }         
+                        },
+                        infoTolerancia: this.infoTolerancia
                     },
                     calibrationInterval: {
                         date: this.dataCalibracao,
@@ -145,8 +152,6 @@ export default {
                     entreguePara: this.entreguePara
                 }
             }
-
-            console.log(">> options >> ", options.data)
 
             await axios.request(options).then((response) => {
                 console.log(response);
@@ -190,6 +195,7 @@ export default {
             this.additionalDocuments = []
             this.entreguePara = null
             this.loading = false
+            this.infoTolerancia = []
         },
         afterSend(e){
             const response = JSON.parse(e.xhr.responseText);
@@ -232,6 +238,7 @@ export default {
             this.responsavel = this.idEquipament.infoMed.localizacao.responsavel
             this.valorTolerancia = this.idEquipament.infoMed.tolerancia.valor
             this.unTolerancia = {name: this.idEquipament.infoMed.tolerancia.un}
+            this.infoTolerancia = this.idEquipament.infoTolerancia || []
 
             this.dataCalibracao = new Date(this.idEquipament.calibrationInterval.date)
             this.validadeCalibracao = new Date(this.idEquipament.calibrationInterval.validade)
@@ -293,7 +300,9 @@ export default {
             }
 
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
-
+        },
+        addTolerancia(e){
+            this.infoTolerancia.push(e)
         }
     },
     computed:{
@@ -450,7 +459,7 @@ export default {
                                         </div>
                                     </div>
                                 </div>
-                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                <div style="display: flex; flex-direction: column; align-items: center;" v-if="equipamentName?.name != 'Explosímetro'">
                                     <strong>Tolerância :</strong>
                                     <div class="organizerInputs">                                        
                                         <div class="groupInput">
@@ -469,6 +478,12 @@ export default {
                                             ></Dropdown>
                                         </div>
                                     </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;" v-else>
+                                    <explosimeterComponent
+                                        :infoTolerancia="infoTolerancia"
+                                        @attTolerancia="addTolerancia($event)"
+                                    ></explosimeterComponent>
                                 </div>
                             </div>
                         </div>
