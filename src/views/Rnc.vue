@@ -1282,7 +1282,7 @@ export default{
                                                 ></Calendar>
                                             </template>
                                         </Column>
-                                        <Column header="Ações">
+                                        <Column header="Ações" v-if="userInfo.department == 'Qualidade' || userInfo.department == 'ADMINISTRAÇÂO'">
                                             <template #body="{data}">
                                                 <i 
                                                     class="pi pi-trash"
