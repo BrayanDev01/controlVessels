@@ -1,8 +1,12 @@
 <script>
 import axios from 'axios'
 import { MockLocations } from '../../mocks/locationsMocks'
+import explosimeterComponent from './explosimeterComponent.vue';
 
 export default {
+    components: {
+        explosimeterComponent    
+    },
     data(){
         return{
             userInfo: JSON.parse(localStorage.getItem("loggedUser")),
@@ -21,6 +25,9 @@ export default {
             responsavel: null,
             valorTolerancia: null,
             unTolerancia: null,
+
+            infoTolerancia: [],
+
             dataCalibracao: null,
             validadeCalibracao: null,
             daysToInvalid: null,
@@ -493,6 +500,11 @@ export default {
                                         </div>
                                     </div>
                                 </div>
+                                <!-- <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                                    <explosimeterComponent
+                                        :infoTolerancia="infoTolerancia"
+                                    ></explosimeterComponent>
+                                </div> -->
                             </div>
                         </div>
                         <div style="display: flex; justify-content: flex-end; margin: 10px;">
