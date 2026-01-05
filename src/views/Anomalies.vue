@@ -1802,7 +1802,7 @@ export default{
                         Cancelar
                     </Button>
                 </div>
-                <div style="width: 100%;">
+                <div style="width: 100%; display: flex; flex-direction: column;">
                     <Message 
                         severity="error"
                         :closable="false"
@@ -1811,6 +1811,17 @@ export default{
                     >
                         Todos os campos são necessarios
                     </Message>
+                    <div style="display: flex; gap: 10px; align-items: center; justify-content: center;">
+                        
+                        <span :class="this.nameEquipament ? 'pi pi-check' : 'pi pi-times'"></span>
+                        <span :class="this.resumeAnomalie ? 'pi pi-check' : 'pi pi-times'"></span>
+                        <span :class="this.dateAnomalie ? 'pi pi-check' : 'pi pi-times'"></span>
+                        <span :class="this.departmentResp ? 'pi pi-check' : 'pi pi-times'"></span>
+                        <span :class="this.typeAnomalie ? 'pi pi-check' : 'pi pi-times'"></span>
+                        <span :class="this.baseAnomalie ? 'pi pi-check' : 'pi pi-times'"></span>
+                        <span :class="this.placeAnomalie ? 'pi pi-check' : 'pi pi-times'"></span>
+                        <span :class="this.equipamentAnomalie ? 'pi pi-check' : 'pi pi-times'"></span>             
+                    </div>
                 </div>
             </div>
         </Dialog>
