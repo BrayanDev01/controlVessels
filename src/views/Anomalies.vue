@@ -256,7 +256,7 @@ export default{
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
-                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    criticalityAnomalie: this.criticalityAnomalie?.name,
                     purgatory: this.typeCall,
                     actionImmediate: this.actionImmediate,
                     actionCorrectives: this.actionCorrectives,
@@ -325,7 +325,7 @@ export default{
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
-                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    criticalityAnomalie: this.criticalityAnomalie?.name,
                     purgatory: this.typeCall,
                     actionImmediate: this.actionImmediate,
                     actionCorrectives: this.actionCorrectives,
@@ -398,7 +398,7 @@ export default{
                     contramedida: this.contramedida,
                     gestorArgument: this.gestorArgument,
                     archivesRetrated: this.archivesRetrated,
-                    criticalityAnomalie: this.criticalityAnomalie.name,
+                    criticalityAnomalie: this.criticalityAnomalie?.name,
                     purgatory: this.typeCall,
                     actionImmediate: this.actionImmediate,
                     actionCorrectives: this.actionCorrectives,
@@ -686,7 +686,6 @@ export default{
         },
         resetData(){
             this.anomalies = [];
-            this.getRNC()
         },
         formatData(x){
             if(!x){return ''}
