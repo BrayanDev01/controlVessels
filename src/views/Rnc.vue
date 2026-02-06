@@ -81,6 +81,7 @@ export default{
             fifthWhy: null,
 
             evidencesAnalises: [],
+            nameOfCreator: null,
 
             sectorsEnvolveds: null,
             classificationOptions: [
@@ -493,7 +494,8 @@ export default{
             this.needRevision = null,
             this.revisionDate = null,
             this.revisionNumber = null,
-            this.reasonRevision = null
+            this.reasonRevision = null,
+            this.nameOfCreator = null
         },
         closeModal(){
             this.visible = false
@@ -643,6 +645,7 @@ export default{
             //     return alert("Não Autorizado a editar")
             // }
 
+            console.log(e.data);
 
             if(!e.data.archivesRetrated){
                 this.archivesRetrated = [];
@@ -684,6 +687,7 @@ export default{
             this.revisionDate = new Date(e.data.revisionDate).toLocaleDateString() || null,
             this.revisionNumber = e.data.revisionNumber,
             this.reasonRevision = e.data.reasonRevision,
+            this.nameOfCreator = e.data.reportFor.fullName
 
             this.visible= true;
         },
@@ -1022,7 +1026,10 @@ export default{
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
         >
             <template #header>
-                <div class="titleDialog">Cadastrar Não Conformidade</div>
+                <div >
+                    <div class="titleDialog">Cadastrar Não Conformidade</div>
+                    <div class="subTitleDialog">Criado por: {{ nameOfCreator }}</div>
+                </div>
             </template>
             <div class="formAnomalies">
                 <TabView style="width: 100%;" v-model:activeIndex="active">
@@ -1851,6 +1858,10 @@ Button{
 .titleDialog{
     font-weight: bolder;
     font-size: larger;
+}
+.subTitleDialog{
+    font-size: small;
+    font-style: italic;
 }
 .topBox{
     display: flex;
