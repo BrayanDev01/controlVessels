@@ -98,49 +98,7 @@ export default{
                 ]
             }
         },
-        setChartOptions() {
-            const documentStyle = getComputedStyle(document.documentElement);
-            const textColor = documentStyle.getPropertyValue('--text-color');
-            const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-            const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-            return {
-                indexAxis: 'y',
-                maintainAspectRatio: false,
-                aspectRatio: 0.8,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: textColor
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: textColorSecondary,
-                            font: {
-                                weight: 500
-                            }
-                        },
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: textColorSecondary
-                        },
-                        grid: {
-                            color: surfaceBorder,
-                            drawBorder: false
-                        }
-                    }
-                }
-            };
-        },
-
+        
         setChartData(x, y, w) {
             return {
                 labels: x,
@@ -157,6 +115,7 @@ export default{
             const documentStyle = getComputedStyle(document.documentElement);
             const textColor = documentStyle.getPropertyValue('--primary-color-gc');
             const textColorSecondary = documentStyle.getPropertyValue('--primary-color-gc');
+            const textLabel = documentStyle.getPropertyValue('--secondary-color-gc');
 
             return {
                 plugins: {
@@ -164,7 +123,16 @@ export default{
                         labels: {
                             color: textColor
                         }
-                    }
+                    },
+                    datalabels: {
+                        display: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4,
+                        clamp: true,
+                        font: { size: 12, weight: 'bold', color: textLabel },
+                        color: textColor
+                    },
                 },
                 scales: {
                     x: {
