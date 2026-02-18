@@ -41,6 +41,9 @@ import RadioButton from 'primevue/radiobutton';
 import '../src/style.scss'
 import App from './App.vue'
 
+import { Chart as ChartJS, registerables } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
+
 import 'primevue/resources/themes/lara-light-indigo/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
@@ -50,7 +53,11 @@ const app = createApp(App);
 
 const pinia = createPinia()
 
+// 🔹 Registra tudo do Chart.js
+ChartJS.register(...registerables)
 
+// 🔹 Registra o plugin de labels
+ChartJS.register(ChartDataLabels)
 
 app.use(PrimeVue);
 app.component('TabView', TabView);
