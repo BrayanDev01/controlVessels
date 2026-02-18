@@ -113,38 +113,44 @@ export default{
         },
         setChartOptions() {
             const documentStyle = getComputedStyle(document.documentElement);
-            const textColor = documentStyle.getPropertyValue('--primary-color-gc');
-            const textColorSecondary = documentStyle.getPropertyValue('--primary-color-gc');
-            const textLabel = documentStyle.getPropertyValue('--secondary-color-gc');
+            const textColor = documentStyle.getPropertyValue('--primary-color-gc') || '#222';
+            const textColorSecondary = documentStyle.getPropertyValue('--primary-color-gc') || '#666';
+            const textLabel = documentStyle.getPropertyValue('--secondary-color-gc') || '#222';
 
             return {
+                responsive: true,
+                maintainAspectRatio: false,
+
                 plugins: {
                     legend: {
-                        labels: {
-                            color: textColor
-                        }
+                        labels: { color: textColor }
                     },
+
+                    // se quiser, pode desligar tooltip já que tem label fixo
+                    tooltip: { enabled: true },
+
+                    // labels fixos no gráfico
                     datalabels: {
                         display: true,
                         anchor: 'end',
                         align: 'top',
                         offset: 4,
                         clamp: true,
-                        font: { size: 12, weight: 'bold', color: textLabel },
-                        color: textColor
-                    },
+                        color: (ctx) => {
+                            const bgColor = ctx.dataset.backgroundColor[ctx.dataIndex];
+                            return bgColor === '#0064ac' ? '#ffffff' : '#000000';
+                        },
+                        font: { size: 12, weight: 'bold' }
+                    }
                 },
+
                 scales: {
                     x: {
-                        ticks: {
-                            color: textColorSecondary
-                        }
+                        ticks: { color: textColorSecondary }
                     },
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            color: textColorSecondary
-                        }
+                        ticks: { color: textColorSecondary } // ✅ aqui estava "te"
                     }
                 }
             };
