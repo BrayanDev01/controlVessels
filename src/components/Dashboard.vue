@@ -24,13 +24,16 @@ export default{
             qtdRnc: null,
             qtdNaoAnalisada: null,
             qtdOM: null,
+            qtdProxValidade: null,
+            qtdVencidas: null,
 
             chartRncData: null,
             chartAnomaliesData: null,
             chartOptions: null,
             chartRncByDepartments: null,
             chartAnomalieByDepartments: null,
-            chartInstruments: null
+            chartInstruments: null,
+            chartAnomalieByYear: null
         }
     },
     methods:{
@@ -59,13 +62,15 @@ export default{
             this.chartRncData = this.setChartData(data.rncByStatus.labels, data.rncByStatus.data, 'RNCs')
             this.chartAnomaliesData = this.setChartData(data.anomaliesByStatus.labels, data.anomaliesByStatus.data, 'Anomalias')
             this.chartInstruments = this.setChartData(data.instrumentMed.byValidity.labels, data.instrumentMed.byValidity.data, 'Instrumentos')
+            this.chartAnomalieByYear = this.setChartData(data.anomaliesByYear.labels, data.anomaliesByYear.data, 'Anomalias')
             this.chartOptions = this.setChartOptions()
 
             this.qtdAnomalias = data.totals.data[1]
             this.qtdRnc = data.totals.data[0]
             this.qtdNaoAnalisada = data.instrumentMed.total
             this.qtdOM = data.totals.data[3]
-            
+            this.qtdProxValidade = data.instrumentMed.nearToExpire
+            this.qtdVencidas = data.instrumentMed.expired
             
         },
         organizeQtdAnomalies(x, y){
@@ -181,6 +186,14 @@ export default{
                 <strong class="title">Quantidade de Oportunidades de Melhoria</strong>
                 <strong class="number">{{ qtdOM }}</strong>
             </div>
+            <div class="div4 card wNumbers">
+                <strong class="title">Instrumentos de medição proximos da validade</strong>
+                <strong class="number">{{ qtdProxValidade }}</strong>
+            </div>
+            <div class="div4 card wNumbers">
+                <strong class="title">Instrumentos de medição vencidos</strong>
+                <strong class="number">{{ qtdVencidas }}</strong>
+            </div>
             <div class="div5 card wGraphs">
                 <strong>Rnc's por Status</strong>
                 <Chart type="bar" :data="chartRncData" :options="chartOptions" class="chartGraph"/>
@@ -197,10 +210,15 @@ export default{
                 <strong>RNC\ por Setor</strong>
                 <Chart type="bar" :data="chartRncByDepartments" :options="chartOptions" class="chartGraph"/>
             </div>
-            <div class="div9 card wGraphs">
+            <div class="div10 card wGraphs">
                 <strong>Instrumentos de Medição</strong>
                 <Chart type="pie" :data="chartInstruments" :options="chartOptions" class="chartGraph"/>                
-            </div>            
+            </div> 
+            <div class="div9 card wGraphs">
+                <strong>Anomalias por ano</strong>
+                <Chart type="bar" :data="chartAnomalieByYear" :options="chartOptions" class="chartGraph"/>                
+            </div> 
+                      
         </div>
     </div>
     <Dialog
@@ -264,6 +282,10 @@ export default{
     grid-column: span 2 / span 2;
     grid-column-start: 3;
     grid-row-start: 3;
+}
+
+.div10 { 
+    grid-area: 4 / 3 / 5 / 5; 
 }
 
 .card{
