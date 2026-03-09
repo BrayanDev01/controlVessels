@@ -1161,7 +1161,7 @@ export default{
                             </div>
                         </div>
                     </TabPanel>
-                    <TabPanel header="Análise">
+                    <!-- <TabPanel header="Análise">
                         <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1674,7 +1674,38 @@ export default{
                                 </div>
                             </div>
                         </div>
-                    </TabPanel>
+                    </TabPanel> -->
+                    <TabPanel header="Análise">
+                        <div style="width: 100%; display: flex; gap: 10px;">
+                            <div class="questionInput">
+                                <span>Identificação da causa da anomalia :</span>
+                                <Textarea
+                                    v-model="causeAfterAnalise"
+                                    placeholder="Identificação da causa da anomalia"
+                                    rows="5" 
+                                    cols="30"
+                                ></Textarea>
+                            </div>
+                            <div class="questionInput">
+                                <span>Definição da ação de contenção :</span>
+                                <Textarea
+                                    v-model="actionOfContention"
+                                    placeholder="Definição da ação de contenção"
+                                    rows="5" 
+                                    cols="30"
+                                ></Textarea>
+                            </div>
+                            <div class="questionInput">
+                                <span>Definição de contramedida :</span>
+                                <Textarea
+                                    v-model="contramedida"
+                                    placeholder="Definição de contramedida"
+                                    rows="5" 
+                                    cols="30"
+                                ></Textarea>
+                            </div>                                                        
+                        </div>                       
+                    </TabPanel> 
                     <TabPanel header="Verificação da Eficácia" v-if="userInfo?.department === 'Qualidade' || userInfo?.department === 'ADMINISTRACAO'">
                         <div style="width: 100%; display: flex; gap: 10px;">
                             <div class="questionInput">
@@ -1769,7 +1800,7 @@ export default{
                         
                         
                         
-                    </TabPanel>                    
+                    </TabPanel>                   
                 </TabView>
                 <div class="buttonsBottom">
                     <Button 

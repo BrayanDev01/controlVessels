@@ -67,6 +67,7 @@ export default{
             who: null,
             how: null,
             howMuch: null,
+            newDeadline: null,
 
             needRevision: null,
             revisionDate: null,
@@ -779,7 +780,8 @@ export default{
                 when: this.when,
                 who: this.who,
                 how: this.how,
-                howMuch: this.howMuch
+                howMuch: this.howMuch,
+                newDeadline: this.newDeadline
             })
             this.$refs.actionCorrective.hide();
             this.fasterUpdateAnomalie()            
@@ -1646,6 +1648,14 @@ export default{
                                                     currency="BRL"
                                                     locale="pt-BR"                                                
                                                 ></InputNumber>
+                                            </template>
+                                        </Column>
+                                        <Column field="newDeadline" header="Novo Prazo">
+                                            <template #editor="{data}">
+                                                <Calendar
+                                                    v-model="data.newDeadline"
+                                                    dateFormat="dd/mm/yy"                                               
+                                                ></Calendar>
                                             </template>
                                         </Column>
                                         <Column header="Ações">
