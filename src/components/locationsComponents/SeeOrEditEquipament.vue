@@ -32,8 +32,14 @@ export default {
             responsavel: null,
             valorTolerancia: null,
             unTolerancia: null,
+            pression: null,
+            eMax: null,
+            errorF: null,
+            eMaxErrorF: null,
+            tolerance: null,
 
             infoTolerancia: [],
+            tolerancias: [],
 
             dataCalibracao: null,
             validadeCalibracao: null,
@@ -128,7 +134,8 @@ export default {
                             valor: this.valorTolerancia,
                             un: this.unTolerancia?.name
                         },
-                        infoTolerancia: this.infoTolerancia
+                        infoTolerancia: this.infoTolerancia,
+                        tolerances: this.tolerancias
                     },
                     calibrationInterval: {
                         date: this.dataCalibracao,
@@ -195,7 +202,14 @@ export default {
             this.additionalDocuments = []
             this.entreguePara = null
             this.loading = false
-            this.infoTolerancia = []
+            this.infoTolerancia = [],
+            this.pression = null
+            this.eMax = null
+            this.tolerance = null
+            this.errorF = null
+            this.eMaxErrorF = null  
+            this.tolerancias = []
+
         },
         afterSend(e){
             const response = JSON.parse(e.xhr.responseText);
@@ -239,6 +253,7 @@ export default {
             this.valorTolerancia = this.idEquipament.infoMed.tolerancia.valor
             this.unTolerancia = {name: this.idEquipament.infoMed.tolerancia.un}
             this.infoTolerancia = this.idEquipament.infoTolerancia || []
+            this.tolerancias = this.idEquipament.infoMed.tolerances || []
 
             this.dataCalibracao = new Date(this.idEquipament.calibrationInterval.date)
             this.validadeCalibracao = new Date(this.idEquipament.calibrationInterval.validade)
@@ -259,7 +274,18 @@ export default {
             this.calculateDate()
         },
         toggle(event){
-            this.$refs.op.toggle(event);
+            this.$refs.popAddTolerance.toggle(event);
+        },
+        addTolerancia(){
+            const tolerance ={
+                pressao: this.pression,
+                emax: this.eMax,
+                errorF: this.errorF,
+                emaxError: this.eMaxErrorF,
+                tolerance: this.tolerance
+            }
+            this.tolerancias.push(tolerance)
+            this.$refs.popAddTolerance.hide();
         },
         close(){
             this.nameResponsavel = null;
@@ -277,6 +303,9 @@ export default {
         },
         deleteResponsavel(data){
             this.responsaveis.splice(data, 1)
+        },
+        deleteTolerancia(item){
+            this.tolerancias = this.tolerancias.filter((item, index) => index !== this.tolerancias.length - 1)
         },
         calculateDate() {
             if(!this.dataCalibracao || !this.validadeCalibracao) return
@@ -300,9 +329,6 @@ export default {
             }
 
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
-        },
-        addTolerancia(e){
-            this.infoTolerancia.push(e)
         }
     },
     computed:{
@@ -330,6 +356,16 @@ export default {
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
 
         }        
+    },
+    watch:{
+        pression() {
+            const result = this.pression * 0.25 / 100;
+            this.errorF = result
+            this.tolerance = this.pression * 6 / 100
+        },
+        eMax(){
+            this.eMaxErrorF = this.eMax + this.errorF
+        }
     },
     created(){
         MockLocations.getLocations().then((data) =>{ this.locationOptions = data })
@@ -418,7 +454,7 @@ export default {
                                 </div>
                             </div>
                             <div class="rightSide">
-                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                <!-- <div style="display: flex; flex-direction: column; align-items: center;">
                                     <strong>Resolução :</strong>
                                     <div class="organizerInputs">                                        
                                         <div class="groupInput">
@@ -484,6 +520,129 @@ export default {
                                         :infoTolerancia="infoTolerancia"
                                         @attTolerancia="addTolerancia($event)"
                                     ></explosimeterComponent>
+                                </div> -->
+                                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                                    <DataTable
+                                        :value="tolerancias"
+                                    >
+                                        <template #empty>
+                                            <div>Nenhuma tolerância cadastrada.</div>
+                                        </template>
+                                        <template #header>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span>Tolerâncias Cadastradas</span>
+                                                <Button
+                                                    icon="pi pi-plus"
+                                                    label="Adicionar Tolerância"
+                                                    @click="toggle"
+                                                ></Button>
+                                                <OverlayPanel 
+                                                    ref="popAddTolerance"
+                                                    @hide="clearPop"
+                                                >
+                                                    <div style="display: flex; flex-direction : column; gap: 20px; padding: 10px; align-items: center;">
+                                                        <div class="organizerInputs">
+                                                            <div class="groupInput">
+                                                                <span>Pressão :</span>
+                                                                <InputNumber
+                                                                    v-model="pression"
+                                                                ></InputNumber>
+                                                            </div>
+                                                            <div class="groupInput">
+                                                                <span>E Max :</span>
+                                                                <InputNumber
+                                                                    v-model="eMax"
+                                                                    :minFractionDigits="4"
+                                                                ></InputNumber>
+                                                            </div>
+                                                            <div class="groupInput">
+                                                                <span>Erro Fid. :</span>
+                                                                <InputNumber
+                                                                    v-model="errorF"
+                                                                    :disabled="true"
+                                                                    :minFractionDigits="4"
+                                                                    placeholder="Auto Preenchimento"
+                                                                ></InputNumber>
+                                                            </div>
+                                                        </div>
+                                                        <div class="organizerInputs">
+                                                            <div class="groupInput">
+                                                                <span>E Max + Erro Fid. :</span>
+                                                                <InputNumber
+                                                                    v-model="eMaxErrorF"
+                                                                    :disabled="true"
+                                                                    :minFractionDigits="4"
+                                                                    placeholder="Auto Preenchimento"
+                                                                ></InputNumber>
+                                                            </div>
+                                                            <div class="groupInput">
+                                                                <span>Tolerância :</span>
+                                                                <InputNumber
+                                                                    v-model="tolerance"
+                                                                    :disabled="true"
+                                                                    :minFractionDigits="4"
+                                                                    placeholder="Auto Preenchimento"
+                                                                ></InputNumber>
+                                                            </div>
+                                                            <div style="display: flex; align-items: center; justify-content: center;">
+                                                                <Tag
+                                                                    v-if="this.eMaxErrorF <= this.tolerance"
+                                                                    value="Dentro da Tolerância"
+                                                                    severity="success"
+                                                                ></Tag>
+                                                                <Tag
+                                                                    v-else
+                                                                    value="Fora da Tolerância"
+                                                                    severity="danger"
+                                                                ></Tag>
+                                                            </div>
+                                                        </div> 
+                                                    </div>    
+                                                    <div style="display: flex; gap: 10px; justify-content: center; margin:10px">
+                                                        <Button
+                                                            label="Adicionar"
+                                                            style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
+                                                            @click="addTolerancia"
+                                                        ></Button>
+                                                        <Button
+                                                            label="Cancelar"
+                                                            @click="$refs.popAddTolerance.hide()"
+                                                        ></Button>
+                                                    </div>                                                                                                                                        
+                                                </OverlayPanel>
+                                            </div>
+                                        </template>
+                                        <Column field="pressao" header="Pressão"></Column>
+                                        <Column field="emax" header="E Max"></Column>
+                                        <Column field="errorF" header="Erro Fid."></Column>
+                                        <Column field="emaxError" header="EMax + Erro Fid."></Column>
+                                        <Column field="tolerance" header="Tolerância"></Column>
+                                        <Column header="Status">
+                                            <template #body="{data}">
+                                                <Tag 
+                                                    v-if="data.emaxError <= data.tolerance" 
+                                                    value="Aprovado" 
+                                                    severity="success" 
+                                                ></Tag>
+                                                <Tag 
+                                                    v-else
+                                                    value="Reprovado" 
+                                                    severity="danger" 
+                                                    
+                                                ></Tag>
+                                            </template>
+                                        </Column>
+                                        <Column header="Ações">
+                                            <template #body="{data}">
+                                                <Button
+                                                    icon="pi pi-trash"
+                                                    severity="danger"
+                                                    rounded
+                                                    @click="deleteTolerancia(data)"
+                                                ></Button>
+                                            </template>
+                                        </Column>
+                                    </DataTable>
                                 </div>
                             </div>
                         </div>
