@@ -248,7 +248,7 @@ export default {
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
 
         },
-        toggle(event){
+        openResp(event){
             this.$refs.op.toggle(event);
         },
         close(){
@@ -746,7 +746,7 @@ export default {
                                                     <Button
                                                         icon="pi pi-plus"
                                                         label="Adicionar Responsavel" 
-                                                        @click="toggle"
+                                                        @click="openResp"
                                                     ></Button>
                                                 </div>
                                                 <OverlayPanel ref="op" appendTo="body">

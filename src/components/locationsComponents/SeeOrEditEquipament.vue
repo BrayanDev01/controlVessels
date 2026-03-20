@@ -275,6 +275,9 @@ export default {
 
             this.calculateDate()
         },
+        openResp(event){
+            this.$refs.op.toggle(event);
+        },
         toggle(event){
             this.$refs.popAddTolerance.toggle(event);
         },
@@ -712,7 +715,7 @@ export default {
                                                     <Button
                                                         icon="pi pi-plus"
                                                         label="Adicionar Responsavel" 
-                                                        @click="toggle"
+                                                        @click="openResp"
                                                     ></Button>
                                                 </div>
                                                 <OverlayPanel ref="op" appendTo="body">
