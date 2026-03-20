@@ -94,7 +94,9 @@ export default {
                 {name: 'Navegação'},
                 {name: 'Inspeção'},
                 {name: 'Manutenção'},
-                {name: 'SESMT'}
+                {name: 'SESMT'},
+                {name: 'Almoxarifado'},
+                {name: 'Qualidade'}
             ],
             locationOptions:[],
             loading: false
@@ -359,12 +361,15 @@ export default {
     },
     watch:{
         pression() {
-            const result = this.pression * 0.25 / 100;
+            const result = this.pression * this.eMax / 100;
             this.errorF = result
             this.tolerance = this.pression * 6 / 100
         },
         eMax(){
             this.eMaxErrorF = this.eMax + this.errorF
+            const result = this.pression * this.eMax / 100;
+            this.errorF = result
+            this.tolerance = this.pression * 6 / 100
         }
     },
     created(){
