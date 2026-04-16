@@ -1194,7 +1194,7 @@ export default{
                             </div>                                                        
                         </div>                       
                     </TabPanel>
-                    <TabPanel header="Análise Marlon" v-show="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'">
+                    <TabPanel header="Análise Marlon" v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'">
                         <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1802,7 +1802,58 @@ export default{
                         
                         
                         
-                    </TabPanel>                   
+                    </TabPanel>
+                    <TabPanel header="Pós-analise" v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'">
+                        <div class="topBox collum">
+                            <div style="display: flex; gap: 10px;">
+                                <div style="width: 100%;">
+                                    <FloatLabel>
+                                        <Textarea v-model="gestorArgument" rows="5" cols="40" style="resize: none; width: 100%;"/>
+                                        <label>Retratação do Gestor :</label>
+                                    </FloatLabel>
+                                </div>
+                            </div>
+                            <div style="width: 100%; display: flex; gap: 10px; justify-content: space-between">
+                                <FloatLabel>
+                                    <Textarea v-model="causeAfterAnalise" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Causa :</label>
+                                </FloatLabel>
+                                <FloatLabel>
+                                    <Textarea v-model="actionOfContention" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Ação de contenção :</label>
+                                </FloatLabel>
+                                <FloatLabel>
+                                    <Textarea v-model="contramedida" rows="5" cols="40" style="resize: none;"/>
+                                    <label>Contramedida :</label>
+                                </FloatLabel>                                
+                            </div>
+                            <div>
+                                <div class="boxUpload">
+                                    <FileUpload 
+                                        mode="basic" 
+                                        name="files"
+                                        :auto="true"
+                                        :multiple="true"
+                                        @upload="afterGestor($event)"
+                                        url="https://connectapi.3nf.com.br/upload"
+                                    />
+                                    <div v-for="(file, i) in archivesRetrated" :key="i" 
+                                        style="display: flex; margin: 10px; flex-wrap: wrap;"
+                                    >
+                                        <div 
+                                            class="uploadBox"
+                                        >
+                                            <Image :src="file.location" alt="teste" width="100" height="100" preview ></Image>
+                                            <div style="display: flex; gap: 15px; padding: 10px;">
+                                                <i class="pi pi-times" style="font-size: 1rem; cursor: pointer;" @click="deleteImageGestor(file.location, i)"></i>
+                                                <i class="pi pi-download" style="font-size: 1rem; cursor: pointer;" @click="downloadImage(file.location)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </TabPanel>                
                 </TabView>
                 <div class="buttonsBottom">
                     <Button 
