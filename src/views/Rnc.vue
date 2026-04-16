@@ -116,6 +116,8 @@ export default{
                 {name:"Rodoviário", email:'supervisor.rod@3nf.com.br'},
                 {name:"SESMT", email:'sesmt@3nf.com.br'},
                 {name:"Suprimentos", email:'compras2@3nf.com.br'},
+                {name:"Compras", email:'compras2@3nf.com.br'},
+                {name:"Almoxarifado", email:'almoxarifado2@3nf.com.br'},
                 {name:"TI", email:'ti@3nf.com.br'},
                 {name:"Terceirizado"}
             ],
