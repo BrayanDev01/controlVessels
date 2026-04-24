@@ -356,7 +356,14 @@ export default {
             }
 
             return this.daysToInvalid = diasDeDiferenca, this.monthsToInvalid = diferencaEmMeses
-        }
+        },
+        clearPop() {
+            this.pression = null;
+            this.eMax = null;
+            this.errorF = null;
+            this.eMaxErrorF = null;
+            this.resultCalc = null
+        },
     },
     computed:{
         calcularDiferencas() {
@@ -596,7 +603,7 @@ export default {
                                                                     placeholder="Auto Preenchimento"
                                                                 ></InputNumber>
                                                             </div>
-                                                            <div style="display: flex; align-items: center; justify-content: center;">
+                                                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                                                 <Tag
                                                                     v-if="this.resultCalc <= this.tolerance?.value"
                                                                     value="Dentro da Tolerância"
@@ -607,6 +614,7 @@ export default {
                                                                     value="Fora da Tolerância"
                                                                     severity="danger"
                                                                 ></Tag>
+                                                                <span style="margin-left: 10px; font-weight: bold;">Resultado : {{resultCalc}}</span>
                                                             </div>
                                                         </div> 
                                                     </div>    
@@ -636,7 +644,7 @@ export default {
                                         <Column header="Status">
                                             <template #body="{data}">
                                                 <Tag 
-                                                    v-if="data.emaxError <= data.tolerance" 
+                                                    v-if=" data.emax + data.errorF <= data.tolerance.value" 
                                                     value="Aprovado" 
                                                     severity="success" 
                                                 ></Tag>
