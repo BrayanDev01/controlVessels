@@ -4,7 +4,7 @@ import Form from '../views/Form.vue';
 import Login from '../views/Login.vue';
 import NotFound from '../views/NotFound.vue';
 import VesselView from '../views/VesselView.vue';
-import Locations from '../views/Locations.vue';
+import Instruments from '../views/Instruments.vue';
 import Anomalies from '../views/Anomalies.vue'
 import HistoricForm from '../views/HistoricForm.vue'
 import ControlChanges from '../views/ControlChanges.vue'
@@ -30,9 +30,9 @@ const routes = [
         component: Form
     },
     {
-        path:'/locations',
-        name:'locations',
-        component: Locations
+        path:'/instruments',
+        name:'instruments',
+        component: Instruments
     },
     {
         path:'/vesselView/:id',

@@ -551,7 +551,7 @@ export default {
                                                     <div style="display: flex; flex-direction : column; gap: 20px; padding: 10px; align-items: center;">
                                                         <div class="organizerInputs">
                                                             <div class="groupInput">
-                                                                <span>Pressão :</span>
+                                                                <span>Faixa de Medição :</span>
                                                                 <InputNumber
                                                                     v-model="pression"
                                                                 ></InputNumber>
@@ -564,7 +564,7 @@ export default {
                                                                 ></InputNumber>
                                                             </div>
                                                             <div class="groupInput">
-                                                                <span>Erro Fid. :</span>
+                                                                <span>Incerteza Expandida :</span>
                                                                 <InputNumber
                                                                     v-model="errorF"
                                                                     :disabled="true"

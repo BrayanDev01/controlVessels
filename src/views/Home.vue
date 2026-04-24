@@ -4,14 +4,14 @@ import Dashboard from '../components/Dashboard.vue';
 import { mapState } from 'pinia';
 import {userInfoStore} from '../store/UserInfos.js'
 import Anomalies from './Anomalies.vue';
-import Locations from '../views/Locations.vue';
+import Instruments from '../views/Instruments.vue';
 
 export default{
     components:{
         Form,
         Dashboard,
         Anomalies,
-        Locations
+        Instruments
     },
     data(){
         return{
@@ -27,7 +27,7 @@ export default{
 }
 </script>
 <template>
-    <Locations v-if="userInfo?.accessLevel === 3"></Locations>
+    <Instruments v-if="userInfo?.accessLevel === 3"></Instruments>
     <Anomalies v-if="userInfo?.accessLevel === 2"></Anomalies>
     <Form v-if="userInfo?.accessLevel === 1"></Form>
     <Dashboard v-if="userInfo?.accessLevel === 0"></Dashboard>

@@ -30,7 +30,7 @@ export default{
                     label: 'Intrumentos',
                     icon: 'pi pi-map',
                     command: () => {
-                        this.$router.push('/locations');
+                        this.$router.push('/instruments');
                         // this.$toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
                     }
                 },
@@ -110,7 +110,7 @@ export default{
             <router-link to="/noncompliance" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>RNC</div>
             </router-link>
-            <router-link to="/locations" class="buttonLink" v-if="userInfo?.accessLevel < 1">
+            <router-link to="/instruments" class="buttonLink" v-if="userInfo?.accessLevel < 1">
                 <div>Instrumentos</div>
             </router-link>
             <router-link to="/purgatory" class="buttonLink" v-if="userInfo?.accessLevel < 1">

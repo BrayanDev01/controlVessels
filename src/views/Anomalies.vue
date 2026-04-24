@@ -1194,7 +1194,7 @@ export default{
                             </div>                                                        
                         </div>                       
                     </TabPanel>
-                    <TabPanel header="Análise Marlon" v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'">
+                    <!-- <TabPanel header="Análise Marlon" v-if="userInfo?.department === 'ADMINISTRACAO' || userInfo?.department === 'Qualidade'">
                         <div class="topBox" style="margin: 10px;">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1707,7 +1707,7 @@ export default{
                                 </div>
                             </div>
                         </div>
-                    </TabPanel>
+                    </TabPanel> -->
                     <TabPanel header="Verificação da Eficácia" v-if="userInfo?.department === 'Qualidade' || userInfo?.department === 'ADMINISTRACAO'">
                         <div style="width: 100%; display: flex; gap: 10px;">
                             <div class="questionInput">
