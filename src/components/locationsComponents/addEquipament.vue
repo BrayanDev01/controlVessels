@@ -2,7 +2,6 @@
 import axios from 'axios'
 import { MockLocations } from '../../mocks/locationsMocks'
 import explosimeterComponent from './explosimeterComponent.vue';
-import { info } from 'sass';
 
 export default {
     components: {
@@ -31,6 +30,7 @@ export default {
             errorF: null,
             eMaxErrorF: null,
             tolerance: null,
+            resultCalc: null,
 
             infoTolerancia: [],
             tolerancias: [],
@@ -165,6 +165,26 @@ export default {
                 console.log(error);
             })
         },
+        getEquipSelected(e){
+            const options = {
+                url: `${import.meta.env.VITE_URL_API}functions/getToleranceByType`,
+                method: 'POST',
+                headers: {
+                    'X-Parse-REST-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    type: e.value.name  
+                }               
+            }
+
+            axios.request(options).then((response) => {
+                console.log(response)
+                this.tolerance = response.data.result
+            }).catch((error) => {
+                console.log(error);
+            })  
+        },
         clearForm(){
             this.equipamentName = null
             this.description = null
@@ -202,7 +222,7 @@ export default {
             this.infoTolerancia = null
             this.pression = null
             this.eMax = null
-            this.tolerance = null
+            // this.tolerance = null
             this.errorF = null
             this.eMaxErrorF = null  
             this.tolerancias = []          
@@ -306,6 +326,9 @@ export default {
             this.$refs.popAddTolerance.hide();
         },
         toggle(event) {
+            if(!this.equipamentName){
+                return this.$toast.add({severity:'warn', summary:'Atenção', detail:'Selecione o equipamento para adicionar a tolerância', life: 3000});
+            }
             this.$refs.popAddTolerance.toggle(event);
         },
         clearPop() {
@@ -313,7 +336,6 @@ export default {
             this.eMax = null;
             this.errorF = null;
             this.eMaxErrorF = null;
-            this.tolerance = null;
         },
         deleteTolerancia(item){
             this.tolerancias = this.tolerancias.filter((item, index) => index !== this.tolerancias.length - 1)
@@ -386,16 +408,11 @@ export default {
         observacao() {
             this.checkIfAllFieldsAreFilled();
         },
-        pression() {
-            const result = this.pression * this.eMax / 100;
-            this.errorF = result
-            this.tolerance = this.pression * 6 / 100
+        eMax() {
+            this.resultCalc = this.eMax + this.errorF
         },
-        eMax(){
-            this.eMaxErrorF = this.eMax + this.errorF
-            const result = this.pression * this.eMax / 100;
-            this.errorF = result
-            this.tolerance = this.pression * 6 / 100
+        errorF() {
+            this.resultCalc = this.eMax + this.errorF
         }
     },
     created(){
@@ -434,6 +451,7 @@ export default {
                                             :options="equipaments"
                                             optionLabel="name"
                                             placeholder="Selecione o equipamento"
+                                            @change="getEquipSelected"
                                         ></Dropdown>                                   
                                     </div>
                                 </div>
@@ -561,6 +579,7 @@ export default {
                                 <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
                                     <DataTable
                                         :value="tolerancias"
+                                        :style="{width: '100%'}"
                                     >
                                         <template #empty>
                                             <div>Nenhuma tolerância cadastrada.</div>
@@ -596,34 +615,22 @@ export default {
                                                                 <span>Incerteza Expandida :</span>
                                                                 <InputNumber
                                                                     v-model="errorF"
-                                                                    :disabled="true"
                                                                     :minFractionDigits="4"
-                                                                    placeholder="Auto Preenchimento"
                                                                 ></InputNumber>
                                                             </div>
                                                         </div>
                                                         <div class="organizerInputs">
                                                             <div class="groupInput">
-                                                                <span>E Max + Erro Fid. :</span>
-                                                                <InputNumber
-                                                                    v-model="eMaxErrorF"
-                                                                    :disabled="true"
-                                                                    :minFractionDigits="4"
-                                                                    placeholder="Auto Preenchimento"
-                                                                ></InputNumber>
-                                                            </div>
-                                                            <div class="groupInput">
                                                                 <span>Tolerância :</span>
                                                                 <InputNumber
-                                                                    v-model="tolerance"
+                                                                    v-model="tolerance.value"
                                                                     :disabled="true"
-                                                                    :minFractionDigits="4"
                                                                     placeholder="Auto Preenchimento"
                                                                 ></InputNumber>
                                                             </div>
                                                             <div style="display: flex; align-items: center; justify-content: center;">
                                                                 <Tag
-                                                                    v-if="this.eMaxErrorF <= this.tolerance"
+                                                                    v-if="this.resultCalc <= this.tolerance?.value"
                                                                     value="Dentro da Tolerância"
                                                                     severity="success"
                                                                 ></Tag>
@@ -639,6 +646,7 @@ export default {
                                                         <Button
                                                             label="Adicionar"
                                                             style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
+                                                            :disabled="!pression || !eMax || !errorF"
                                                             @click="addTolerancia"
                                                         ></Button>
                                                         <Button
@@ -649,11 +657,11 @@ export default {
                                                 </OverlayPanel>
                                             </div>
                                         </template>
-                                        <Column field="pressao" header="Pressão"></Column>
+                                        <Column field="pressao" header="Faixa de Med."></Column>
                                         <Column field="emax" header="E Max"></Column>
-                                        <Column field="errorF" header="Erro Fid."></Column>
-                                        <Column field="emaxError" header="EMax + Erro Fid."></Column>
-                                        <Column field="tolerance" header="Tolerância"></Column>
+                                        <Column field="errorF" header="Incerteza Expandida"></Column>
+                                        <!-- <Column field="emaxError" header="EMax + Erro Fid."></Column> -->
+                                        <Column field="tolerance.value" header="Tolerância"></Column>
                                         <Column header="Status">
                                             <template #body="{data}">
                                                 <Tag 
@@ -669,7 +677,7 @@ export default {
                                                 ></Tag>
                                             </template>
                                         </Column>
-                                        <Column header="Ações">
+                                        <Column header="Ações" v-if="userInfo?.department === 'Qualidade' || userInfo?.department === 'ADMINISTRACAO'">
                                             <template #body="{data}">
                                                 <Button
                                                     icon="pi pi-trash"

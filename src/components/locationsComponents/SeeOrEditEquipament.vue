@@ -37,6 +37,7 @@ export default {
             errorF: null,
             eMaxErrorF: null,
             tolerance: null,
+            resultCalc: null,
 
             infoTolerancia: [],
             tolerancias: [],
@@ -170,6 +171,26 @@ export default {
                 console.log(error);
             })
         },
+        getEquipSelected(e){
+            const options = {
+                url: `${import.meta.env.VITE_URL_API}functions/getToleranceByType`,
+                method: 'POST',
+                headers: {
+                    'X-Parse-REST-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                },
+                data:{
+                    type: e.value.name  
+                }               
+            }
+
+            axios.request(options).then((response) => {
+                console.log(response)
+                this.tolerance = response.data.result
+            }).catch((error) => {
+                console.log(error);
+            })  
+        },
 
         clearForm(){
             this.equipamentName = null
@@ -207,7 +228,7 @@ export default {
             this.infoTolerancia = [],
             this.pression = null
             this.eMax = null
-            this.tolerance = null
+            // this.tolerance = null
             this.errorF = null
             this.eMaxErrorF = null  
             this.tolerancias = []
@@ -274,6 +295,7 @@ export default {
             this.entreguePara = this.idEquipament.entreguePara
 
             this.calculateDate()
+            this.getEquipSelected({value: this.equipamentName})
         },
         openResp(event){
             this.$refs.op.toggle(event);
@@ -363,16 +385,8 @@ export default {
         }        
     },
     watch:{
-        pression() {
-            const result = this.pression * this.eMax / 100;
-            this.errorF = result
-            this.tolerance = this.pression * 6 / 100
-        },
-        eMax(){
-            this.eMaxErrorF = this.eMax + this.errorF
-            const result = this.pression * this.eMax / 100;
-            this.errorF = result
-            this.tolerance = this.pression * 6 / 100
+        errorF() {
+            this.resultCalc = this.eMax + this.errorF
         }
     },
     created(){
@@ -404,6 +418,7 @@ export default {
                                             :options="equipaments"
                                             optionLabel="name"
                                             placeholder="Selecione o equipamento"
+                                            @change="getEquipSelected"
                                         ></Dropdown>                                   
                                     </div>
                                 </div>
@@ -567,26 +582,15 @@ export default {
                                                                 <span>Incerteza Expandida :</span>
                                                                 <InputNumber
                                                                     v-model="errorF"
-                                                                    :disabled="true"
                                                                     :minFractionDigits="4"
-                                                                    placeholder="Auto Preenchimento"
                                                                 ></InputNumber>
                                                             </div>
                                                         </div>
                                                         <div class="organizerInputs">
                                                             <div class="groupInput">
-                                                                <span>E Max + Erro Fid. :</span>
-                                                                <InputNumber
-                                                                    v-model="eMaxErrorF"
-                                                                    :disabled="true"
-                                                                    :minFractionDigits="4"
-                                                                    placeholder="Auto Preenchimento"
-                                                                ></InputNumber>
-                                                            </div>
-                                                            <div class="groupInput">
                                                                 <span>Tolerância :</span>
                                                                 <InputNumber
-                                                                    v-model="tolerance"
+                                                                    v-model="tolerance.value"
                                                                     :disabled="true"
                                                                     :minFractionDigits="4"
                                                                     placeholder="Auto Preenchimento"
@@ -594,7 +598,7 @@ export default {
                                                             </div>
                                                             <div style="display: flex; align-items: center; justify-content: center;">
                                                                 <Tag
-                                                                    v-if="this.eMaxErrorF <= this.tolerance"
+                                                                    v-if="this.resultCalc <= this.tolerance?.value"
                                                                     value="Dentro da Tolerância"
                                                                     severity="success"
                                                                 ></Tag>
@@ -620,11 +624,15 @@ export default {
                                                 </OverlayPanel>
                                             </div>
                                         </template>
-                                        <Column field="pressao" header="Pressão"></Column>
+                                        <Column field="pressao" header="Faixa de Med."></Column>
                                         <Column field="emax" header="E Max"></Column>
-                                        <Column field="errorF" header="Erro Fid."></Column>
-                                        <Column field="emaxError" header="EMax + Erro Fid."></Column>
-                                        <Column field="tolerance" header="Tolerância"></Column>
+                                        <Column field="errorF" header="Incerteza Expandida"></Column>
+                                        <!-- <Column field="emaxError" header="EMax + Erro Fid."></Column> -->
+                                        <Column field="tolerance" header="Tolerância">
+                                            <template #body="{data}">
+                                                <span>{{data.tolerance.value}}</span>
+                                            </template>
+                                        </Column>
                                         <Column header="Status">
                                             <template #body="{data}">
                                                 <Tag 

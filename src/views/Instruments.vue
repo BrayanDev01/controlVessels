@@ -4,18 +4,22 @@ import MenuBar from '../components/MenuBar.vue';
 import addEquipament from '../components/locationsComponents/addEquipament.vue';
 import SeeOrEditEquipament from '../components/locationsComponents/SeeOrEditEquipament.vue';
 import { FilterMatchMode } from 'primevue/api';
+import toleranceModal from '../components/locationsComponents/tolerancesModal.vue';
 
 export default{
     components:{
         MenuBar,
         addEquipament,
-        SeeOrEditEquipament
+        SeeOrEditEquipament,
+        toleranceModal
     },
     data(){
         return{
             userInfos: JSON.parse(localStorage.getItem("loggedUser")),
             vessels: null,
             showAddEquipament: false,
+            showAddTolerance: false,
+            tolerances: [],
             showSeeOrEditEquipament: false,
             idForEdit: null,
             rowsExpanded: {},
@@ -127,11 +131,17 @@ export default{
     <div class="main">
         <MenuBar></MenuBar>
         <div class="dataCentral">
-            <div style="width: 100%; display: flex; justify-content: center; margin: 20px 0px">
+            <div style="width: 100%; display: flex; justify-content: center; margin: 20px 0px; gap: 10px;">
                 <Button
                     style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
                     @click="showAddEquipament = true"
                     label="Adicionar Equipamento"
+                >
+                </Button>
+                <Button
+                    style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
+                    @click="showAddTolerance = true"
+                    label="Cadastrar Tolerâncias"
                 >
                 </Button>
             </div>
@@ -282,6 +292,10 @@ export default{
             :idEquipament="idForEdit"
             @reGet="resetData()"
         ></SeeOrEditEquipament>
+        <toleranceModal
+            v-model:visible="showAddTolerance"
+            @update:visible="showAddTolerance = $event"
+        ></toleranceModal>
     </div>
 </template>
 
