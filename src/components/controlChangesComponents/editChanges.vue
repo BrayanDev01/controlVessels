@@ -234,6 +234,9 @@ export default{
             this.filesQualidade = data?.filesQualidade    
             
             this.loadingComponent = false
+        },
+        downloadFile(file){
+            window.open(file.location, '_blank')    
         }
     },
     watch: {
@@ -493,6 +496,7 @@ export default{
                     <div class="groupOfInputs">
                         <div class="inputGroup">
                             <FileUpload
+                                chooseLabel="Enviar Arquivos"
                                 mode="basic" 
                                 name="files"
                                 :auto="true"
