@@ -153,6 +153,9 @@ export default{
             if(e.progress === 100){
                 this.uploading = false
             }
+        },
+        downloadFile(file){
+            window.open(file.location, '_blank')    
         }
     },
     watch: {
