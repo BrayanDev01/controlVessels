@@ -644,7 +644,7 @@ export default {
                                                         <Button
                                                             label="Adicionar"
                                                             style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
-                                                            :disabled="!pression || !eMax || !errorF"
+                                                            :disabled="[pression, eMax, errorF].some(v => v === null || v === undefined)"
                                                             @click="addTolerancia"
                                                         ></Button>
                                                         <Button
