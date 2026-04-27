@@ -31,6 +31,7 @@ export default {
             eMaxErrorF: null,
             tolerance: null,
             resultCalc: null,
+            gas: null,
 
             infoTolerancia: [],
             tolerancias: [],
@@ -320,7 +321,8 @@ export default {
                 emax: this.eMax,
                 errorF: this.errorF,
                 emaxError: this.eMaxErrorF,
-                tolerance: this.tolerance
+                tolerance: this.tolerance,
+                gas: this.gas
             }
             this.tolerancias.push(tolerance)
             this.$refs.popAddTolerance.hide();
@@ -336,9 +338,15 @@ export default {
             this.eMax = null;
             this.errorF = null;
             this.eMaxErrorF = null;
+            this.gas = null;
         },
+
         deleteTolerancia(item){
             this.tolerancias = this.tolerancias.filter((item, index) => index !== this.tolerancias.length - 1)
+        },
+        changeGas(event){
+            console.log(event)
+            this.tolerance.value = event.value.value.value
         }
     },
     watch: {
@@ -598,10 +606,21 @@ export default {
                                                 >
                                                     <div style="display: flex; flex-direction : column; gap: 20px; padding: 10px; align-items: center;">
                                                         <div class="organizerInputs">
+                                                            <div class="groupInput" v-if="this.equipamentName.name === 'Explosímetro'">
+                                                                <span>Selecioe o gás :</span>
+                                                                <Dropdown
+                                                                    v-model="gas"
+                                                                    :options="tolerance.subitens"
+                                                                    optionLabel="type"
+                                                                    placeholder="Selecione o gás"
+                                                                    @change="changeGas($event)"
+                                                                ></Dropdown>
+                                                            </div>
                                                             <div class="groupInput">
                                                                 <span>Faixa de Medição :</span>
                                                                 <InputNumber
                                                                     v-model="pression"
+                                                                    :minFractionDigits="4"
                                                                 ></InputNumber>
                                                             </div>
                                                             <div class="groupInput">
@@ -611,6 +630,8 @@ export default {
                                                                     :minFractionDigits="4"
                                                                 ></InputNumber>
                                                             </div>
+                                                        </div>
+                                                        <div class="organizerInputs">
                                                             <div class="groupInput">
                                                                 <span>Incerteza Expandida :</span>
                                                                 <InputNumber
@@ -618,8 +639,6 @@ export default {
                                                                     :minFractionDigits="4"
                                                                 ></InputNumber>
                                                             </div>
-                                                        </div>
-                                                        <div class="organizerInputs">
                                                             <div class="groupInput">
                                                                 <span>Tolerância :</span>
                                                                 <InputNumber
