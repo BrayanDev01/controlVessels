@@ -38,6 +38,7 @@ export default {
             eMaxErrorF: null,
             tolerance: null,
             resultCalc: null,
+            gas: null,
 
             infoTolerancia: [],
             tolerancias: [],
@@ -309,7 +310,8 @@ export default {
                 emax: this.eMax,
                 errorF: this.errorF,
                 emaxError: this.eMaxErrorF,
-                tolerance: this.tolerance
+                tolerance: this.tolerance,
+                gas: this.gas
             }
             this.tolerancias.push(tolerance)
             this.$refs.popAddTolerance.hide();
@@ -362,7 +364,8 @@ export default {
             this.eMax = null;
             this.errorF = null;
             this.eMaxErrorF = null;
-            this.resultCalc = null
+            this.resultCalc = null;
+            this.gas = null;
         },
     },
     computed:{
@@ -572,10 +575,21 @@ export default {
                                                 >
                                                     <div style="display: flex; flex-direction : column; gap: 20px; padding: 10px; align-items: center;">
                                                         <div class="organizerInputs">
+                                                            <div class="groupInput" v-if="this.equipamentName.name === 'Explosímetro'">
+                                                                <span>Selecioe o gás :</span>
+                                                                <Dropdown
+                                                                    v-model="gas"
+                                                                    :options="tolerance.subitens"
+                                                                    optionLabel="type"
+                                                                    placeholder="Selecione o gás"
+                                                                    @change="changeGas($event)"
+                                                                ></Dropdown>
+                                                            </div>
                                                             <div class="groupInput">
                                                                 <span>Faixa de Medição :</span>
                                                                 <InputNumber
                                                                     v-model="pression"
+                                                                    :minFractionDigits="4"
                                                                 ></InputNumber>
                                                             </div>
                                                             <div class="groupInput">
@@ -585,6 +599,8 @@ export default {
                                                                     :minFractionDigits="4"
                                                                 ></InputNumber>
                                                             </div>
+                                                        </div>
+                                                        <div class="organizerInputs">
                                                             <div class="groupInput">
                                                                 <span>Incerteza Expandida :</span>
                                                                 <InputNumber
@@ -592,8 +608,6 @@ export default {
                                                                     :minFractionDigits="4"
                                                                 ></InputNumber>
                                                             </div>
-                                                        </div>
-                                                        <div class="organizerInputs">
                                                             <div class="groupInput">
                                                                 <span>Tolerância :</span>
                                                                 <InputNumber
@@ -622,6 +636,7 @@ export default {
                                                         <Button
                                                             label="Adicionar"
                                                             style="background-color: var(--secondary-color-gc); color: var(--primary-color-gc); font-weight: bold;"
+                                                            :disabled="!pression || !eMax || !errorF"
                                                             @click="addTolerancia"
                                                         ></Button>
                                                         <Button
@@ -651,8 +666,7 @@ export default {
                                                 <Tag 
                                                     v-else
                                                     value="Reprovado" 
-                                                    severity="danger" 
-                                                    
+                                                    severity="danger"                                                     
                                                 ></Tag>
                                             </template>
                                         </Column>
