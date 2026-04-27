@@ -345,8 +345,8 @@ export default {
             this.tolerancias = this.tolerancias.filter((item, index) => index !== this.tolerancias.length - 1)
         },
         changeGas(event){
-            console.log(event)
-            this.tolerance.value = event.value.value.value
+            console.log(event.value.value)
+            this.tolerance.value = event.value.value
         }
     },
     watch: {
@@ -676,6 +676,7 @@ export default {
                                                 </OverlayPanel>
                                             </div>
                                         </template>
+                                        <Column field="gas.type" header="Elemento" v-if="this.equipamentName?.name === 'Explosímetro'"></Column>
                                         <Column field="pressao" header="Faixa de Med."></Column>
                                         <Column field="emax" header="E Max"></Column>
                                         <Column field="errorF" header="Incerteza Expandida"></Column>

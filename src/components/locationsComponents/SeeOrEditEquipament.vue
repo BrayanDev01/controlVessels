@@ -647,6 +647,7 @@ export default {
                                                 </OverlayPanel>
                                             </div>
                                         </template>
+                                        <Column field="gas.type" header="Elemento" v-if="this.equipamentName?.name === 'Explosímetro'"></Column>
                                         <Column field="pressao" header="Faixa de Med."></Column>
                                         <Column field="emax" header="E Max"></Column>
                                         <Column field="errorF" header="Incerteza Expandida"></Column>
