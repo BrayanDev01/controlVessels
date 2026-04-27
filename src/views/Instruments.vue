@@ -185,7 +185,7 @@ export default{
                 <ColumnGroup type="header">
                     <Row>
                         <Column header="Equipamento" :rowspan="3" ></Column>
-                        <Column header="Informações sobre o instrumento de medição" :colspan="13"></Column>
+                        <Column header="Informações sobre o instrumento de medição" :colspan="9"></Column>
                         <Column header="Intervalo da Calibração" :colspan="4"></Column>
                         <Column header="Resultados da Calibração" :colspan="2"></Column>
                         <Column header="Avaliação da Calibração" :colspan="3" ></Column>
@@ -198,11 +198,11 @@ export default{
                         <Column header="Modelo" :rowspan="2"></Column>
                         <Column header="Nª Série / Lacre" :rowspan="2"></Column>
                         <Column header="Etiqueta / Identificação" :rowspan="2"></Column>
-                        <Column header="Faixa de medição" :rowspan="2"></Column>
+                        <!-- <Column header="Faixa de medição" :rowspan="2"></Column> -->
                         <Column header="Resolução" :colspan="2"></Column>
                         <Column header="Classe" :rowspan="2"></Column>
-                        <Column header="Localização" :colspan="2"></Column>
-                        <Column header="Tolerância" :colspan="2"></Column>
+                        <Column header="Localização" :colspan="1"></Column>
+                        <!-- <Column header="Tolerância" :colspan="2"></Column> -->
 
                         <Column header="Data da Calibração" :rowspan="2"></Column>
                         <Column header="Validade" :rowspan="2"></Column>
@@ -221,10 +221,10 @@ export default{
                         <Column header="Un"></Column>
 
                         <Column header="Localidade"></Column>
-                        <Column header="Responsável"></Column>
+                        <!-- <Column header="Responsável"></Column> -->
 
-                        <Column header="Valor"></Column>
-                        <Column header="Un"></Column>                   
+                        <!-- <Column header="Valor"></Column>
+                        <Column header="Un"></Column>                    -->
                     </Row>
                 </ColumnGroup>
                 <!-- <Column field="item"></Column> -->
@@ -234,14 +234,14 @@ export default{
                 <Column field="infoMed.modelo"></Column>
                 <Column field="infoMed.nSerieLacre"></Column>
                 <Column field="infoMed.etiquetaIdentificacao"></Column>
-                <Column field="infoMed.faixaMedicao"></Column>
+                <!-- <Column field="infoMed.faixaMedicao"></Column> -->
                 <Column field="infoMed.resolucao.valor"></Column>
                 <Column field="infoMed.resolucao.un"></Column>
                 <Column field="infoMed.classe"></Column>
-                <Column field="infoMed.localizacao.setor.name"></Column>
-                <Column field="infoMed.localizacao.responsavel"></Column>
-                <Column field="infoMed.tolerancia.valor"></Column>
-                <Column field="infoMed.tolerancia.un"></Column>
+                <Column field="infoMed.localizacao.setor"></Column>
+                <!-- <Column field="infoMed.localizacao.responsavel"></Column> -->
+                <!-- <Column field="infoMed.tolerancia.valor"></Column>
+                <Column field="infoMed.tolerancia.un"></Column> -->
                 <Column field="calibrationInterval.date">
                     <template #body="slotProps">
                         <div style="display: flex; justify-content: center; align-items: center; width: 100%;">

@@ -101,6 +101,14 @@ export default {
                 {name: 'Qualidade'}
             ],
             locationOptions:[],
+            locaisOptions:[
+                'Porto Velho',
+                'Santarém',
+                'Barcarena',
+                'Manaus',
+                'Itaituba',
+                'Itacoatiara'
+            ],
             loading: false
         }
     },
@@ -682,6 +690,17 @@ export default {
                                             </template>
                                         </Column>
                                     </DataTable>
+                                </div>
+                                <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 20px;">
+                                    <div class="groupInput">
+                                        <span>Localidade :</span>
+                                        <Dropdown
+                                            filter
+                                            v-model="setorLocalizacao"
+                                            :options="locaisOptions"
+                                            placeholder="Selecione o setor"
+                                        ></Dropdown>
+                                    </div>
                                 </div>
                             </div>
                         </div>
