@@ -342,7 +342,7 @@ export default {
             this.responsaveis.splice(data, 1)
         },
         deleteTolerancia(item){
-            this.tolerancias = this.tolerancias.filter((item, index) => index !== this.tolerancias.length - 1)
+            this.tolerancias = this.tolerancias.filter(t => t !== item)
         },
         calculateDate() {
             if(!this.dataCalibracao || !this.validadeCalibracao) return

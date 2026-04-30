@@ -350,7 +350,7 @@ export default {
         },
 
         deleteTolerancia(item){
-            this.tolerancias = this.tolerancias.filter((item, index) => index !== this.tolerancias.length - 1)
+            this.tolerancias = this.tolerancias.filter(t => t !== item)
         },
         changeGas(event){
             console.log(event.value.value)
