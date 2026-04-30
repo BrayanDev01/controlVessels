@@ -375,6 +375,10 @@ export default {
             this.resultCalc = null;
             this.gas = null;
         },
+        changeGas(event){
+            console.log(event.value.value)
+            this.tolerance.value = event.value.value
+        }
     },
     computed:{
         calcularDiferencas() {
