@@ -118,7 +118,79 @@ export default{
         },
         exportCSV(){
             this.$refs.equip.exportCSV()
-        }
+        },
+        async exportExcel() {
+            try {
+                // URL da Cloud Function do Back4App
+                // Substitua pelos seus valores
+                const APP_ID = "zFnXp8duZFOLBWfnqnj9hPbPcXd1YYBv7155jKyu";
+                const JAVASCRIPT_KEY = "FIFzV9EkueocfjksA9RmdFbPSYuP4WCHHFOFd9L0";
+                const SERVER_URL = "https://parseapi.back4app.com/functions/exportInstrumentMedExcel";
+
+                // Fazer requisição POST para a Cloud Function
+                const { data: result } = await axios.post(
+                SERVER_URL,
+                {}, // parâmetros da função (caso necessário)
+                {
+                    headers: {
+                    "X-Parse-Application-Id": APP_ID,
+                    "X-Parse-JavaScript-Key": JAVASCRIPT_KEY,
+                    "Content-Type": "application/json",
+                    },
+                }
+                );
+
+                const fileData = result.result;
+
+                if (!fileData?.data) {
+                throw new Error("Nenhum arquivo foi retornado.");
+                }
+
+                // Decodificar Base64
+                const binaryString = atob(fileData.data);
+                const bytes = new Uint8Array(binaryString.length);
+
+                for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+                }
+
+                // Criar Blob
+                const blob = new Blob([bytes], {
+                type: fileData.mimeType,
+                });
+
+                // Download
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement("a");
+
+                link.href = url;
+                link.download = fileData.fileName || "InstrumentMed.xlsx";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+
+                // Opcional: exibir mensagem de sucesso
+                this.$toast?.add({
+                    severity: "success",
+                    summary: "Sucesso",
+                    detail: "Arquivo Excel gerado com sucesso.",
+                    life: 3000,
+                });
+            } catch (error) {
+                console.error("Erro ao exportar Excel:", error);
+
+                this.$toast?.add({
+                    severity: "error",
+                    summary: "Erro",
+                    detail:
+                        error?.response?.data?.error ||
+                        error?.message ||
+                        "Não foi possível gerar o arquivo Excel.",
+                    life: 5000,
+                });
+            }
+        },
     },
     mounted(){
         this.getEquipaments()
@@ -168,7 +240,7 @@ export default{
                         <Button 
                             icon="pi pi-external-link" 
                             label="Export" 
-                            @click="exportCSV($event)"
+                            @click="exportExcel()"
                         />
                     </div>
                 </template>
