@@ -82,6 +82,9 @@ export default{
 
             evidencesAnalises: [],
 
+            creationDate: null,
+            nameOfCreator: null,
+
             sectorsEnvolveds: null,
             classificationOptions: [
                 {name: "Processo"},
@@ -647,6 +650,9 @@ export default{
                 this.archivesRetrated = [];
             }else{this.archivesRetrated = e.data.archivesRetrated;}
 
+            this.creationDate = new Date(e.data.createdAt).toLocaleDateString();
+            this.nameOfCreator = e.data.reportFor.name;
+
             this.objectId = e.data.objectId;
             this.resumeAnomalie= e.data.resumeAnomalie;
             this.dateAnomalie= new Date(e.data.date);
@@ -1018,7 +1024,10 @@ export default{
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
         >
             <template #header>
-                <div class="titleDialog">Cadastrar Anomalia</div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div class="titleDialog">Cadastrar Anomalia</div>
+                    <div class="subTitleDialog">Data de criação: {{ creationDate }}</div>
+                </div>    
             </template>
             <div class="formAnomalies">
                 <TabView style="width: 100%;" v-model:activeIndex="active">
