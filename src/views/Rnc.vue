@@ -677,9 +677,9 @@ export default{
             this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
             this.typeCall = e.data.purgatory;
             this.actionImmediate = e.data.actionImmediate;
-            this.timeToCheck = e.data.timeToCheck;
+            this.timeToCheck = new Date(e.data.timeToCheck) || null;
             this.isEffective = e.data.isEffective;
-            this.dateToFinish = e.data.dateToFinish;
+            this.dateToFinish = new Date(e.data.dateToFinish) || null;
             this.respToCheck = e.data.respToCheck;
             this.observations = e.data.observations;
             this.actionCorrectives = e.data.actionCorrectives;   
@@ -1249,7 +1249,7 @@ export default{
                                         <Column field="respEmailAction" header="Responsavel">
                                             <template #editor="{data}">
                                                 <Textarea
-                                                    v-model="data.actionImmediateText"
+                                                    v-model="data.respEmailAction"
                                                     :autoResize="false"
                                                 ></Textarea>
                                             </template>
@@ -1306,7 +1306,7 @@ export default{
                                 </div>
                             </div>
                         </div>
-                        <div class="topBox" style="margin: 10px;">
+                        <div class="topBox" style="margin: 10px;" v-show="this.typeCall.name == 'Não Conformidade'">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <strong>Os 5 Porquês :</strong>
@@ -1441,7 +1441,7 @@ export default{
                                 </div>
                             </div>
                         </div>
-                        <div class="topBox" style="margin: 10px;">
+                        <div class="topBox" style="margin: 10px;" v-show="this.typeCall.name == 'Não Conformidade'">
                             <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;" >
                                 <strong>A gestão de riscos e oportunidades do setor precisa ser revisada?</strong>
                                 <div style="display: flex; gap: 10px;">
