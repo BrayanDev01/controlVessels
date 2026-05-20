@@ -307,7 +307,8 @@ export default{
                 url: `${import.meta.env.VITE_URL_API}classes/Anomalies/${this.objectId}`,
                 headers: {
                     'X-Parse-Rest-API-Key':`${import.meta.env.VITE_XPARSE_REST_API_KEY}`,
-                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`
+                    'X-Parse-Application-Id': `${import.meta.env.VITE_XPARSE_APP_ID}`,
+                    'X-Parse-Session-Token': this.userInfo.sessionToken
                 },
                 data:{
                     resumeAnomalie: this.resumeAnomalie,
@@ -1007,7 +1008,18 @@ export default{
                         </template>
                     </Column>
                     <Column field="criticalityAnomalie" header="Criticidade" sortable></Column>
-                    <Column field="departmentResp" header="Depart. Responsável" sortable></Column>
+                    <Column field="departmentResp" header="Depart. Responsável" sortable>
+                        <template #filter="{filterModel}">
+                            <Dropdown
+                                v-model="filterModel.value"
+                                :options="departments"
+                                optionLabel="name"
+                                optionValue="name"
+                                placeholder="Selecione..."
+                                class="p-column-filter"
+                            />
+                        </template>
+                    </Column>
                     <Column header="Ações" v-if="userInfo.department == 'Qualidade' || userInfo.department == 'ADMINISTRACAO'">
                         <template #body="{data}">
                             <Button
