@@ -709,6 +709,26 @@ export default {
                                         ></Dropdown>
                                     </div>
                                 </div>
+                                <div style="display: flex; flex-direction: column; align-items: center; margin-top: 10px; width: 100%;">
+                                    <strong>Resolução :</strong>
+                                    <div class="organizerInputs">                                        
+                                        <div class="groupInput">
+                                            <span>Valor :</span>
+                                            <InputText
+                                                v-model="valorResolucao"
+                                            ></InputText>
+                                        </div>
+                                        <div class="groupInput">
+                                            <span>Un. :</span>
+                                            <Dropdown
+                                                v-model="unResolucao"
+                                                :options="unMedOptions"
+                                                optionLabel="name"
+                                                placeholder="Selecione a Unidade"
+                                            ></Dropdown>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div style="display: flex; justify-content: flex-end; margin: 10px;">
