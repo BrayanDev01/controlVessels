@@ -261,7 +261,7 @@ export default{
                         <Column header="Intervalo da Calibração" :colspan="4"></Column>
                         <Column header="Resultados da Calibração" :colspan="2"></Column>
                         <Column header="Avaliação da Calibração" :colspan="3" ></Column>
-                        <Column header="Obs" :rowspan="3" ></Column>
+                        <Column header="Entregue" :rowspan="3" ></Column>
                         <Column header="Ações" :rowspan="3" v-if="userInfos.department == 'Qualidade' || userInfos.department == 'ADMINISTRACAO'"></Column>
                     </Row>
                     <Row>
@@ -341,7 +341,7 @@ export default{
                     </template>
                 </Column>
                 <Column field="avaliationCalibration.acoesTomadas"></Column>
-                <Column field="obs"></Column>
+                <Column field="entreguePara"></Column>
                 <Column header="Ações" v-if="userInfos.department == 'Qualidade' || userInfos.department == 'ADMINISTRACAO'">
                     <template #body="{data}">
                         <Button

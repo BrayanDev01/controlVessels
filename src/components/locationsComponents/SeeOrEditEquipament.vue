@@ -58,6 +58,7 @@ export default {
             acoesTomadas: null,
             quaisAcoes: null,
             observacao: null,
+            avaliator: null,
 
             additionalDocuments:[],
             entreguePara: null,
@@ -165,6 +166,7 @@ export default {
                         document: this.document,
                         acoesTomadas: this.acoesTomadas,
                         quaisAcoes: this.quaisAcoes,
+                        avaliator: this.avaliator
                     },
                     obs: this.observacao,                    
                     additionalDocuments: this.additionalDocuments,
@@ -241,7 +243,7 @@ export default {
             this.errorF = null
             this.eMaxErrorF = null  
             this.tolerancias = []
-
+            this.avaliator = null    
         },
         afterSend(e){
             const response = JSON.parse(e.xhr.responseText);
@@ -302,6 +304,7 @@ export default {
             this.observacao = this.idEquipament.obs,
             this.additionalDocuments = this.idEquipament.additionalDocuments
             this.entreguePara = this.idEquipament.entreguePara
+            this.avaliator = this.idEquipament.avaliationCalibration.avaliator
 
             this.calculateDate()
             this.getEquipSelected({value: this.equipamentName})
@@ -854,6 +857,13 @@ export default {
                             <div class="leftSide">
                                 <strong>Avaliação da Calibração</strong>
                                 <div class="organizerInputs">
+                                    <div class="groupInput">
+                                        <span>Avaliador :</span>
+                                        <InputText
+                                            v-model="avaliator"
+                                            placeholder="Informe o avaliador"
+                                        ></InputText>
+                                    </div>
                                     <div class="groupInput">
                                         <span>Situação Atual :</span>
                                         <Dropdown
