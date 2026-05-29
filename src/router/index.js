@@ -11,6 +11,7 @@ import ControlChanges from '../views/ControlChanges.vue'
 import RNC from '../views/Rnc.vue'
 import { userInfoStore } from "../store/UserInfos";
 import Purgatory from "../views/Purgatory.vue";
+import addRNC from "../components/RncComponents/addRNC.vue";
 
 
 const routes = [
@@ -63,6 +64,11 @@ const routes = [
         path: '/noncompliance',
         name: 'RNC',
         component: RNC
+    },
+    {
+        path: '/addrnc',
+        name: 'AddRNC',
+        component: addRNC
     },
     {
         path: '/purgatory',
