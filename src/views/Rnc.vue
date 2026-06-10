@@ -657,7 +657,7 @@ export default{
 
             this.objectId = e.data.objectId;
             this.resumeAnomalie= e.data.resumeAnomalie;
-            this.dateAnomalie= new Date(e.data.date);
+            this.dateAnomalie= this.ifDate(e.data.date);
             this.departmentResp= {name: e.data.departmentResp, email:e.data.emailResp};
             this.reasonAnomalie= e.data.reasonAnomalie;
             this.envolvedInAnomalie= e.data.envolvedInAnomalie;
@@ -678,9 +678,9 @@ export default{
             this.criticalityAnomalie = {name: e.data.criticalityAnomalie};
             this.typeCall = e.data.purgatory;
             this.actionImmediate = e.data.actionImmediate;
-            this.timeToCheck = new Date(e.data.timeToCheck) || null;
+            this.timeToCheck = this.ifDate(e.data.timeToCheck);
             this.isEffective = e.data.isEffective;
-            this.dateToFinish = new Date(e.data.dateToFinish) || null;
+            this.dateToFinish = this.ifDate(e.data.dateToFinish);
             this.respToCheck = e.data.respToCheck;
             this.observations = e.data.observations;
             this.actionCorrectives = e.data.actionCorrectives;   
@@ -688,12 +688,17 @@ export default{
             this.classification = e.data.classification; 
             this.evidencesAnalises = e.data.evidencesAnalises||[];   
             this.needRevision = e.data.needRevision,
-            this.revisionDate = new Date(e.data.revisionDate).toLocaleDateString() || null,
+            this.revisionDate = this.ifDate(e.data.revisionDate),
             this.revisionNumber = e.data.revisionNumber,
             this.reasonRevision = e.data.reasonRevision,
             this.nameOfCreator = e.data.reportFor.fullName
 
             this.visible= true;
+        },
+        ifDate(x){
+            if(x){
+                return new Date(x)
+            }return null
         },
         resetData(){
             this.anomalies = [];
