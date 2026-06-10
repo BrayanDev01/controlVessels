@@ -9,6 +9,7 @@ export default{
 
     data(){
         return{
+            expiredActions: [],
             vessels:[],
             charges:[],
             selectedVessel:[],
@@ -71,7 +72,8 @@ export default{
             this.qtdOM = data.totals.data[3]
             this.qtdProxValidade = data.instrumentMed.nearToExpire
             this.qtdVencidas = data.instrumentMed.expired
-            
+
+            this.expiredActions = data.actionsMonitoring
         },
         organizeQtdAnomalies(x, y){
             return{
@@ -159,6 +161,16 @@ export default{
                     }
                 }
             };
+        },
+        severityColor(severity) {
+            switch (severity) {
+                case 'Vencido':
+                    return 'danger';
+                case 'Proximo':
+                    return 'info';
+                default:
+                    return 'secondary';
+            }
         }
     },
     created(){
@@ -172,13 +184,23 @@ export default{
         <div class="dashboard">
             <div class="div11 card wGraphs">
                 <DataTable
+                    :value="expiredActions"
                     style="width: 100%; height: 100%;"
+                    scrollable 
+                    scrollHeight="700px"
                 >
-                    <Column header="Codigo"></Column>
-                    <Column header="Data de Venc"></Column>
-                    <Column header="Criador"></Column>
-                    <Column header="Responsável"></Column>
-                    <Column header="Tipo"></Column>
+                    <Column header="Codigo" field="numericId"></Column>
+                    <Column header="Data de Venc" field="dateLimit">
+                        <template #body="{ data }">
+                            {{ new Date(data.dateLimit).toLocaleDateString('pt-BR') }}    
+                        </template>
+                    </Column>
+                    <Column header="Responsável" field="respEmailAction"></Column>
+                    <Column header="Status" field="status">
+                        <template #body="{ data }">
+                            <Tag :severity="severityColor(data.status)" :value="data.status"></Tag>
+                        </template>
+                    </Column>
                 </DataTable>
             </div>
             <div class="div1 card wNumbers">
