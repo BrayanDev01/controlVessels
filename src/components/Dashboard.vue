@@ -170,6 +170,17 @@ export default{
     <div class="main">
         <MenuBar></MenuBar>
         <div class="dashboard">
+            <div class="div11 card wGraphs">
+                <DataTable
+                    style="width: 100%; height: 100%;"
+                >
+                    <Column header="Codigo"></Column>
+                    <Column header="Data de Venc"></Column>
+                    <Column header="Criador"></Column>
+                    <Column header="Responsável"></Column>
+                    <Column header="Tipo"></Column>
+                </DataTable>
+            </div>
             <div class="div1 card wNumbers">
                 <strong class="title">Quantidade de Anomalias</strong>
                 <strong class="number">{{ qtdAnomalias }}</strong>
@@ -264,7 +275,7 @@ export default{
 .dashboard{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     gap: 8px;
     padding: 40px;
 }
@@ -286,6 +297,11 @@ export default{
 
 .div10 { 
     grid-area: 4 / 3 / 5 / 5; 
+}
+
+.div11 {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
 }
 
 .card{
