@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios'
-import { MockLocations } from '../../mocks/locationsMocks'
+import { MockEquipaments } from '../../mocks/equipamentsMocks.js'
 import explosimeterComponent from './explosimeterComponent.vue';
 
 
@@ -415,7 +415,7 @@ export default {
         }
     },
     created(){
-        MockLocations.getLocations().then((data) =>{ this.locationOptions = data })
+        MockEquipaments.getLocations().then((data) =>{ this.locationOptions = data })
     }
 }
 </script>

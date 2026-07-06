@@ -2,7 +2,8 @@
 import MenuBar from '../components/MenuBar.vue';
 import axios from 'axios'
 import { FilterMatchMode, FilterOperator  } from 'primevue/api';
-import { MockLocations } from '../mocks/locationsMocks.js';
+import { MockEquipaments } from '../mocks/equipamentsMocks.js';
+import { MockLocations } from '../mocks/locationsMock.js';
 
 export default{
     components:{
@@ -143,18 +144,7 @@ export default{
                 {name:"Santarém"},
                 {name:"Viagem"}
             ],
-            localOptions:[
-                {name:"Boia Porto 3NF"},
-                {name:"Boia do Vigia"},
-                {name:"EQD (Equador)"},
-                {name:"Escritório"},
-                {name:"Porto 3NF"},
-                {name:"Porto Cidade"},
-                {name:"Refinaria (REAM)"},
-                {name:"Terminal ABI"},
-                {name:"Viagem"},
-                {name:"Terminal TFB"}
-            ],
+            localOptions:[],
             equipamentTypeOptions:[
                 {name:"Balsa"},
                 {name:"Caminhão"},
@@ -686,7 +676,7 @@ export default{
             this.actionCorrectives = e.data.actionCorrectives;   
             this.fiveWhys = e.data.fiveWhys; 
             this.classification = e.data.classification; 
-            this.evidencesAnalises = e.data.evidencesAnalises||[];   
+            this.evidencesAnalises = e.data.evidencesAnalises || [];   
             this.needRevision = e.data.needRevision,
             this.revisionDate = this.ifDate(e.data.revisionDate),
             this.revisionNumber = e.data.revisionNumber,
@@ -919,7 +909,8 @@ export default{
         this.getRNC();
         document.title="Não Conformidades | Controle de Embarcação"
         
-        MockLocations.getLocations().then((data) =>{ this.equipamentOptions = data })
+        MockEquipaments.getLocations().then((data) =>{ this.equipamentOptions = data })
+        MockLocations.getLocations().then((data) =>{ this.localOptions = data })
     }
 }
 </script>
@@ -1323,7 +1314,7 @@ export default{
                                 </div>
                             </div>
                         </div>
-                        <div class="topBox" style="margin: 10px;" v-show="this.typeCall.name == 'Não Conformidade'">
+                        <div class="topBox" style="margin: 10px;" v-if="this.typeCall?.name === 'Não Conformidade'">
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <strong>Os 5 Porquês :</strong>
@@ -1458,7 +1449,7 @@ export default{
                                 </div>
                             </div>
                         </div>
-                        <div class="topBox" style="margin: 10px;" v-show="this.typeCall.name == 'Não Conformidade'">
+                        <div class="topBox" style="margin: 10px;" v-show="this.typeCall?.name === 'Não Conformidade'">
                             <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;" >
                                 <strong>A gestão de riscos e oportunidades do setor precisa ser revisada?</strong>
                                 <div style="display: flex; gap: 10px;">

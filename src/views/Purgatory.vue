@@ -2,7 +2,8 @@
 import MenuBar from '../components/MenuBar.vue';
 import axios from 'axios'
 import { FilterMatchMode, FilterOperator  } from 'primevue/api';
-import { MockLocations } from '../mocks/locationsMocks.js';
+import { MockEquipaments } from '../mocks/equipamentsMocks.js';
+import { MockLocations } from '../mocks/locationsMock.js';
 
 export default{
     components:{
@@ -141,18 +142,7 @@ export default{
                 {name:"Santarém"},
                 {name:"Viagem"}
             ],
-            localOptions:[
-                {name:"Boia Porto 3NF"},
-                {name:"Boia do Vigia"},
-                {name:"EQD (Equador)"},
-                {name:"Escritório"},
-                {name:"Porto 3NF"},
-                {name:"Porto Cidade"},
-                {name:"Refinaria (REAM)"},
-                {name:"Terminal ABI"},
-                {name:"Viagem"},
-                {name:"Terminal TFB"}
-            ],
+            localOptions:[],
             equipamentTypeOptions:[
                 {name:"Balsa"},
                 {name:"Caminhão"},
@@ -905,7 +895,8 @@ export default{
         this.getRNC();
         document.title="Purgatório | Controle de Embarcação"
         
-        MockLocations.getLocations().then((data) =>{ this.equipamentOptions = data })
+        MockEquipaments.getLocations().then((data) =>{ this.equipamentOptions = data })
+        MockLocations.getLocations().then((data) =>{ this.localOptions = data })
     }
 }
 </script>

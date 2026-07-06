@@ -1,4 +1,4 @@
-export const MockLocations ={
+export const MockEquipaments ={
     getData(){
         return [
             { name: 'CT 1' },
