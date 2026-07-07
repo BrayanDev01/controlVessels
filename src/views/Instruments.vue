@@ -57,7 +57,8 @@ export default{
                 'calibrationInterval.nCertificadoArt':{value:null, matchMode: FilterMatchMode.CONTAINS},
                 'avaliationCalibration.status':{value:null, matchMode: FilterMatchMode.CONTAINS},
                 'avaliationCalibration.acoesTomadas':{value:null, matchMode: FilterMatchMode.CONTAINS},
-                obs:{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'entreguePara':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'obs':{value:null, matchMode: FilterMatchMode.CONTAINS},
             }
         }
     },
@@ -230,7 +231,7 @@ export default{
                 scrollHeight="600px"
                 v-model:filters="filters"
                 exportFilename="Equipamentos de Medição"
-                :globalFilterFields="['global', 'equipamentName', 'infoMed.setor.name', 'infoMed.marca', 'infoMed.modelo', 'infoMed.nSerieLacre', 'infoMed.etiquetaIdentificacao', 'infoMed.faixaMedicao', 'infoMed.resolucao.valor', 'infoMed.resolucao.un', 'infoMed.classe','infoMed.localizacao.setor.name', 'infoMed.localizacao.responsavel', 'infoMed.tolerancia.valor', 'infoMed.tolerancia.un', 'calibrationResults.laboratorioEngenheiro', 'calibrationResults.nCertificadoArt', 'avaliationCalibration.status', 'avaliationCalibration.acoesTomadas', 'obs']">
+                :globalFilterFields="['global', 'equipamentName', 'infoMed.setor.name', 'infoMed.marca', 'infoMed.modelo', 'infoMed.nSerieLacre', 'infoMed.etiquetaIdentificacao', 'infoMed.faixaMedicao', 'infoMed.resolucao.valor', 'infoMed.resolucao.un', 'infoMed.classe','infoMed.localizacao.setor.name', 'infoMed.localizacao.responsavel', 'infoMed.tolerancia.valor', 'infoMed.tolerancia.un', 'calibrationResults.laboratorioEngenheiro', 'calibrationResults.nCertificadoArt', 'avaliationCalibration.status', 'avaliationCalibration.acoesTomadas', 'obs', 'entreguePara']">
                 <template #header>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <FloatLabel>
