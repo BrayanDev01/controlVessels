@@ -1,6 +1,7 @@
 export const MockLocations ={
     getData(){
         return[
+            {name:"Atem Manaus"},
             {name:"Boia Porto 3NF"},
             {name:"Boia do Vigia"},
             {name:"EQD (Equador)"},
@@ -10,6 +11,7 @@ export const MockLocations ={
             {name:"Refinaria (REAM)"},
             {name:"Terminal ABI"},
             {name:"Viagem"},
+            {name:"Vibra Manaus"},
             {name:"Terminal TFB"},
             {name:"Terminal Ipiranga"},
             {name:"Outros"}            
