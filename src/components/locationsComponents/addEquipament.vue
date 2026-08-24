@@ -64,12 +64,13 @@ export default {
                 {name: 'Inativo'}
             ],
             unMedOptions:[
-                {name:  'Âmperes'},
+                {name: 'Âmperes'},
                 {name: 'Volts'},
                 {name: 'Watts'},
                 {name: 'kgf/cm²'},
                 {name: 'mol/mol'},
                 {name: 'μmol/mol'},
+                {name: 'Kg'},
                 {name: 'g/cm³'},
                 {name: 'g/ml'},
                 {name: 'ml'},
@@ -77,6 +78,7 @@ export default {
                 {name: 'M'},                
             ],
             equipaments:[
+                {name: 'Balança'},
                 {name: 'Densímetro'},
                 {name: 'Termômetro Analógico'},
                 {name: 'Termômetro Digital'},
@@ -93,7 +95,8 @@ export default {
                 {name: 'Manutenção'},
                 {name: 'SESMT'},
                 {name: 'Almoxarifado'},
-                {name: 'Qualidade'}
+                {name: 'Qualidade'},
+                {name: 'Patrimônio'},                
             ],
             locationsOptions:[],
             locaisOptions:[
