@@ -2,6 +2,7 @@ export const MockLocations ={
     getData(){
         return[
             {name:"Atem Manaus"},
+            {name:"ABI VTX"},
             {name:"Boia Porto 3NF"},
             {name:"Boia do Vigia"},
             {name:"EQD (Equador)"},
