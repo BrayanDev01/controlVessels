@@ -3,7 +3,7 @@ import axios from 'axios';
 import MenuBar from '../components/MenuBar.vue';
 import addEquipament from '../components/locationsComponents/addEquipament.vue';
 import SeeOrEditEquipament from '../components/locationsComponents/SeeOrEditEquipament.vue';
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import toleranceModal from '../components/locationsComponents/tolerancesModal.vue';
 
 export default{
@@ -57,7 +57,7 @@ export default{
                 'calibrationInterval.nCertificadoArt':{value:null, matchMode: FilterMatchMode.CONTAINS},
                 'avaliationCalibration.status':{value:null, matchMode: FilterMatchMode.CONTAINS},
                 'avaliationCalibration.acoesTomadas':{value:null, matchMode: FilterMatchMode.CONTAINS},
-                'entreguePara':{value:null, matchMode: FilterMatchMode.CONTAINS},
+                'entreguePara':{operator: FilterOperator.AND, constraints:[{value:null, matchMode: FilterMatchMode.CONTAINS}]},
                 'obs':{value:null, matchMode: FilterMatchMode.CONTAINS},
             }
         }
@@ -231,6 +231,7 @@ export default{
                 scrollHeight="600px"
                 v-model:filters="filters"
                 exportFilename="Equipamentos de Medição"
+                filterDisplay="menu"
                 :globalFilterFields="['global', 'equipamentName', 'infoMed.setor.name', 'infoMed.marca', 'infoMed.modelo', 'infoMed.nSerieLacre', 'infoMed.etiquetaIdentificacao', 'infoMed.faixaMedicao', 'infoMed.resolucao.valor', 'infoMed.resolucao.un', 'infoMed.classe','infoMed.localizacao.setor.name', 'infoMed.localizacao.responsavel', 'infoMed.tolerancia.valor', 'infoMed.tolerancia.un', 'calibrationResults.laboratorioEngenheiro', 'calibrationResults.nCertificadoArt', 'avaliationCalibration.status', 'avaliationCalibration.acoesTomadas', 'obs', 'entreguePara']">
                 <template #header>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -262,7 +263,15 @@ export default{
                         <Column header="Intervalo da Calibração" :colspan="4"></Column>
                         <Column header="Resultados da Calibração" :colspan="2"></Column>
                         <Column header="Avaliação da Calibração" :colspan="3" ></Column>
-                        <Column header="Entregue" :rowspan="3" ></Column>
+                        <Column header="Entregue" field="entreguePara" :rowspan="3" >
+                            <template #filter="{ filterModel }">
+                                <InputText
+                                    v-model="filterModel.value"
+                                    placeholder="Pesquisar"
+                                    class="p-column-filter"
+                                ></InputText>
+                            </template>
+                        </Column>
                         <Column header="Ações" :rowspan="3" v-if="userInfos.department == 'Qualidade' || userInfos.department == 'ADMINISTRACAO'"></Column>
                     </Row>
                     <Row>
