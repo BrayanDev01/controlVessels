@@ -765,7 +765,8 @@ export default{
                 when: this.when,
                 who: this.who,
                 how: this.how,
-                howMuch: this.howMuch
+                howMuch: this.howMuch,
+                attachments: []
             })
             this.$refs.actionCorrective.hide();
             this.fasterUpdateAnomalie()            
@@ -863,6 +864,53 @@ export default{
             const i = this.actionImmediate.findIndex(it => it === data);
             if (i !== -1) this.actionImmediate.splice(i, 1);
             this.fasterUpdateAnomalie()
+        },
+        addAttachment5w2h(e, row){
+            const response = JSON.parse(e.xhr.responseText);
+            const i = this.actionCorrectives.findIndex(it => it === row);
+            if (i === -1) return;
+
+            const atuais = Array.isArray(row.attachments) ? row.attachments : [];
+            this.actionCorrectives.splice(i, 1, { ...row, attachments: [...atuais, ...response.files] });
+
+            this.tostAdvice('success', 'Anexo adicionado');
+            this.fasterUpdateAnomalie()
+        },
+        async deleteAttachment5w2h(row, url, index){
+            const options = {
+                method: 'DELETE',
+                url: `https://connectapi.3nf.com.br/uploadAnomalias`,
+                data:{
+                    fileUrl: url
+                }
+            }
+
+            await axios.request(options).then((response)=>{
+                console.log(response)
+                const i = this.actionCorrectives.findIndex(it => it === row);
+                if (i !== -1) {
+                    const anexos = [...(row.attachments || [])];
+                    anexos.splice(index, 1);
+                    this.actionCorrectives.splice(i, 1, { ...row, attachments: anexos });
+                }
+                this.$toast.add({severity:'success', summary:'Arquivo Deletado', life:3000})
+                this.fasterUpdateAnomalie()
+            }).catch((error)=>{
+                console.log(error)
+                this.$toast.add({severity:'error', summary:'Houve um erro', life:3000})
+            })
+        },
+        isImageFile(url){
+            if(!url) return false
+            return /\.(png|jpe?g|gif|webp|bmp|svg)(\?.*)?$/i.test(url)
+        },
+        fileNameFromUrl(url){
+            if(!url) return ''
+            try {
+                return decodeURIComponent(url.split('/').pop().split('?')[0])
+            } catch (e) {
+                return url.split('/').pop()
+            }
         },
         delete5w2h(data){
             const i = this.actionCorrectives.findIndex(it => it === data);
@@ -1004,9 +1052,9 @@ export default{
             v-model:visible="visible" 
             modal
             :draggable="false"
-            :style="{width: '70dvw'}" 
+            :style="{width: '95dvw', maxHeight: '95dvh'}" 
             @hide="clearForm()" 
-            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+            :breakpoints="{ '1199px': '95vw', '575px': '98vw' }"
         >
             <template #header>
                 <div class="titleDialog">Visualizar Anomalia / RNC</div>
@@ -1628,6 +1676,56 @@ export default{
                                                 ></InputNumber>
                                             </template>
                                         </Column>
+                                        <Column header="Anexos" style="min-width: 220px;">
+                                            <template #body="{data}">
+                                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                                    <FileUpload
+                                                        mode="basic"
+                                                        name="files"
+                                                        :multiple="true"
+                                                        :auto="true"
+                                                        chooseLabel="Anexar"
+                                                        @upload="addAttachment5w2h($event, data)"
+                                                        url="https://connectapi.3nf.com.br/uploadAnomalias"
+                                                    ></FileUpload>
+                                                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                                        <div
+                                                            v-for="(file, idx) in (data.attachments || [])"
+                                                            :key="idx"
+                                                            class="attachment5w2h"
+                                                        >
+                                                            <Image
+                                                                v-if="isImageFile(file.location)"
+                                                                :src="file.location"
+                                                                alt="Anexo"
+                                                                width="50"
+                                                                height="50"
+                                                                preview
+                                                            ></Image>
+                                                            <i
+                                                                v-else
+                                                                class="pi pi-file"
+                                                                style="font-size: 2rem;"
+                                                                :title="fileNameFromUrl(file.location)"
+                                                            ></i>
+                                                            <div style="display: flex; gap: 8px;">
+                                                                <i
+                                                                    class="pi pi-download"
+                                                                    style="font-size: 0.9rem; cursor: pointer;"
+                                                                    @click="downloadImage(file.location)"
+                                                                ></i>
+                                                                <i
+                                                                    class="pi pi-times"
+                                                                    style="font-size: 0.9rem; cursor: pointer;"
+                                                                    v-show="userInfo?.accessLevel === 0"
+                                                                    @click="deleteAttachment5w2h(data, file.location, idx)"
+                                                                ></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </Column>
                                         <Column header="Ações">
                                             <template #body="{data}">
                                                 <i 
@@ -1896,6 +1994,16 @@ Button{
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
+}
+
+.attachment5w2h{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid #cecece;
+    border-radius: 8px;
 }
 
 .inputGroup{

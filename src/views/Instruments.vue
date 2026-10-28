@@ -259,7 +259,7 @@ export default{
                 <ColumnGroup type="header">
                     <Row>
                         <Column header="Equipamento" :rowspan="3" ></Column>
-                        <Column header="Informações sobre o instrumento de medição" :colspan="9"></Column>
+                        <Column header="Informações sobre o instrumento de medição" :colspan="10"></Column>
                         <Column header="Intervalo da Calibração" :colspan="4"></Column>
                         <Column header="Resultados da Calibração" :colspan="2"></Column>
                         <Column header="Avaliação da Calibração" :colspan="3" ></Column>
@@ -280,7 +280,7 @@ export default{
                         <Column header="Modelo" :rowspan="2"></Column>
                         <Column header="Nª Série / Lacre" :rowspan="2"></Column>
                         <Column header="Etiqueta / Identificação" :rowspan="2"></Column>
-                        <!-- <Column header="Faixa de medição" :rowspan="2"></Column> -->
+                        <Column header="Faixa de medição" :rowspan="2"></Column>
                         <Column header="Resolução" :colspan="2"></Column>
                         <Column header="Classe" :rowspan="2"></Column>
                         <Column header="Localização" :colspan="1"></Column>
@@ -316,7 +316,7 @@ export default{
                 <Column field="infoMed.modelo"></Column>
                 <Column field="infoMed.nSerieLacre"></Column>
                 <Column field="infoMed.etiquetaIdentificacao"></Column>
-                <!-- <Column field="infoMed.faixaMedicao"></Column> -->
+                <Column field="infoMed.faixaMedicao"></Column>
                 <Column field="infoMed.resolucao.valor"></Column>
                 <Column field="infoMed.resolucao.un"></Column>
                 <Column field="infoMed.classe"></Column>
